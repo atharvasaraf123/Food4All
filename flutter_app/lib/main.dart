@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Dashboard.dart';
 
 import 'login.dart';
 
@@ -28,7 +30,12 @@ class App extends StatelessWidget {
 
             // Once complete, show your application
             if (snapshot.connectionState == ConnectionState.done) {
-              return Login();
+              if(FirebaseAuth.instance.currentUser!=null){
+                return Dashboard();
+              }else{
+                return Login();
+              }
+
             }
 
             // Otherwise, show something whilst waiting for initialization to complete

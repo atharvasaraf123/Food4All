@@ -10,14 +10,7 @@ class SignUp extends StatefulWidget {
   _SignUpState createState() => _SignUpState();
 }
 
-String name;
-String email;
-String collegeName;
-String password = "";
-String password1 = "";
-bool disable = false;
-String phoneNumber;
-String userName;
+
 
 TextEditingController nameController = TextEditingController();
 TextEditingController usernameController = TextEditingController();
@@ -29,7 +22,6 @@ TextEditingController password1Controller = TextEditingController();
 TextEditingController ieee = TextEditingController();
 TextEditingController registrationController = TextEditingController();
 
-bool ieeeMenber = false;
 double _height;
 double _width;
 double _pixelRatio;
@@ -41,7 +33,7 @@ String pictRegID;
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
-  String _mail, _password, _password1, _name;
+  String mail, password, password1, name,phoneNumber;
   bool _obscureText = true;
   bool _obscureText1 = true;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -56,11 +48,11 @@ class _SignUpState extends State<SignUp> {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-          email: "$_mail", password: "$_password");
+          email: "$mail", password: "$password");
       users
           .add({
-        'email': _mail, // John Doe
-        'name': _name, //// 42
+        'email': mail, // John Doe
+        'name': name, //// 42
       })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));
@@ -108,13 +100,16 @@ class _SignUpState extends State<SignUp> {
                   _getBackImage(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: Column(
-                      children: <Widget>[
-                        _getHeader(),
-                        _getTextFields(),
-                        _getSignIn(),
-                        _getBottomRow(context),
-                      ],
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          _getHeader(),
+                          _getTextFields(),
+                          _getSignIn(),
+                          _getBottomRow(context),
+                        ],
+                      ),
                     ),
                   ),
                   _getBackBtn(),
@@ -150,197 +145,237 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-}
+  _getBackBtn() {
+    return Positioned(
+      top: 35,
+      left: 25,
+      child: Icon(
+        Icons.arrow_back_ios,
+        color: Colors.white,
+      ),
+    );
+  }
 
-_getBackBtn() {
-  return Positioned(
-    top: 35,
-    left: 25,
-    child: Icon(
-      Icons.arrow_back_ios,
-      color: Colors.white,
-    ),
-  );
-}
-
-_getBottomRow(context) {
-  return Expanded(
-    flex: 1,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Text(
-            'Already a user Sign in here',
+  _getBottomRow(context) {
+    return Expanded(
+      flex: 1,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Already a user Sign in here',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          Text(
+            '',
             style: TextStyle(
-              color: Colors.black,
               fontSize: 15,
               fontWeight: FontWeight.w500,
               decoration: TextDecoration.underline,
             ),
           ),
-        ),
-        Text(
-          '',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            decoration: TextDecoration.underline,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
-_getSignIn() {
-  return Expanded(
-    flex: 1,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          'Sign up',
-          style: TextStyle(
-              color: Colors.white, fontSize: 25, fontWeight: FontWeight.w500),
-        ),
-        CircleAvatar(
-          backgroundColor: Colors.grey.shade800,
-          radius: 40,
-          child: Icon(
-            Icons.arrow_forward,
-            color: Colors.white,
+  _getSignIn() {
+    return Expanded(
+      flex: 1,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            'Sign up',
+            style: TextStyle(
+                color: Colors.white, fontSize: 25, fontWeight: FontWeight.w500),
           ),
-        )
-      ],
-    ),
-  );
-}
+          InkWell(
+            onTap: ()async{
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                await createUser();
+              }
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.grey.shade800,
+              radius: 40,
+              child: Icon(
+                Icons.arrow_forward,
+                color: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
-_getTextFields() {
-  return Expanded(
-    flex: 4,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(
-          height: 15,
-        ),
-        Material(
-          borderRadius: BorderRadius.circular(10.0),
-          elevation: _large ? 12 : (_medium ? 10 : 8),
-          child: TextFormField(
-            controller: nameController,
-            keyboardType: TextInputType.text,
-            cursorColor: Color(0xff0aa9d7),
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.person,
-                  color: Color(0xff0aa9d7), size: 20),
-              hintText: "Name",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide.none),
-            ),
-            onChanged: (val) {
-              // setState(()=> {
-              //   name = val;
-              // });
-            },
+  _getTextFields() {
+    return Expanded(
+      flex: 4,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            height: 15,
           ),
-        ),
-        SizedBox(height: _height / 30.0),
-        Material(
-          borderRadius: BorderRadius.circular(10.0),
-          elevation: _large ? 12 : (_medium ? 10 : 8),
-          child: TextFormField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            cursorColor: Color(0xff0aa9d7),
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.email,
-                  color: Color(0xff0aa9d7), size: 20),
-              hintText: "Email",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide.none),
-            ),
-            onChanged: (val) {
-              // setState(() {
-              //   email = val;
-              // });
-            },
-          ),
-        ),
-        SizedBox(height: _height / 30.0),
-        Material(
-          borderRadius: BorderRadius.circular(10.0),
-          elevation: _large ? 12 : (_medium ? 10 : 8),
-          child: TextFormField(
-            controller: passwordController,
-            keyboardType: TextInputType.text,
-            cursorColor: Color(0xff0aa9d7),
-            decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock,
+          Material(
+            borderRadius: BorderRadius.circular(10.0),
+            elevation: _large ? 12 : (_medium ? 10 : 8),
+            child: TextFormField(
+              controller: nameController,
+              validator: (val) {
+                if (val.isEmpty) {
+                  return 'This field cannot be empty!';
+                }
+                return null;
+              },
+              onSaved: (val) => name = val,
+              keyboardType: TextInputType.text,
+              cursorColor: Color(0xff0aa9d7),
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.person,
                     color: Color(0xff0aa9d7), size: 20),
-                hintText: "Password",
+                hintText: "Name",
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none),
-                suffixIcon: IconButton(
+              ),
+              onChanged: (val) {
+                // setState(()=> {
+                //   name = val;
+                // });
+              },
+            ),
+          ),
+          SizedBox(height: _height / 30.0),
+          Material(
+            borderRadius: BorderRadius.circular(10.0),
+            elevation: _large ? 12 : (_medium ? 10 : 8),
+            child: TextFormField(
+              validator: (val) {
+                if (val.isEmpty) {
+                  return 'This field cannot be empty!';
+                } else if (!validateEmail(val)) {
+                  return 'Enter a valid email!';
+                }
+                return null;
+              },
+              onSaved: (val) => mail = val,
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              cursorColor: Color(0xff0aa9d7),
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.email,
+                    color: Color(0xff0aa9d7), size: 20),
+                hintText: "Email",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none),
+              ),
+              onChanged: (val) {
+                // setState(() {
+                //   email = val;
+                // });
+              },
+            ),
+          ),
+          SizedBox(height: _height / 30.0),
+          Material(
+            borderRadius: BorderRadius.circular(10.0),
+            elevation: _large ? 12 : (_medium ? 10 : 8),
+            child: TextFormField(
+              validator: (val) => val.length < 6
+                  ? 'Password must be at least 6 characters long!'
+                  : null,
+              onSaved: (val) => password = val,
+              controller: passwordController,
+              keyboardType: TextInputType.text,
+              cursorColor: Color(0xff0aa9d7),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.lock,
+                      color: Color(0xff0aa9d7), size: 20),
+                  hintText: "Password",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: BorderSide.none),
+                  suffixIcon: IconButton(
                     icon: Icon(Icons.remove_red_eye),
                     color: Color(0xff0aa9d7),
-                    )),
-            onChanged: (val) {
-              // setState(() {
-              //   password = val;
-              // });
-            },
-            obscureText: _obscureText,
-          ),
-        ),
-        SizedBox(height: _height / 30.0),
-        Material(
-          borderRadius: BorderRadius.circular(10.0),
-          elevation: _large ? 12 : (_medium ? 10 : 8),
-          child: TextFormField(
-            controller: phoneController,
-            keyboardType: TextInputType.phone,
-            cursorColor: Color(0xff0aa9d7),
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.phone,
-                  color: Color(0xff0aa9d7), size: 20),
-              hintText: "Phone Number",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  borderSide: BorderSide.none),
+                    onPressed: (){
+                      setState(() {
+                        _obscureText=!_obscureText;
+                      });
+                    },
+                  )),
+
+              obscureText: _obscureText,
             ),
-            onChanged: (val) {
-              // setState(() {
-              //   phoneNumber = val;
-              // });
-            },
           ),
+          SizedBox(height: _height / 30.0),
+          Material(
+            borderRadius: BorderRadius.circular(10.0),
+            elevation: _large ? 12 : (_medium ? 10 : 8),
+            child: TextFormField(
+              validator: (val) {
+                if (val.isEmpty) {
+                  return 'This field cannot be empty!';
+                } else if (val.trim().length<10) {
+                  return 'Enter a valid phone number!';
+                }
+                return null;
+              },
+              onSaved: (val) => phoneNumber = val,
+              controller: phoneController,
+              keyboardType: TextInputType.phone,
+              cursorColor: Color(0xff0aa9d7),
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.phone,
+                    color: Color(0xff0aa9d7), size: 20),
+                hintText: "Phone Number",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none),
+              ),
+              onChanged: (val) {
+                // setState(() {
+                //   phoneNumber = val;
+                // });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _getHeader() {
+    return Expanded(
+      flex: 3,
+      child: Container(
+        alignment: Alignment.bottomLeft,
+        child: Text(
+          'Create\nAccount',
+          style: TextStyle(color: Colors.white, fontSize: 40),
         ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
+
+
 }
 
-_getHeader() {
-  return Expanded(
-    flex: 3,
-    child: Container(
-      alignment: Alignment.bottomLeft,
-      child: Text(
-        'Create\nAccount',
-        style: TextStyle(color: Colors.white, fontSize: 40),
-      ),
-    ),
-  );
-}
 
 class BackgroundSignIn extends CustomPainter {
   @override
@@ -543,13 +578,6 @@ class _CustomClipper extends CustomClipper<Path> {
                               hintText: 'Name',
                               hintStyle: TextStyle(
                                   color:Colors.black)),
-                          validator: (val) {
-                            if (val.isEmpty) {
-                              return 'This field cannot be empty!';
-                            }
-                            return null;
-                          },
-                          onSaved: (val) => _name = val,
                         ),
                       ),
                     ),

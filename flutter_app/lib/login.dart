@@ -33,6 +33,9 @@ class _LoginState extends State<Login> {
   String pictRegID;
 
 
+
+
+
   signInWithGoogle() async {
     // Trigger the authentication flow
     try {
@@ -112,6 +115,17 @@ class _LoginState extends State<Login> {
     height: 1.0,
     color: Colors.black26.withOpacity(.2),
   );
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLogIn();
+  }
+
+  getLogIn()async{
+
+  }
+
   @override
   Widget build(BuildContext context) {
     _height = MediaQuery
