@@ -5,8 +5,11 @@ import 'package:flutter_app/signup.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'Dashboard.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -17,39 +20,84 @@ class _LoginState extends State<Login> {
   String _mail,_password;
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 
-  Future<AuthResult> signInWithGoogle() async {
+  signInWithGoogle() async {
     // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    try {
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth = await googleUser
+          .authentication;
 
-    // Create a new credential
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      // Once signed in, return the UserCredential
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+      users
+          .add({
+        'email': "${userCredential.user.email}", // John Doe
+        'name': "${userCredential.user.displayName}", //// 42
+      })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+      Fluttertoast.showToast(msg: 'Signed Up Successfully');
+      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) => Dashboard()));
+    }catch(e){
+      print(e.toString());
+    }
   }
 
   login()async{
     try {
-      AuthResult authResult=await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: "barry.allen@example.com",
-          password: "SuperSecretPassword!"
+      print(_mail);
+      print(_password);
+      UserCredential authResult=await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: "$_mail",
+          password: "$_password"
       );
+      Fluttertoast.showToast(msg: 'Logged in');
     } catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+      if (e.toString().toLowerCase().contains('user_not_found')) {
+        Fluttertoast.showToast(msg:'No user found for that email.');
+      } else if (e.toString().toLowerCase().contains('wrong-password')) {
+        Fluttertoast.showToast(msg:'Wrong password provided for that user.');
+      }else{
+        Fluttertoast.showToast(msg: e.toString());
       }
     }
   }
+  // signInWithFacebook()async{
+  //   try {
+  //     // by default the login method has the next permissions ['email','public_profile']
+  //     AccessToken accessToken = await FacebookAuth.instance.login();
+  //     print(accessToken.toJson());
+  //     // get the user data
+  //     final userData = await FacebookAuth.instance.getUserData();
+  //     print(userData);
+  //   } on FacebookAuthException catch (e) {
+  //     switch (e.errorCode) {
+  //       case FacebookAuthErrorCode.OPERATION_IN_PROGRESS:
+  //         print("You have a previous login operation in progress");
+  //         break;
+  //       case FacebookAuthErrorCode.CANCELLED:
+  //         print("login cancelled");
+  //         break;
+  //       case FacebookAuthErrorCode.FAILED:
+  //         print("login failed");
+  //         break;
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +183,12 @@ class _LoginState extends State<Login> {
                     child: MaterialButton(
                       minWidth: MediaQuery.of(context).size.width,
                       padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                      onPressed: () {},
+                      onPressed: ()async{
+                        if (_formKey.currentState.validate()) {
+                          _formKey.currentState.save();
+                          await login();
+                        }
+                      },
                       child: Text("Login",
                         textAlign: TextAlign.center,
                       ),
@@ -164,66 +217,37 @@ class _LoginState extends State<Login> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SignInButton(
-                              Buttons.Facebook,
-                              shape: CircleBorder(),
-                              mini: true,
-                              onPressed: () async {
-                                // FirebaseUser user = await auth.handleFacebookSignIn(context);
-                                // validateUser(context, user);
-                              },
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              'Login with Facebook',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SignInButtonBuilder(
+                          text: 'Google',
+                          mini: true,
+                          shape: CircleBorder(),
+                          icon: FontAwesomeIcons.google,
+                          onPressed: () async {
+                            await signInWithGoogle();
+                            // try {
+                            //   FirebaseUser user =
+                            //   await auth.handleGoogleSignIn(context);
+                            //   validateUser(context, user);
+                            // }catch(e){
+                            //   print('GoogleError');
+                            //   print(e.toString());
+                            // }
+                          },
+                          backgroundColor: Colors.red.shade900,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SignInButtonBuilder(
-                              text: 'Google',
-                              mini: true,
-                              shape: CircleBorder(),
-                              icon: FontAwesomeIcons.google,
-                              onPressed: () async {
-                                await signInWithGoogle();
-                                // try {
-                                //   FirebaseUser user =
-                                //   await auth.handleGoogleSignIn(context);
-                                //   validateUser(context, user);
-                                // }catch(e){
-                                //   print('GoogleError');
-                                //   print(e.toString());
-                                // }
-                              },
-                              backgroundColor: Colors.red.shade900,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              'Login with Google',
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          'Login with Google',
 //                                style: GoogleFonts.openSans(),
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),

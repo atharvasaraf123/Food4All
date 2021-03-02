@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -11,23 +13,34 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
 
   final _formKey = GlobalKey<FormState>();
-  String _mail, _password, _password1;
+  String _mail, _password, _password1,_name;
   bool _obscureText = true;
   bool _obscureText1 = true;
-
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   createUser()async{
     try {
-      AuthResult userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: "$_mail",
           password: "$_password"
       );
-      Fluttertoast.showToast(msg: 'Signed Up Succesfully');
+       users
+           .add({
+         'email': _mail, // John Doe
+         'name': _name, //// 42
+       })
+           .then((value) => print("User Added"))
+           .catchError((error) => print("Failed to add user: $error"));
+      Fluttertoast.showToast(msg: 'Signed Up Successfully');
+      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
     } catch (e) {
-      if (e.code == 'weak-password') {
+      if (e.toString().toLowerCase().contains('weak_password')) {
         Fluttertoast.showToast(msg:'The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
+      } else if (e.toString().toLowerCase().contains('email_already_in_use')) {
         Fluttertoast.showToast(msg:'The account already exists for that email.');
+      }else{
+        Fluttertoast.showToast(msg: 'Try again in sometime');
       }
     }
   }
@@ -78,6 +91,36 @@ class _SignUpState extends State<SignUp> {
                         height: 1.0,
                         width: 35.0,
                         color: Colors.black),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade700,
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: TextFormField(
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(left: 12),
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              hintText: 'Name',
+                              hintStyle: TextStyle(
+                                  color:Colors.black)),
+                          validator: (val) {
+                            if (val.isEmpty) {
+                              return 'This field cannot be empty!';
+                            }
+                            return null;
+                          },
+                          onSaved: (val) => _name = val,
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 25.0),
                       child: Container(
