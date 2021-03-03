@@ -51,6 +51,7 @@ class _MyHomePageState extends State {
       animatedIcon: AnimatedIcons.menu_close,
       animatedIconTheme: IconThemeData(size: 24.0),
       curve: Curves.easeInBack,
+      backgroundColor: Colors.orange.shade700,
       heroTag: 'add',
       children: [
         SpeedDialChild(
