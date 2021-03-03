@@ -1,13 +1,19 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/Dashboard.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart';
 
 class Donate_Food extends StatefulWidget {
   @override
@@ -94,6 +100,11 @@ class _Donate_FoodState extends State<Donate_Food> {
   TextEditingController dateController = TextEditingController();
 
   TextEditingController _addressController = TextEditingController();
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference userCol = FirebaseFirestore.instance.collection('users');
+  CollectionReference dona = FirebaseFirestore.instance.collection('donation');
 
   List<File> image = [];
   bool pressed = false;
@@ -106,14 +117,56 @@ class _Donate_FoodState extends State<Donate_Food> {
   String address;
   String name;
   String add;
+  String foodItems;
   String phone;
   String city;
+  final _formKey = GlobalKey<FormState>();
+  List url;
 
   Future getImage() async {
     final imageTemp = await imagePicker.getImage(source: ImageSource.camera);
     setState(() {
       image.add(File(imageTemp.path));
     });
+  }
+
+  donateFood(BuildContext context)async{
+    User user=FirebaseAuth.instance.currentUser;
+    CollectionReference donation=userCol.doc(user.uid).collection('donations');
+    url=List();
+    for(int i=0;i<image.length;i++){
+      // await storage.ref(basename(image[i].path)).putFile(image[i]).then((val)async{
+      //   String s=await storage.ref(basename(image[i].path)).getDownloadURL();
+      //   print(s);
+      //   url.add(s);
+      // });
+      await storage.ref().child(basename(image[i].path)).putFile(image[i]).then((val)async{
+        String s=await storage.ref(basename(image[i].path)).getDownloadURL();
+        print(s);
+        url.add(s);
+      });
+    }
+    Map<String,dynamic>mapp={
+      'address':add,
+      'foodItems':foodItems,
+      'dateTime':dateController.text.toString().trim(),
+      'minQ':capacitymin.ceil(),
+      'maxQ':capacitymax.ceil(),
+      'url':url
+    };
+    await donation.add(mapp).then((value)async{
+      await dona.add(mapp).then((value) {
+        Fluttertoast.showToast(msg: 'Donations added');
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
+      }).catchError((onError){
+        Fluttertoast.showToast(msg: 'Something went wrong');
+      });
+    }).catchError((onError){
+      Fluttertoast.showToast(msg: 'Something went wrong');
+    });
+
+
+
   }
 
   getUserLocation() async {
@@ -160,262 +213,290 @@ class _Donate_FoodState extends State<Donate_Food> {
         child: Stack(
           children: [
             AppBackground(),
-            SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Material(
-                              elevation: 10,
-                              child: Padding(
-                                padding: EdgeInsets.all(2),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_back,
-                                    color: Color(0xFFea9b72),
+            Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Row(
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                elevation: 10,
+                                child: Padding(
+                                  padding: EdgeInsets.all(2),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_back,
+                                      color: Color(0xFFea9b72),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    iconSize: 24,
                                   ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  iconSize: 24,
                                 ),
+                                color: Colors.white,
+                                shape: CircleBorder(),
                               ),
-                              color: Colors.white,
-                              shape: CircleBorder(),
+                            ),
+                            Spacer(),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 10.0),
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Donate Food Details',
+                            style: TextStyle(
+                              fontFamily: 'MontserratBold',
+                              color: Colors.orange,
+                              fontSize: 25
                             ),
                           ),
-                          Spacer(),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: TextFormField(
+                          validator: (val) {
+                            if (val.isEmpty) {
+                              return 'This field cannot be empty!';
+                            }
+                            return null;
+                          },
+                          controller: _addressController,
+                          onSaved: (val) {
+                            setState(() {
+                              add = val;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              onPressed: () async {
+                                await getUserLocation();
+                              },
+                              icon: Icon(
+                                Icons.location_searching_outlined,
+                              ),
+                            ),
+                            labelText: 'Preferred Address',
+                            labelStyle: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'MontserratMed',
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: TextFormField(
+                          onSaved: (val) {
+                            setState(() {
+                              foodItems = val;
+                            });
+                          },
+                          validator: (val) {
+                            if (val.isEmpty) {
+                              return 'This field cannot be empty!';
+                            }
+                            return null;
+                          },
+                          style: TextStyle(
+                            fontFamily: 'MontserratMed',
+                            color: Colors.black,
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                              isDense: true,
+                              labelText: 'Food Item(s)',
+                              labelStyle: TextStyle(
+                                fontFamily: 'MontserratMed',
+                                color: Colors.grey.shade500,
+                              ),
+                              suffixIcon: Icon(Icons.fastfood)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: TextFormField(
+                          validator: (val) {
+                            if (val.isEmpty) {
+                              return 'This field cannot be empty!';
+                            }
+                            return null;
+                          },
+                          controller: dateController,
+                          onTap: () => setState(() {
+                            pressed = true;
+
+                            DatePicker.showDateTimePicker(context,
+                                showTitleActions: true, onChanged: (date) {
+                              // print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
+                            }, onConfirm: (date) {
+                              selectedDateTime = date;
+                              dateController.text = DateFormat.yMMMEd().add_jm().format(date);
+                            }, currentTime: DateTime(2020, 01, 01, 12, 00, 00));
+                          }),
+                          style: TextStyle(
+                            fontFamily: 'MontserratMed',
+                            color: Colors.black,
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                              isDense: true,
+                              labelText: 'Preferred Time',
+                              labelStyle: TextStyle(
+                                fontFamily: 'MontserratMed',
+                                color: Colors.grey.shade500,
+                              ),
+                              suffixIcon: Icon(Icons.calendar_today)),
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Text(
+                              'Quantity: 500 people',
+                              style: TextStyle(
+                                fontFamily: 'MontserratMed',
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 20.0, horizontal: 10.0),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Donate Food Details',
-                          style: TextStyle(
-                            fontFamily: 'MontserratBold',
-                            color: Colors.orange,
-                            fontSize: 25
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: <Widget>[
+                          Text(
+                            capacitymin.ceil().toString(),
+                            style: TextStyle(
+                              fontFamily: 'MontserratBold',
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
+                          Text(
+                            ' - ',
+                            style: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            capacitymax.ceil().toString(),
+                            style: TextStyle(
+                              fontFamily: 'MontserratBold',
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            ' people',
+                            style: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.black,
+                            ),
+                          )
+                        ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: TextFormField(
-                        validator: (val) {
-                          if (val.isEmpty) {
-                            return 'This field cannot be empty!';
-                          }
-                          return null;
-                        },
-                        controller: _addressController,
-                        onSaved: (val) {
+                      RangeSlider(
+                        min: 0,
+                        max: 500,
+                        divisions: 50,
+                        values: gradesRange,
+                        onChanged: (RangeValues value) {
                           setState(() {
-                            add = val;
+                            gradesRange = value;
+                            capacitymin = gradesRange.start;
+                            capacitymax = gradesRange.end;
                           });
                         },
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            onPressed: () async {
-                              await getUserLocation();
-                            },
-                            icon: Icon(
-                              Icons.location_searching_outlined,
-                            ),
-                          ),
-                          labelText: 'Preferred Address',
-                          labelStyle: TextStyle(
-                            fontFamily: 'MontserratMed',
-                            color: Colors.grey.shade500,
-                          ),
-                        ),
-                        style: TextStyle(
-                          fontFamily: 'MontserratMed',
-                          color: Colors.black,
-                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: TextFormField(
-                        style: TextStyle(
-                          fontFamily: 'MontserratMed',
-                          color: Colors.black,
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                            isDense: true,
-                            labelText: 'Food Item(s)',
-                            labelStyle: TextStyle(
-                              fontFamily: 'MontserratMed',
-                              color: Colors.grey.shade500,
-                            ),
-                            suffixIcon: Icon(Icons.fastfood)),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: TextFormField(
-                        controller: dateController,
-                        onTap: () => setState(() {
-                          pressed = true;
 
-                          DatePicker.showDateTimePicker(context,
-                              showTitleActions: true, onChanged: (date) {
-                            // print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
-                          }, onConfirm: (date) {
-                            selectedDateTime = date;
-                            dateController.text = DateFormat.yMMMEd().add_jm().format(date);
-                          }, currentTime: DateTime(2020, 01, 01, 12, 00, 00));
-                        }),
-                        style: TextStyle(
-                          fontFamily: 'MontserratMed',
-                          color: Colors.black,
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                            isDense: true,
-                            labelText: 'Preferred Time',
-                            labelStyle: TextStyle(
-                              fontFamily: 'MontserratMed',
-                              color: Colors.grey.shade500,
-                            ),
-                            suffixIcon: Icon(Icons.calendar_today)),
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    Row(
-                      children: [
-                        Padding(
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
                           padding: const EdgeInsets.only(left: 15.0),
                           child: Text(
-                            'Quantity: 500 persons',
+                            'Photos',
                             style: TextStyle(
                               color: Colors.grey.shade500,
                               fontSize: 15.0,
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: <Widget>[
-                        Text(
-                          capacitymin.ceil().toString(),
-                          style: TextStyle(
-                            fontFamily: 'MontserratBold',
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          ' - ',
-                          style: TextStyle(
-                            fontFamily: 'MontserratMed',
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          capacitymax.ceil().toString(),
-                          style: TextStyle(
-                            fontFamily: 'MontserratBold',
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          ' people',
-                          style: TextStyle(
-                            fontFamily: 'MontserratMed',
-                            color: Colors.black,
-                          ),
-                        )
-                      ],
-                    ),
-                    RangeSlider(
-                      min: 0,
-                      max: 500,
-                      divisions: 50,
-                      values: gradesRange,
-                      onChanged: (RangeValues value) {
-                        setState(() {
-                          gradesRange = value;
-                          capacitymin = gradesRange.start;
-                          capacitymax = gradesRange.end;
-                        });
-                      },
-                    ),
-
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 15.0),
-                        child: Text(
-                          'Photos',
-                          style: TextStyle(
-                            color: Colors.grey.shade500,
-                            fontSize: 15.0,
-                          ),
-                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        height: 100,
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: [
-                            _showImages(),
-                            _addNewImage(),
-                          ],
-                          scrollDirection: Axis.horizontal,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25.0, vertical: 35.0),
-                      child: Align(
-                        alignment: Alignment.centerRight,
+                      Align(
+                        alignment: Alignment.centerLeft,
                         child: Container(
-                          width: 150,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              gradient: LinearGradient(colors: [
-                                Color(0xFFea9b72),
-                                Color(0xFFff9e33)
-                              ])),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 20),
-                            child: Center(
-                                child: Text(
-                              'Submit',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontStyle: FontStyle.normal,
-                                  fontFamily: 'MontserratSemi'),
-                            )),
+                          height: 100,
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: [
+                              _showImages(),
+                              _addNewImage(),
+                            ],
+                            scrollDirection: Axis.horizontal,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25.0, vertical: 35.0),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                            onTap: ()async{
+                              if(_formKey.currentState.validate()){
+                                _formKey.currentState.save();
+                                await donateFood(context);
+                              }
+                            },
+                            child: Container(
+                              width: 150,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  gradient: LinearGradient(colors: [
+                                    Color(0xFFea9b72),
+                                    Color(0xFFff9e33)
+                                  ])),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                child: Center(
+                                    child: Text(
+                                  'Submit',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.normal,
+                                      fontFamily: 'MontserratSemi'),
+                                )),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
