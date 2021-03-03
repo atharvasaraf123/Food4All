@@ -11,9 +11,10 @@ class NGOs extends StatefulWidget {
 class _NGOsState extends State<NGOs> {
 
   bool ngo=false;
+  bool load=true;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference ngoCol = FirebaseFirestore.instance.collection('NGO');
-
+  List list;
   @override
   void initState() {
     // TODO: implement initState
@@ -24,26 +25,40 @@ class _NGOsState extends State<NGOs> {
   checkNgo()async{
     User user=FirebaseAuth.instance.currentUser;
     DocumentSnapshot ds = await ngoCol.doc(user.uid).get();
-    setState(() {
-      ngo=ds.exists;
-    });
+    ngo=ds.exists;
     print(ngo);
+    if(!ngo){
+      list=List();
+      await ngoCol.get().then((value){
+        list=value.docs;
+        // value.docs.forEach((element) {
+        //   list.add(element);
+        // });
+      });
+    }
+    setState(() {
+      load=false;
+    });
+    print(list);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ngo?Container(
+    return load==true?CircularProgressIndicator():ngo?Container(
       child: Text('abc',style: TextStyle(color: Colors.black),),
-    ):Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-        Text('No NGO registered yet'),
-        GestureDetector(child: Text('Register here'),
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>AddNGO()));
-        },)
-      ],),
-    );
+    ):ListView.builder(itemBuilder: (BuildContext context,int pos){
+      return ListTile(
+        title: Text(list[pos]['name'].toString()),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Address:- ${list[pos]['address'].toString()}"),
+            Text("Capacity:- ${list[pos]['capacity'].toString()}"),
+            Text("Phone:- ${list[pos]['phone'].toString()}"),
+          ],
+        ),
+      );
+    },
+    itemCount: list.length,);
   }
 }
