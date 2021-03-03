@@ -46,19 +46,29 @@ class _NGOsState extends State<NGOs> {
   Widget build(BuildContext context) {
     return load==true?CircularProgressIndicator():ngo?Container(
       child: Text('abc',style: TextStyle(color: Colors.black),),
-    ):ListView.builder(itemBuilder: (BuildContext context,int pos){
-      return ListTile(
-        title: Text(list[pos]['name'].toString()),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Address:- ${list[pos]['address'].toString()}"),
-            Text("Capacity:- ${list[pos]['capacity'].toString()}"),
-            Text("Phone:- ${list[pos]['phone'].toString()}"),
-          ],
-        ),
-      );
-    },
-    itemCount: list.length,);
+    ):ListView(
+      children: [
+        ListView.builder(itemBuilder: (BuildContext context,int pos){
+          return ListTile(
+            title: Text(list[pos]['name'].toString()),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Address:- ${list[pos]['address'].toString()}"),
+                Text("Capacity:- ${list[pos]['capacity'].toString()}"),
+                Text("Phone:- ${list[pos]['phone'].toString()}"),
+              ],
+            ),
+          );
+        },
+        itemCount: list.length,shrinkWrap: true,),
+        Center(child: Text('No NGO registered yet')),
+    GestureDetector(child: Center(child: Text('Register here')),
+    onTap: (){
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>AddNGO()));
+    }
+    ),
+      ],
+    );
   }
 }
