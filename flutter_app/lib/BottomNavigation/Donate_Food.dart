@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -93,7 +94,7 @@ class _Donate_FoodState extends State<Donate_Food> {
 
   TextEditingController _addressController = TextEditingController();
 
-  List<File> image =[];
+  List<File> image = [];
   bool pressed = false;
   final imagePicker = ImagePicker();
 
@@ -106,6 +107,7 @@ class _Donate_FoodState extends State<Donate_Food> {
   String add;
   String phone;
   String city;
+
   Future getImage() async {
     final imageTemp = await imagePicker.getImage(source: ImageSource.camera);
     setState(() {
@@ -134,9 +136,9 @@ class _Donate_FoodState extends State<Donate_Food> {
     }
     LocationData currentLocation = myLocation;
     final coordinates =
-    new Coordinates(myLocation.latitude, myLocation.longitude);
+        new Coordinates(myLocation.latitude, myLocation.longitude);
     var addresses =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     print(
         ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
@@ -150,10 +152,7 @@ class _Donate_FoodState extends State<Donate_Food> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera),
-        onPressed: getImage,
-      ),
+
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
@@ -196,7 +195,8 @@ class _Donate_FoodState extends State<Donate_Food> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical:20.0,horizontal: 10.0),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 10.0),
                       child: Container(
                         alignment: Alignment.topLeft,
                         child: Text(
@@ -210,7 +210,7 @@ class _Donate_FoodState extends State<Donate_Food> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child:  TextFormField(
+                      child: TextFormField(
                         validator: (val) {
                           if (val.isEmpty) {
                             return 'This field cannot be empty!';
@@ -339,7 +339,6 @@ class _Donate_FoodState extends State<Donate_Food> {
                         )
                       ],
                     ),
-
                     RangeSlider(
                       min: 0,
                       max: 100,
@@ -350,32 +349,56 @@ class _Donate_FoodState extends State<Donate_Food> {
                       onChanged: (RangeValues value) {
                         setState(() {
                           gradesRange = value;
-                          capacitymin=gradesRange.start;
-                          capacitymax=gradesRange.end;
-
+                          capacitymin = gradesRange.start;
+                          capacitymax = gradesRange.end;
                         });
                       },
                     ),
 
-
-                    _showImages(),
-
-
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: Text(
+                          'Photos',
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        _showImages(),
+                        _addNewImage(),
+                      ],
+                    ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:25.0,vertical: 35.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25.0, vertical: 35.0),
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: Container(
                           width: 150,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),  gradient: LinearGradient(
-                              colors: [
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              gradient: LinearGradient(colors: [
                                 Color(0xFFea9b72),
                                 Color(0xFFff9e33)
-                              ]
-                          )),
+                              ])),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                            child: Center(child: Text('Submit',style: TextStyle( fontSize: 20,color: Colors.white,fontStyle: FontStyle.normal,fontFamily: 'MontserratSemi'),)),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            child: Center(
+                                child: Text(
+                              'Submit',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontStyle: FontStyle.normal,
+                                  fontFamily: 'MontserratSemi'),
+                            )),
                           ),
                         ),
                       ),
@@ -410,20 +433,39 @@ class _Donate_FoodState extends State<Donate_Food> {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
-
         itemCount: image.length,
-       itemBuilder: (BuildContext context,int position){
-         return Padding(
-           padding: const EdgeInsets.all(8.0),
-           child: new Container(
-             width: 100,
-             height: 100,
-             child:image[position] == null ? Text('null'):Image.file(image[position]),
+        itemBuilder: (BuildContext context, int position) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: new Container(
+              width: 100,
+              height: 100,
+              child: image[position] == null
+                  ? Text('null')
+                  : Image.file(image[position]),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
-
-           ),
-         );
-       },
+  _addNewImage() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DottedBorder(
+        dashPattern: [6, 2],
+        strokeWidth: 2,
+        color: Colors.orange.shade600,
+        child: Container(
+          height: 100,
+          width: 60,
+          child: IconButton(
+            onPressed: getImage,
+            icon: Icon(Icons.add),
+            // onPressed: ,
+          ),
+        ),
       ),
     );
   }
