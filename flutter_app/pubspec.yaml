@@ -37,6 +37,8 @@ dependencies:
   google_sign_in: ^4.5.9
   bubble_bottom_bar: ^1.2.0
   flutter_speed_dial: ^2.1.1
+  geocoder:
+  location:
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +56,23 @@ flutter:
 
   assets:
   - images/
+
+  fonts:
+    - family: MontserratReg
+      fonts:
+        - asset: fonts/Montserrat-Regular.ttf
+    - family: MontserratReg
+      fonts:
+        - asset: fonts/Montserrat-Regular.ttf
+    - family: MontserratBold
+      fonts:
+        - asset: fonts/Montserrat-Bold.ttf
+    - family: MontserratMed
+      fonts:
+        - asset: fonts/Montserrat-Medium.ttf
+    - family: MontserratSemi
+      fonts:
+        - asset: fonts/Montserrat-SemiBold.ttf
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

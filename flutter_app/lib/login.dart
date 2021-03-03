@@ -53,17 +53,34 @@ class _LoginState extends State<Login> {
       // Once signed in, return the UserCredential
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(credential);
-      users
-          .add({
-        'email': "${userCredential.user.email}", // John Doe
-        'name': "${userCredential.user.displayName}", //// 42
-      })
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
-      Fluttertoast.showToast(msg: 'Signed Up Successfully');
-      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => Dashboard()));
+      String uid=userCredential.user.uid;
+      // users
+      //     .add({
+      //   'email': mail, // John Doe
+      //   'name': name, //// 42
+      // })
+      //     .then((value) => print("User Added"))
+      //     .catchError((error) => print("Failed to add user: $error"));
+      User user1=userCredential.user;
+      Map<String, dynamic>user;
+      if(user1.phoneNumber!=null&&user1.phoneNumber.isNotEmpty) {
+       user = {
+          'email': user1.email,
+          'name': user1.displayName,
+          'phone': user1.phoneNumber
+        };
+      }else{
+        user = {
+          'email': user1.email,
+          'name': user1.displayName,
+        };
+      }
+      users.doc(uid).set(user).then((value) {
+        Fluttertoast.showToast(msg: 'Signed Up Successfully');
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => Dashboard()), (route) => false);
+      }).catchError((onError){
+        Fluttertoast.showToast(msg: onError.toString());
+      });
     }catch(e){
       print(e.toString());
     }
@@ -78,6 +95,7 @@ class _LoginState extends State<Login> {
           password: "$_password"
       );
       Fluttertoast.showToast(msg: 'Logged in');
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => Dashboard()), (route) => false);
     } catch (e) {
       if (e.toString().toLowerCase().contains('user_not_found')) {
         Fluttertoast.showToast(msg:'No user found for that email.');

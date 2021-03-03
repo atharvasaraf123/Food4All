@@ -49,16 +49,26 @@ class _SignUpState extends State<SignUp> {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
           email: "$mail", password: "$password");
-      users
-          .add({
-        'email': mail, // John Doe
-        'name': name, //// 42
-      })
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+      String uid=userCredential.user.uid;
+      // users
+      //     .add({
+      //   'email': mail, // John Doe
+      //   'name': name, //// 42
+      // })
+      //     .then((value) => print("User Added"))
+      //     .catchError((error) => print("Failed to add user: $error"));
+      Map<String,dynamic>user={
+        'email':mail,
+        'name':name,
+        'phone':phoneNumber
+      };
+      users.doc(uid).set(user).then((value) {
       Fluttertoast.showToast(msg: 'Signed Up Successfully');
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) => Dashboard()));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => Dashboard()), (route) => false);
+      }).catchError((onError){
+       Fluttertoast.showToast(msg: onError.toString());
+    });
+
     } catch (e) {
       if (e.toString().toLowerCase().contains('weak_password')) {
         Fluttertoast.showToast(msg: 'The password provided is too weak.');

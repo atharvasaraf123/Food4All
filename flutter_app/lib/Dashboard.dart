@@ -2,6 +2,8 @@ import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/BottomNavigation/Add_Hunger_Spot.dart';
+import 'package:flutter_app/BottomNavigation/NGOs.dart';
+import 'package:flutter_app/BottomNavigation/Profile.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'BottomNavigation/Donate_Food.dart';
@@ -53,6 +55,12 @@ class _MyHomePageState extends State {
     });
   }
 
+  List<Widget>list=[
+    Container(),
+    NGOs(),
+    Profile()
+  ];
+
   SpeedDial _speedDial() {
     return SpeedDial(
       animatedIcon: AnimatedIcons.menu_close,
@@ -100,7 +108,6 @@ class _MyHomePageState extends State {
       ),
       floatingActionButton: _speedDial(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-
       bottomNavigationBar: BubbleBottomBar(
         opacity: 0.2,
         backgroundColor: Colors.white,
@@ -154,9 +161,7 @@ class _MyHomePageState extends State {
           ),
         ],
       ),
-      body: Container(
-        color: Colors.white70,
-      ),
+      body: list[currentIndex]
     );
   }
 }
