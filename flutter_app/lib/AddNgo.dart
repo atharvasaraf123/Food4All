@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geocoder/model.dart';
@@ -14,41 +13,40 @@ class AddNGO extends StatefulWidget {
   _AddNGOState createState() => _AddNGOState();
 }
 
-class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
-
+class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<Offset> _animation;
   Animation<double> _fadeAnimation;
-  TextEditingController _addressController=TextEditingController();
+  TextEditingController _addressController = TextEditingController();
   String address;
   String name;
   String add;
   String phone;
   String city;
   User _user;
-  int capacity=0;
+  int capacity = 0;
   final _formKey = GlobalKey<FormState>();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference ngoCol = FirebaseFirestore.instance.collection('NGO');
 
-  addNgo()async{
-    String uid=_user.uid;
-    Map<String,dynamic>ngo={
-      'name':name,
-      'address':add,
-      'phone':phone,
-      'capacity':capacity
+  addNgo() async {
+    String uid = _user.uid;
+    Map<String, dynamic> ngo = {
+      'name': name,
+      'address': add,
+      'phone': phone,
+      'capacity': capacity
     };
     print(ngo);
-    ngoCol.doc(uid).set(ngo).then((value){
+    ngoCol.doc(uid).set(ngo).then((value) {
       Fluttertoast.showToast(msg: 'NGO registered');
-    }).catchError((onError){
+    }).catchError((onError) {
       Fluttertoast.showToast(msg: onError.toString());
     });
-
   }
 
-  getUserLocation() async {//call this async method from whereever you need
+  getUserLocation() async {
+    //call this async method from whereever you need
 
     LocationData myLocation;
     String error;
@@ -67,39 +65,35 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
       myLocation = null;
     }
     LocationData currentLocation = myLocation;
-    final coordinates = new Coordinates(
-        myLocation.latitude, myLocation.longitude);
-    var addresses = await Geocoder.local.findAddressesFromCoordinates(
-        coordinates);
+    final coordinates =
+        new Coordinates(myLocation.latitude, myLocation.longitude);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
-    print(' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    print(
+        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
     setState(() {
-      address= addresses.first.toString();
-      _addressController.text= addresses.first.addressLine;
-      city=addresses.first.locality;
+      address = addresses.first.toString();
+      _addressController.text = addresses.first.addressLine;
+      city = addresses.first.locality;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _user=FirebaseAuth.instance.currentUser;
+    _user = FirebaseAuth.instance.currentUser;
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1000));
-    _animation =
-        Tween<Offset>(begin: Offset(0, 0), end: Offset(-0.05, 0)).animate(
-            _controller);
+    _animation = Tween<Offset>(begin: Offset(0, 0), end: Offset(-0.05, 0))
+        .animate(_controller);
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
-
   }
 
   playAnimation() {
     _controller.reset();
     _controller.forward();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +118,16 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                             elevation: 10,
                             child: Padding(
                               padding: EdgeInsets.all(2),
-                              child: IconButton(icon: Icon(Icons.arrow_back,color: Color(0xFFea9b72),),onPressed: (){Navigator.pop(context);},iconSize: 24,),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: Color(0xFFea9b72),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                iconSize: 24,
+                              ),
                             ),
                             color: Colors.white,
                             shape: CircleBorder(),
@@ -134,13 +137,19 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                       ],
                     ),
                   ),
-                  SizedBox(height: 25,),
-                  Text('Please fill the following form',style: TextStyle(
-                    fontFamily: 'MontserratSemi',
-                    color: Colors.black,
-                    fontSize: 18
-                  ),),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Text(
+                    'Please fill the following form',
+                    style: TextStyle(
+                        fontFamily: 'MontserratSemi',
+                        color: Colors.black,
+                        fontSize: 18),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   TextFormField(
                     validator: (val) {
                       if (val.isEmpty) {
@@ -148,9 +157,9 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                       }
                       return null;
                     },
-                    onSaved: (val){
+                    onSaved: (val) {
                       setState(() {
-                        name=val;
+                        name = val;
                       });
                     },
                     decoration: InputDecoration(
@@ -165,7 +174,9 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   TextFormField(
                     validator: (val) {
                       if (val.isEmpty) {
@@ -174,17 +185,20 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                       return null;
                     },
                     controller: _addressController,
-                    onSaved: (val){
+                    onSaved: (val) {
                       setState(() {
-                        add=val;
+                        add = val;
                       });
                     },
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
-                        onPressed: ()async{
+                        onPressed: () async {
                           await getUserLocation();
                         },
-                        icon: Icon(Icons.location_searching_outlined,color: Color(0xFFea9b72),),
+                        icon: Icon(
+                          Icons.location_searching_outlined,
+                          color: Color(0xFFea9b72),
+                        ),
                       ),
                       labelText: 'NGO Address',
                       labelStyle: TextStyle(
@@ -192,13 +206,14 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                         color: Colors.grey.shade500,
                       ),
                     ),
-
                     style: TextStyle(
                       fontFamily: 'MontserratMed',
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   TextFormField(
                     validator: (val) {
                       if (val.isEmpty) {
@@ -206,9 +221,9 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                       }
                       return null;
                     },
-                    onSaved: (val){
+                    onSaved: (val) {
                       setState(() {
-                        phone=val;
+                        phone = val;
                       });
                     },
                     decoration: InputDecoration(
@@ -224,13 +239,19 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  Text('NGO Capacity',style: TextStyle(
-                    fontFamily: 'MontserratMed',
-                    color: Colors.black,
-                    fontSize: 15
-                  ),),
-                  SizedBox(height: 15,),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'NGO Capacity',
+                    style: TextStyle(
+                        fontFamily: 'MontserratMed',
+                        color: Colors.black,
+                        fontSize: 15),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -277,13 +298,15 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                       },
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: InkWell(
-                        onTap: ()async{
+                        onTap: () async {
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();
                             addNgo();
@@ -291,15 +314,24 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
                         },
                         child: Container(
                           width: 150,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),  gradient: LinearGradient(
-                              colors: [
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              gradient: LinearGradient(colors: [
                                 Color(0xFFea9b72),
                                 Color(0xFFff9e33)
-                              ]
-                          )),
+                              ])),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                            child: Center(child: Text('Register',style: TextStyle( fontSize: 20,color: Colors.white,fontStyle: FontStyle.normal,fontFamily: 'MontserratSemi'),)),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            child: Center(
+                                child: Text(
+                              'Register',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontStyle: FontStyle.normal,
+                                  fontFamily: 'MontserratSemi'),
+                            )),
                           ),
                         ),
                       ),
@@ -314,6 +346,7 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin{
     );
   }
 }
+
 class AppBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -328,15 +361,14 @@ class AppBackground extends StatelessWidget {
               color: Color(0xFFE4E6F1),
             ),
             Positioned(
-              left: -(height/2 - width/2),
+              left: -(height / 2 - width / 2),
               bottom: height * 0.25,
               child: Container(
                 height: height,
                 width: height,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.3)
-                ),
+                    color: Colors.white.withOpacity(0.3)),
               ),
             ),
             Positioned(

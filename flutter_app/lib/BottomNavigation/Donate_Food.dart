@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 
 class Donate_Food extends StatefulWidget {
   @override
@@ -84,150 +90,396 @@ class CustomPicker extends CommonPickerModel {
 class _Donate_FoodState extends State<Donate_Food> {
   DateTime selectedDateTime;
   TextEditingController dateController = TextEditingController();
-  var gradesRange = RangeValues(0, 100);
 
+  TextEditingController _addressController = TextEditingController();
+
+  List<File> image =[];
   bool pressed = false;
+  final imagePicker = ImagePicker();
 
-  Widget _displayDateTime(selectedDateTime) {
-    return Center(
-        child: Text(
-      "Selected  $selectedDateTime",
-      style: TextStyle(fontSize: 15),
-    ));
+  var gradesRange = RangeValues(0, 100);
+  double capacitymin = 0;
+  double capacitymax = 500;
+
+  String address;
+  String name;
+  String add;
+  String phone;
+  String city;
+  Future getImage() async {
+    final imageTemp = await imagePicker.getImage(source: ImageSource.camera);
+    setState(() {
+      image.add(File(imageTemp.path));
+    });
+  }
+
+  getUserLocation() async {
+    //call this async method from whereever you need
+
+    LocationData myLocation;
+    String error;
+    Location location = new Location();
+    try {
+      myLocation = await location.getLocation();
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'please grant permission';
+        print(error);
+      }
+      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        error = 'permission denied- please enable it from app settings';
+        print(error);
+      }
+      myLocation = null;
+    }
+    LocationData currentLocation = myLocation;
+    final coordinates =
+    new Coordinates(myLocation.latitude, myLocation.longitude);
+    var addresses =
+    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print(
+        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    setState(() {
+      address = addresses.first.toString();
+      _addressController.text = addresses.first.addressLine;
+      city = addresses.first.locality;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.camera),
+        onPressed: getImage,
+      ),
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(30.0),
-                  child: Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Donate Food Details',
-                      style: TextStyle(
-                          color: Colors.orange,
-                          fontSize: 25.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        isDense: true,
-                        labelText: '* Pickup where ?',
-                        labelStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-                        suffixIcon: Icon(Icons.my_location_outlined)),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        isDense: true,
-                        labelText: 'Food Item(s)',
-                        labelStyle: TextStyle(color: Colors.grey, fontSize: 18.0),
-                        suffixIcon: Icon(Icons.fastfood)),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                    controller: dateController,
-                    onTap: () => setState(() {
-                      pressed = true;
-
-                      DatePicker.showDateTimePicker(context,
-                          showTitleActions: true, onChanged: (date) {
-                        // print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
-                      }, onConfirm: (date) {
-                        selectedDateTime = date;
-                        dateController.text = date.toString();
-                      }, currentTime: DateTime(2020, 01, 01, 12, 00, 00));
-                    }),
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        isDense: true,
-                        labelText: 'Prefered Time',
-                        labelStyle: TextStyle(color: Colors.grey, fontSize: 18.0),
-                        suffixIcon: Icon(Icons.calendar_today)),
-                  ),
-                ),
-                SizedBox(height: 30),
-                Row(
+        child: Stack(
+          children: [
+            AppBackground(),
+            SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child: Text(
-                        'Quantity: 500 persons',
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Material(
+                              elevation: 10,
+                              child: Padding(
+                                padding: EdgeInsets.all(2),
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_back,
+                                    color: Color(0xFFea9b72),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  iconSize: 24,
+                                ),
+                              ),
+                              color: Colors.white,
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                          Spacer(),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical:20.0,horizontal: 10.0),
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Donate Food Details',
+                          style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: 25.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child:  TextFormField(
+                        validator: (val) {
+                          if (val.isEmpty) {
+                            return 'This field cannot be empty!';
+                          }
+                          return null;
+                        },
+                        controller: _addressController,
+                        onSaved: (val) {
+                          setState(() {
+                            add = val;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            onPressed: () async {
+                              await getUserLocation();
+                            },
+                            icon: Icon(
+                              Icons.location_searching_outlined,
+                            ),
+                          ),
+                          labelText: 'NGO Address',
+                          labelStyle: TextStyle(
+                            fontFamily: 'MontserratMed',
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
                         style: TextStyle(
-                          color: Colors.grey.shade500,
-                          fontSize: 15.0,
+                          fontFamily: 'MontserratMed',
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextFormField(
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w500),
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                            isDense: true,
+                            labelText: 'Food Item(s)',
+                            labelStyle: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.grey.shade500,
+                            ),
+                            suffixIcon: Icon(Icons.fastfood)),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextFormField(
+                        controller: dateController,
+                        onTap: () => setState(() {
+                          pressed = true;
+
+                          DatePicker.showDateTimePicker(context,
+                              showTitleActions: true, onChanged: (date) {
+                            // print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
+                          }, onConfirm: (date) {
+                            selectedDateTime = date;
+                            dateController.text = date.toString();
+                          }, currentTime: DateTime(2020, 01, 01, 12, 00, 00));
+                        }),
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w500),
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                            isDense: true,
+                            labelText: 'Prefered Time',
+                            labelStyle: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.grey.shade500,
+                            ),
+                            suffixIcon: Icon(Icons.calendar_today)),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: Text(
+                            'Quantity: 500 persons',
+                            style: TextStyle(
+                              color: Colors.grey.shade500,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: <Widget>[
+                        Text(
+                          capacitymin.toString(),
+                          style: TextStyle(
+                            fontFamily: 'MontserratBold',
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          ' - ',
+                          style: TextStyle(
+                            fontFamily: 'MontserratMed',
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          capacitymax.toString(),
+                          style: TextStyle(
+                            fontFamily: 'MontserratBold',
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          ' people',
+                          style: TextStyle(
+                            fontFamily: 'MontserratMed',
+                            color: Colors.black,
+                          ),
+                        )
+                      ],
+                    ),
+
+                    RangeSlider(
+                      min: 0,
+                      max: 100,
+                      divisions: 20,
+                      labels: RangeLabels(
+                          '${gradesRange.start}', '${gradesRange.end}'),
+                      values: gradesRange,
+                      onChanged: (RangeValues value) {
+                        setState(() {
+                          gradesRange = value;
+                          capacitymin=gradesRange.start;
+                          capacitymax=gradesRange.end;
+
+                        });
+                      },
+                    ),
+
+
+                    _showImages(),
+
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal:25.0,vertical: 35.0),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          width: 150,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),  gradient: LinearGradient(
+                              colors: [
+                                Color(0xFFea9b72),
+                                Color(0xFFff9e33)
+                              ]
+                          )),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                            child: Center(child: Text('Submit',style: TextStyle( fontSize: 20,color: Colors.white,fontStyle: FontStyle.normal,fontFamily: 'MontserratSemi'),)),
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
-                RangeSlider(
-                  min: 0,
-                  max: 100,
-                  divisions: 20,
-                  labels:
-                      RangeLabels('${gradesRange.start}', '${gradesRange.end}'),
-                  values: gradesRange,
-                  onChanged: (RangeValues value) {
-                    setState(() {
-                      gradesRange = value;
-                    });
-                  },
-                ),
-
-
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Positioned(
-                    bottom: 0,
-                    child: Material(
-
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(30.0),
-                      color: Colors.orangeAccent.shade400,
-                      child: MaterialButton(
-                        minWidth: MediaQuery.of(context).size.width * 0.5,
-                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        onPressed: () => {},
-                        child: Text(
-                          "Submit",
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
+    );
+  }
+
+  _getBackBtn() {
+    return Positioned(
+      top: 35,
+      left: 25,
+      child: Icon(
+        Icons.arrow_back_ios,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  _getTextFields() {}
+
+  _showImages() {
+    // if(image.length!=0)
+    return Container(
+      height: 100,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+
+        itemCount: image.length,
+       itemBuilder: (BuildContext context,int position){
+         return Padding(
+           padding: const EdgeInsets.all(8.0),
+           child: new Container(
+             width: 100,
+             height: 100,
+             child:image[position] == null ? Text('null'):Image.file(image[position]),
+
+
+           ),
+         );
+       },
+      ),
+    );
+  }
+}
+
+class AppBackground extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraint) {
+        final height = constraint.maxHeight;
+        final width = constraint.maxWidth;
+
+        return Stack(
+          children: <Widget>[
+            Container(
+              color: Color(0xFFE4E6F1),
+            ),
+            Positioned(
+              left: -(height / 2 - width / 2),
+              bottom: height * 0.25,
+              child: Container(
+                height: height,
+                width: height,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.3)),
+              ),
+            ),
+            Positioned(
+              left: width * 0.15,
+              top: -width * 0.5,
+              child: Container(
+                height: width * 1.6,
+                width: width * 1.6,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.4),
+                ),
+              ),
+            ),
+            Positioned(
+              right: -width * 0.2,
+              top: -50,
+              child: Container(
+                height: width * 0.6,
+                width: width * 0.6,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.6),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
