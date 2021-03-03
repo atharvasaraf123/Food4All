@@ -277,7 +277,7 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin {
                     data: SliderTheme.of(context).copyWith(
                       inactiveTrackColor: Colors.grey.shade400,
                       activeTrackColor: Color(0xFFea9b72),
-                      thumbColor: Color(0xFFea9b72),
+                      thumbColor: Colors.orange.shade400,
                       thumbShape: RoundSliderThumbShape(
                         enabledThumbRadius: 12.0,
                       ),
