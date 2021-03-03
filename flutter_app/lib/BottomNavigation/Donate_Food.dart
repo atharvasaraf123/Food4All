@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 
 class Donate_Food extends StatefulWidget {
   @override
@@ -87,15 +90,60 @@ class CustomPicker extends CommonPickerModel {
 class _Donate_FoodState extends State<Donate_Food> {
   DateTime selectedDateTime;
   TextEditingController dateController = TextEditingController();
-  var gradesRange = RangeValues(0, 100);
-  List<File> image ;
+
+  TextEditingController _addressController = TextEditingController();
+
+  List<File> image =[];
   bool pressed = false;
   final imagePicker = ImagePicker();
 
+  var gradesRange = RangeValues(0, 100);
+  double capacitymin = 0;
+  double capacitymax = 500;
+
+  String address;
+  String name;
+  String add;
+  String phone;
+  String city;
   Future getImage() async {
     final imageTemp = await imagePicker.getImage(source: ImageSource.camera);
     setState(() {
       image.add(File(imageTemp.path));
+    });
+  }
+
+  getUserLocation() async {
+    //call this async method from whereever you need
+
+    LocationData myLocation;
+    String error;
+    Location location = new Location();
+    try {
+      myLocation = await location.getLocation();
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'please grant permission';
+        print(error);
+      }
+      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        error = 'permission denied- please enable it from app settings';
+        print(error);
+      }
+      myLocation = null;
+    }
+    LocationData currentLocation = myLocation;
+    final coordinates =
+    new Coordinates(myLocation.latitude, myLocation.longitude);
+    var addresses =
+    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print(
+        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    setState(() {
+      address = addresses.first.toString();
+      _addressController.text = addresses.first.addressLine;
+      city = addresses.first.locality;
     });
   }
 
@@ -114,11 +162,41 @@ class _Donate_FoodState extends State<Donate_Food> {
             AppBackground(),
             SingleChildScrollView(
               child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Material(
+                              elevation: 10,
+                              child: Padding(
+                                padding: EdgeInsets.all(2),
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_back,
+                                    color: Color(0xFFea9b72),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  iconSize: 24,
+                                ),
+                              ),
+                              color: Colors.white,
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                          Spacer(),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical:20.0,horizontal: 10.0),
                       child: Container(
                         alignment: Alignment.topLeft,
                         child: Text(
@@ -131,21 +209,43 @@ class _Donate_FoodState extends State<Donate_Food> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: TextFormField(
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w500),
-                        keyboardType: TextInputType.emailAddress,
+                      padding: const EdgeInsets.all(15.0),
+                      child:  TextFormField(
+                        validator: (val) {
+                          if (val.isEmpty) {
+                            return 'This field cannot be empty!';
+                          }
+                          return null;
+                        },
+                        controller: _addressController,
+                        onSaved: (val) {
+                          setState(() {
+                            add = val;
+                          });
+                        },
                         decoration: InputDecoration(
-                            isDense: true,
-                            labelText: '* Pickup where ?',
-                            labelStyle:
-                                TextStyle(color: Colors.grey, fontSize: 16.0),
-                            suffixIcon: Icon(Icons.my_location_outlined)),
+                          suffixIcon: IconButton(
+                            onPressed: () async {
+                              await getUserLocation();
+                            },
+                            icon: Icon(
+                              Icons.location_searching_outlined,
+                            ),
+                          ),
+                          labelText: 'NGO Address',
+                          labelStyle: TextStyle(
+                            fontFamily: 'MontserratMed',
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                        style: TextStyle(
+                          fontFamily: 'MontserratMed',
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: TextFormField(
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.w500),
@@ -153,13 +253,15 @@ class _Donate_FoodState extends State<Donate_Food> {
                         decoration: InputDecoration(
                             isDense: true,
                             labelText: 'Food Item(s)',
-                            labelStyle:
-                                TextStyle(color: Colors.grey, fontSize: 18.0),
+                            labelStyle: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.grey.shade500,
+                            ),
                             suffixIcon: Icon(Icons.fastfood)),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: TextFormField(
                         controller: dateController,
                         onTap: () => setState(() {
@@ -179,8 +281,10 @@ class _Donate_FoodState extends State<Donate_Food> {
                         decoration: InputDecoration(
                             isDense: true,
                             labelText: 'Prefered Time',
-                            labelStyle:
-                                TextStyle(color: Colors.grey, fontSize: 18.0),
+                            labelStyle: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.grey.shade500,
+                            ),
                             suffixIcon: Icon(Icons.calendar_today)),
                       ),
                     ),
@@ -200,6 +304,42 @@ class _Donate_FoodState extends State<Donate_Food> {
                       ],
                     ),
                     SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: <Widget>[
+                        Text(
+                          capacitymin.toString(),
+                          style: TextStyle(
+                            fontFamily: 'MontserratBold',
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          ' - ',
+                          style: TextStyle(
+                            fontFamily: 'MontserratMed',
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          capacitymax.toString(),
+                          style: TextStyle(
+                            fontFamily: 'MontserratBold',
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          ' people',
+                          style: TextStyle(
+                            fontFamily: 'MontserratMed',
+                            color: Colors.black,
+                          ),
+                        )
+                      ],
+                    ),
+
                     RangeSlider(
                       min: 0,
                       max: 100,
@@ -210,28 +350,32 @@ class _Donate_FoodState extends State<Donate_Food> {
                       onChanged: (RangeValues value) {
                         setState(() {
                           gradesRange = value;
+                          capacitymin=gradesRange.start;
+                          capacitymax=gradesRange.end;
+
                         });
                       },
                     ),
-                    if(image.length!=0)
+
+
                     _showImages(),
+
+
                     Padding(
-                      padding: const EdgeInsets.only(top: 40.0),
+                      padding: const EdgeInsets.symmetric(horizontal:25.0,vertical: 35.0),
                       child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Material(
-                          elevation: 5.0,
-                          borderRadius: BorderRadius.circular(30.0),
-                          color: Colors.orangeAccent.shade400,
-                          child: MaterialButton(
-                            minWidth: MediaQuery.of(context).size.width * 0.5,
-                            padding:
-                                EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            onPressed: () => {},
-                            child: Text(
-                              "Submit",
-                              textAlign: TextAlign.center,
-                            ),
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          width: 150,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),  gradient: LinearGradient(
+                              colors: [
+                                Color(0xFFea9b72),
+                                Color(0xFFff9e33)
+                              ]
+                          )),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                            child: Center(child: Text('Submit',style: TextStyle( fontSize: 20,color: Colors.white,fontStyle: FontStyle.normal,fontFamily: 'MontserratSemi'),)),
                           ),
                         ),
                       ),
@@ -260,18 +404,27 @@ class _Donate_FoodState extends State<Donate_Food> {
   _getTextFields() {}
 
   _showImages() {
-    if(image.length!=0)
-    return Row(
-      children: List.generate(image.length, (index) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 100,
-            width: 100,
-            child: Image.file(image[index]),
-          ),
-        );
-      }),
+    // if(image.length!=0)
+    return Container(
+      height: 100,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+
+        itemCount: image.length,
+       itemBuilder: (BuildContext context,int position){
+         return Padding(
+           padding: const EdgeInsets.all(8.0),
+           child: new Container(
+             width: 100,
+             height: 100,
+             child:image[position] == null ? Text('null'):Image.file(image[position]),
+
+
+           ),
+         );
+       },
+      ),
     );
   }
 }
