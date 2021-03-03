@@ -1,9 +1,11 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/BottomNavigation/Add_Hunger_Spot.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'BottomNavigation/Donate_Food.dart';
+import 'login.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -38,6 +40,11 @@ class _MyHomePageState extends State {
     super.initState();
 
     currentIndex = 0;
+  }
+
+  logout()async{
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
   }
 
   changePage(int index) {
@@ -83,6 +90,11 @@ class _MyHomePageState extends State {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
+        actions: [
+          IconButton(icon: Icon(Icons.logout), onPressed: ()async{
+            await logout();
+          })
+        ],
         title: Text('Food Donation'),
         centerTitle: true,
       ),
