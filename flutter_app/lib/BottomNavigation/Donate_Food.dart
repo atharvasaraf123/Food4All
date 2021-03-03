@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
 class Donate_Food extends StatefulWidget {
@@ -98,7 +99,7 @@ class _Donate_FoodState extends State<Donate_Food> {
   bool pressed = false;
   final imagePicker = ImagePicker();
 
-  var gradesRange = RangeValues(0, 100);
+  var gradesRange = RangeValues(0, 500);
   double capacitymin = 0;
   double capacitymax = 500;
 
@@ -202,9 +203,10 @@ class _Donate_FoodState extends State<Donate_Food> {
                         child: Text(
                           'Donate Food Details',
                           style: TextStyle(
-                              color: Colors.orange,
-                              fontSize: 25.0,
-                              fontWeight: FontWeight.bold),
+                            fontFamily: 'MontserratBold',
+                            color: Colors.orange,
+                            fontSize: 25
+                          ),
                         ),
                       ),
                     ),
@@ -232,7 +234,7 @@ class _Donate_FoodState extends State<Donate_Food> {
                               Icons.location_searching_outlined,
                             ),
                           ),
-                          labelText: 'NGO Address',
+                          labelText: 'Preferred Address',
                           labelStyle: TextStyle(
                             fontFamily: 'MontserratMed',
                             color: Colors.grey.shade500,
@@ -248,7 +250,9 @@ class _Donate_FoodState extends State<Donate_Food> {
                       padding: const EdgeInsets.all(15.0),
                       child: TextFormField(
                         style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w500),
+                          fontFamily: 'MontserratMed',
+                          color: Colors.black,
+                        ),
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             isDense: true,
@@ -272,15 +276,17 @@ class _Donate_FoodState extends State<Donate_Food> {
                             // print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
                           }, onConfirm: (date) {
                             selectedDateTime = date;
-                            dateController.text = date.toString();
+                            dateController.text = DateFormat.yMMMEd().add_jm().format(date);
                           }, currentTime: DateTime(2020, 01, 01, 12, 00, 00));
                         }),
                         style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w500),
+                          fontFamily: 'MontserratMed',
+                          color: Colors.black,
+                        ),
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             isDense: true,
-                            labelText: 'Prefered Time',
+                            labelText: 'Preferred Time',
                             labelStyle: TextStyle(
                               fontFamily: 'MontserratMed',
                               color: Colors.grey.shade500,
@@ -310,7 +316,7 @@ class _Donate_FoodState extends State<Donate_Food> {
                       textBaseline: TextBaseline.alphabetic,
                       children: <Widget>[
                         Text(
-                          capacitymin.toString(),
+                          capacitymin.ceil().toString(),
                           style: TextStyle(
                             fontFamily: 'MontserratBold',
                             color: Colors.black,
@@ -324,7 +330,7 @@ class _Donate_FoodState extends State<Donate_Food> {
                           ),
                         ),
                         Text(
-                          capacitymax.toString(),
+                          capacitymax.ceil().toString(),
                           style: TextStyle(
                             fontFamily: 'MontserratBold',
                             color: Colors.black,
@@ -341,10 +347,8 @@ class _Donate_FoodState extends State<Donate_Food> {
                     ),
                     RangeSlider(
                       min: 0,
-                      max: 100,
-                      divisions: 20,
-                      labels: RangeLabels(
-                          '${gradesRange.start}', '${gradesRange.end}'),
+                      max: 500,
+                      divisions: 50,
                       values: gradesRange,
                       onChanged: (RangeValues value) {
                         setState(() {
@@ -368,11 +372,19 @@ class _Donate_FoodState extends State<Donate_Food> {
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        _showImages(),
-                        _addNewImage(),
-                      ],
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        height: 100,
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: [
+                            _showImages(),
+                            _addNewImage(),
+                          ],
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -438,11 +450,11 @@ class _Donate_FoodState extends State<Donate_Food> {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: new Container(
-              width: 100,
-              height: 100,
+              // width: 100,
+              // height: 100,
               child: image[position] == null
                   ? Text('null')
-                  : Image.file(image[position]),
+                  : Image.file(image[position],fit: BoxFit.contain,),
             ),
           );
         },

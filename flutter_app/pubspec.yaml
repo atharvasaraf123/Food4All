@@ -43,6 +43,7 @@ dependencies:
   path_provider: ^1.6.27
   image_picker: ^0.6.7+22
   dotted_border: ^1.0.7
+  intl: ^0.16.1
 
 dev_dependencies:
   flutter_test:
