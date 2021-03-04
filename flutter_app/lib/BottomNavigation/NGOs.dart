@@ -72,9 +72,10 @@ class _NGOsState extends State<NGOs> {
         : ngo
             ? ListView.builder(itemBuilder: (BuildContext context, int pos) {
                 return ListTile(
-                  title: Text('abc'),
+                  title: Text(donationList[pos]['foodItems']),
                 );
-              })
+              },
+    itemCount: donationList.length,)
             : ListView(
                 children: [
                   ListView.builder(

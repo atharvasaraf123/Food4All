@@ -124,7 +124,7 @@ class _Donate_FoodState extends State<Donate_Food> {
   List url;
 
   Future getImage() async {
-    final imageTemp = await imagePicker.getImage(source: ImageSource.camera);
+    final imageTemp = await imagePicker.getImage(source: ImageSource.camera,imageQuality:60);
     setState(() {
       image.add(File(imageTemp.path));
     });
@@ -146,7 +146,11 @@ class _Donate_FoodState extends State<Donate_Food> {
         url.add(s);
       });
     }
+    DocumentSnapshot ds=await userCol.doc(user.uid).get();
+    String name=ds.data()['name'];
     Map<String,dynamic>mapp={
+      'name':name,
+      'uid':user.uid,
       'address':add,
       'foodItems':foodItems,
       'dateTime':dateController.text.toString().trim(),
