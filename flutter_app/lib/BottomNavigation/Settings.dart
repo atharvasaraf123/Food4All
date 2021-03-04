@@ -21,6 +21,7 @@ class _SettingsState extends State<Settings> {
   CollectionReference userCol = FirebaseFirestore.instance.collection('users');
   String name="";
   String email="";
+  String profileUrl="";
   bool load=true;
 
 
@@ -31,6 +32,7 @@ class _SettingsState extends State<Settings> {
       Map<String,dynamic>mapp=ds.data();
       name=mapp['name'].toString().capitalize();
       email=mapp['email'];
+      profileUrl=mapp['profileUrl'];
       print(name);
       setState(() {
         load=false;
@@ -84,10 +86,10 @@ class _SettingsState extends State<Settings> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5.0))),
-                                    child: Image.asset(
+                                    child: profileUrl==null||profileUrl.isEmpty?Image.asset(
                                       'images/placeholder.jpg',
                                       fit: BoxFit.fitHeight,
-                                    ),
+                                    ):Image.network(profileUrl),
                                   ),
                                 ),
                               ),
@@ -323,10 +325,5 @@ class _SettingsState extends State<Settings> {
         ),
       ),
     );
-  }
-}
-extension StringExtension on String {
-  String capitalize() {
-    return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }

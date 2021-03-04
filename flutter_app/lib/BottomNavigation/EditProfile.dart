@@ -1,4 +1,13 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Dashboard.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart' as path;
 
 class EditProfile extends StatefulWidget {
   static Pattern pattern =
@@ -9,6 +18,52 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+
+
+
+  CollectionReference userCol = FirebaseFirestore.instance.collection('users');
+  String name="";
+  String email="";
+  String phone="";
+  String profileUrl="";
+  bool load=true;
+  TextEditingController nameController=TextEditingController();
+  TextEditingController emailController=TextEditingController();
+  TextEditingController phoneController=TextEditingController();
+  final imagePicker = ImagePicker();
+  File _file;
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+
+
+  updateProfile()async{
+    String uid=FirebaseAuth.instance.currentUser.uid;
+    print(name);
+    print(nameController.text.toString());
+    print(phone);
+    print(phoneController.text.toString());
+    String s;
+    Map<String,dynamic>mapp=Map();
+    if(name!=nameController.text.toString()){
+      mapp['name']=nameController.text.toString();
+    }
+    if(phone!=phoneController.text.toString()){
+      mapp['phone']=phoneController.text.toString();
+    }
+    if(_file!=null){
+      await storage.ref().child(path.basename(_file.path)).putFile(_file).then((val)async{
+        s=await storage.ref(path.basename(_file.path)).getDownloadURL();
+        print(s);
+      });
+      mapp['profileUrl']=s;
+
+    }
+    await userCol.doc(FirebaseAuth.instance.currentUser.uid).update(mapp).then((value){
+      Fluttertoast.showToast(msg: 'Profile Updated');
+      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
+    });
+  }
+
   Widget _profileText() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -24,29 +79,42 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  Future getImage() async {
+    final imageTemp = await imagePicker.getImage(source: ImageSource.gallery);
+    setState(() {
+      _file=File(imageTemp.path);
+    });
+  }
+
   Widget _circleAvatar() {
-    return Container(
-      
-      width: MediaQuery.of(context).size.width / 2,
-      height: MediaQuery.of(context).size.width / 2,
-      padding: EdgeInsets.all(10.0),
-      
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white, width: 5),
-        
-        shape: BoxShape.circle,
-        color: Colors.white,
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage('images/vaibhav.png'),
-        ), // Decoration image
-      ), // Box decoration
+    return GestureDetector(
+      onTap: ()async{
+        await getImage();
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2,
+        height: MediaQuery.of(context).size.width / 2,
+        padding: EdgeInsets.all(10.0),
+
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white, width: 5),
+
+          shape: BoxShape.circle,
+          color: Colors.white,
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: _file!=null?FileImage(_file):profileUrl==null||profileUrl.isEmpty?AssetImage('images/placeholder.jpg'):NetworkImage(profileUrl),
+          ), // Decoration image
+        ), // Box decoration
+      ),
     ); // Container
   }
 
   Widget _textFormField({
     String hintText,
     IconData icon,
+    TextEditingController controller,
+    bool edit=false
   }) {
     return Material(
       elevation: 4,
@@ -57,6 +125,8 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
       child: TextField(
+        readOnly: edit,
+        controller: controller,
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderSide: BorderSide.none,
@@ -90,15 +160,11 @@ class _EditProfileState extends State<EditProfile> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical:12.0,horizontal: 10.0),
-            child: _textFormField(hintText: 'Name', icon: Icons.person),
+            child: _textFormField(hintText: 'Name', icon: Icons.person,controller: nameController),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical:12.0,horizontal: 10.0),
-            child: _textFormField(hintText: 'Email', icon: Icons.email),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical:12.0,horizontal: 10.0),
-            child: _textFormField(hintText: 'Password', icon: Icons.lock),
+            child: _textFormField(hintText: 'Email', icon: Icons.email,controller: emailController,edit: true),
           ),
 
           Padding(
@@ -106,30 +172,37 @@ class _EditProfileState extends State<EditProfile> {
             child: _textFormField(
               hintText: 'Contact Number',
               icon: Icons.phone,
+              controller: phoneController
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Container(
-              width: MediaQuery.of(context).size.width/1.9,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  gradient: LinearGradient(colors: [
-                    Color(0xffff6600),
-                    Color(0xffff8400),
-                  ])),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 10, horizontal: 20),
-                child: Center(
-                    child: Text(
-                      'Submit',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontStyle: FontStyle.normal,
-                          fontFamily: 'MontserratSemi'),
-                    )),
+            child: GestureDetector(
+              onTap:_file!=null||name!=nameController.text.toString()||phone!=phoneController.text.toString()? ()async{
+                await updateProfile();
+              }:null,
+              child: Container(
+                width: MediaQuery.of(context).size.width/1.9,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: _file!=null||name!=nameController.text.toString()||phone!=phoneController.text.toString()? LinearGradient(colors: [
+                      Color(0xffff6600),
+                      Color(0xffff8400),
+                    ]):null),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10, horizontal: 20),
+                  child: Center(
+                      child: Text(
+                        'Update',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontStyle: FontStyle.normal,
+                            fontFamily: 'MontserratSemi'),
+                      )),
+                ),
               ),
             ),
           ),
@@ -168,6 +241,35 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserInfo();
+  }
+
+  getUserInfo()async{
+    String uid=FirebaseAuth.instance.currentUser.uid;
+    DocumentSnapshot ds=await userCol.doc(uid).get();
+    if(ds.exists){
+      Map<String,dynamic>mapp=ds.data();
+      name=mapp['name'].toString().capitalize();
+      if(name==null)name="";
+     nameController.text=name;
+      email=mapp['email'];
+      emailController.text=email;
+      phone=mapp['phone'];
+      if(phone==null)phone="";
+      phoneController.text=phone;
+      profileUrl=mapp['profileUrl'];
+      print(name);
+      setState(() {
+        load=false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -225,4 +327,9 @@ class HeaderCurvedContainer extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
+  }
 }
