@@ -189,11 +189,15 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin {
                       return null;
                     },
                     controller: _addressController,
+                    readOnly: true,
                     onSaved: (val) {
                       setState(() {
                         add = val;
                       });
                     },
+                      onTap: ()async{
+                        await getUserLocation();
+                      },
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
                         onPressed: () async {

@@ -272,6 +272,9 @@ class _Donate_FoodState extends State<Donate_Food> {
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: TextFormField(
+                          onTap: ()async{
+                            await getUserLocation();
+                          },
                           validator: (val) {
                             if (val.isEmpty) {
                               return 'This field cannot be empty!';
