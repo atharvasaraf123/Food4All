@@ -48,7 +48,7 @@ class _SignUpState extends State<SignUp> {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-          email: "$mail", password: "$password");
+          email: mail, password: password);
       String uid=userCredential.user.uid;
       // users
       //     .add({
@@ -62,6 +62,7 @@ class _SignUpState extends State<SignUp> {
         'name':name,
         'phone':phoneNumber
       };
+      print(user);
       users.doc(uid).set(user).then((value) {
       Fluttertoast.showToast(msg: 'Signed Up Successfully');
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => Dashboard()), (route) => false);
@@ -232,141 +233,138 @@ class _SignUpState extends State<SignUp> {
   }
 
   _getTextFields() {
-    return Expanded(
-      flex: 4,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            height: 15,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(
+          height: 15,
+        ),
+        Material(
+          borderRadius: BorderRadius.circular(10.0),
+          elevation: _large ? 12 : (_medium ? 10 : 8),
+          child: TextFormField(
+            controller: nameController,
+            validator: (val) {
+              if (val.isEmpty) {
+                return 'This field cannot be empty!';
+              }
+              return null;
+            },
+            onSaved: (val) => name = val,
+            keyboardType: TextInputType.text,
+            cursorColor: Color(0xff0aa9d7),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.person,
+                  color: Color(0xff0aa9d7), size: 20),
+              hintText: "Name",
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none),
+            ),
+            onChanged: (val) {
+              // setState(()=> {
+              //   name = val;
+              // });
+            },
           ),
-          Material(
-            borderRadius: BorderRadius.circular(10.0),
-            elevation: _large ? 12 : (_medium ? 10 : 8),
-            child: TextFormField(
-              controller: nameController,
-              validator: (val) {
-                if (val.isEmpty) {
-                  return 'This field cannot be empty!';
-                }
-                return null;
-              },
-              onSaved: (val) => name = val,
-              keyboardType: TextInputType.text,
-              cursorColor: Color(0xff0aa9d7),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.person,
+        ),
+        SizedBox(height: _height / 30.0),
+        Material(
+          borderRadius: BorderRadius.circular(10.0),
+          elevation: _large ? 12 : (_medium ? 10 : 8),
+          child: TextFormField(
+            validator: (val) {
+              if (val.isEmpty) {
+                return 'This field cannot be empty!';
+              } else if (!validateEmail(val)) {
+                return 'Enter a valid email!';
+              }
+              return null;
+            },
+            onSaved: (val) => mail = val,
+            controller: emailController,
+            keyboardType: TextInputType.emailAddress,
+            cursorColor: Color(0xff0aa9d7),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.email,
+                  color: Color(0xff0aa9d7), size: 20),
+              hintText: "Email",
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none),
+            ),
+            onChanged: (val) {
+              // setState(() {
+              //   email = val;
+              // });
+            },
+          ),
+        ),
+        SizedBox(height: _height / 30.0),
+        Material(
+          borderRadius: BorderRadius.circular(10.0),
+          elevation: _large ? 12 : (_medium ? 10 : 8),
+          child: TextFormField(
+            validator: (val) => val.length < 6
+                ? 'Password must be at least 6 characters long!'
+                : null,
+            onSaved: (val) => password = val,
+            controller: passwordController,
+            keyboardType: TextInputType.text,
+            cursorColor: Color(0xff0aa9d7),
+            decoration: InputDecoration(
+                prefixIcon: Icon(Icons.lock,
                     color: Color(0xff0aa9d7), size: 20),
-                hintText: "Name",
+                hintText: "Password",
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none),
-              ),
-              onChanged: (val) {
-                // setState(()=> {
-                //   name = val;
-                // });
-              },
-            ),
-          ),
-          SizedBox(height: _height / 30.0),
-          Material(
-            borderRadius: BorderRadius.circular(10.0),
-            elevation: _large ? 12 : (_medium ? 10 : 8),
-            child: TextFormField(
-              validator: (val) {
-                if (val.isEmpty) {
-                  return 'This field cannot be empty!';
-                } else if (!validateEmail(val)) {
-                  return 'Enter a valid email!';
-                }
-                return null;
-              },
-              onSaved: (val) => mail = val,
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              cursorColor: Color(0xff0aa9d7),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.email,
-                    color: Color(0xff0aa9d7), size: 20),
-                hintText: "Email",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none),
-              ),
-              onChanged: (val) {
-                // setState(() {
-                //   email = val;
-                // });
-              },
-            ),
-          ),
-          SizedBox(height: _height / 30.0),
-          Material(
-            borderRadius: BorderRadius.circular(10.0),
-            elevation: _large ? 12 : (_medium ? 10 : 8),
-            child: TextFormField(
-              validator: (val) => val.length < 6
-                  ? 'Password must be at least 6 characters long!'
-                  : null,
-              onSaved: (val) => password = val,
-              controller: passwordController,
-              keyboardType: TextInputType.text,
-              cursorColor: Color(0xff0aa9d7),
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock,
-                      color: Color(0xff0aa9d7), size: 20),
-                  hintText: "Password",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                      borderSide: BorderSide.none),
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.remove_red_eye),
-                    color: Color(0xff0aa9d7),
-                    onPressed: (){
-                      setState(() {
-                        _obscureText=!_obscureText;
-                      });
-                    },
-                  )),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.remove_red_eye),
+                  color: Color(0xff0aa9d7),
+                  onPressed: (){
+                    setState(() {
+                      _obscureText=!_obscureText;
+                    });
+                  },
+                )),
 
-              obscureText: _obscureText,
-            ),
+            obscureText: _obscureText,
           ),
-          SizedBox(height: _height / 30.0),
-          Material(
-            borderRadius: BorderRadius.circular(10.0),
-            elevation: _large ? 12 : (_medium ? 10 : 8),
-            child: TextFormField(
-              validator: (val) {
-                if (val.isEmpty) {
-                  return 'This field cannot be empty!';
-                } else if (val.trim().length<10) {
-                  return 'Enter a valid phone number!';
-                }
-                return null;
-              },
-              onSaved: (val) => phoneNumber = val,
-              controller: phoneController,
-              keyboardType: TextInputType.phone,
-              cursorColor: Color(0xff0aa9d7),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.phone,
-                    color: Color(0xff0aa9d7), size: 20),
-                hintText: "Phone Number",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none),
-              ),
-              onChanged: (val) {
-                // setState(() {
-                //   phoneNumber = val;
-                // });
-              },
+        ),
+        SizedBox(height: _height / 30.0),
+        Material(
+          borderRadius: BorderRadius.circular(10.0),
+          elevation: _large ? 12 : (_medium ? 10 : 8),
+          child: TextFormField(
+            validator: (val) {
+              if (val.isEmpty) {
+                return 'This field cannot be empty!';
+              } else if (val.trim().length<10) {
+                return 'Enter a valid phone number!';
+              }
+              return null;
+            },
+            onSaved: (val) => phoneNumber = val,
+            controller: phoneController,
+            keyboardType: TextInputType.phone,
+            cursorColor: Color(0xff0aa9d7),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.phone,
+                  color: Color(0xff0aa9d7), size: 20),
+              hintText: "Phone Number",
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none),
             ),
+            onChanged: (val) {
+              // setState(() {
+              //   phoneNumber = val;
+              // });
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

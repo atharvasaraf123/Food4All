@@ -1,10 +1,14 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/BottomNavigation/Add_Hunger_Spot.dart';
 import 'package:flutter_app/BottomNavigation/NGOs.dart';
 import 'package:flutter_app/BottomNavigation/Settings.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geocoder/model.dart';
+import 'package:location/location.dart';
 
 import 'BottomNavigation/Donate_Food.dart';
 import 'login.dart';
@@ -34,6 +38,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State {
+
+
+  String city="";
+
+  getUserLocation() async {
+    //call this async method from whereever you need
+
+    LocationData myLocation;
+    String error;
+    Location location = new Location();
+    try {
+      myLocation = await location.getLocation();
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'please grant permission';
+        print(error);
+      }
+      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        error = 'permission denied- please enable it from app settings';
+        print(error);
+      }
+    }
+    LocationData currentLocation = myLocation;
+    final coordinates =
+    new Coordinates(myLocation.latitude, myLocation.longitude);
+    var addresses =
+    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print(
+        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+    setState(() {
+      city = addresses.first.locality;
+    });
+  }
+
   int currentIndex;
   BuildContext context;
 
@@ -42,6 +81,7 @@ class _MyHomePageState extends State {
     super.initState();
 
     currentIndex = 0;
+    getUserLocation();
   }
 
   logout()async{
@@ -55,11 +95,7 @@ class _MyHomePageState extends State {
     });
   }
 
-  List<Widget>list=[
-    Container(),
-    NGOs(),
-    Settings()
-  ];
+
 
   SpeedDial _speedDial() {
     return SpeedDial(
@@ -95,7 +131,14 @@ class _MyHomePageState extends State {
 
   @override
   Widget build(BuildContext context) {
-    this.context = context;
+
+    List<Widget>list=[
+      Container(),
+      NGOs(city: city,),
+      Settings()
+    ];
+
+    this.context=context;
 
     return Scaffold(
         backgroundColor: Colors.grey[100],

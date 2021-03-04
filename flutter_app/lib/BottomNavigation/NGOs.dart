@@ -5,6 +5,10 @@ import 'package:flutter_app/AddNgo.dart';
 import 'package:flutter_app/BottomNavigation/NgoPerson.dart';
 
 class NGOs extends StatefulWidget {
+  String city;
+
+  NGOs({this.city});
+
   @override
   _NGOsState createState() => _NGOsState();
 }
@@ -17,6 +21,7 @@ class _NGOsState extends State<NGOs> {
   CollectionReference donCol =
       FirebaseFirestore.instance.collection('donation');
   List list;
+  String dropVal;
   List donationList;
   Map<String,List>cities;
 
@@ -46,6 +51,9 @@ class _NGOsState extends State<NGOs> {
       await ngoCol.get().then((value) {
         list = value.docs;
         cities=Map();
+        cities[widget.city]=List();
+        print(widget.city);
+        dropVal=widget.city;
         for(int i=0;i<list.length;i++){
           if(list[i]==null)continue;
           if(cities.containsKey(list[i]['city'])){
@@ -87,6 +95,19 @@ class _NGOsState extends State<NGOs> {
             ? NgoPerson(donationList: donationList,)
             : ListView(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                    child: DropdownButtonFormField<String>(items: cities.keys.toList().map((String e){
+                      return DropdownMenuItem<String>(child: Text(e, style: TextStyle(
+                                              fontFamily: 'MontserratMed',
+                                              color: Colors.black,
+                                            ),),value: e,);
+                    }).toList(), value: dropVal,onChanged: (val){
+                      setState(() {
+                        dropVal=val;
+                      });
+                    }, ),
+                  ),
                   ListView.builder(
                     itemBuilder: (BuildContext context, int pos) {
                       return Container(
@@ -128,14 +149,14 @@ class _NGOsState extends State<NGOs> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        list[pos]['name'].toString(),
+                                        cities[dropVal][pos]['name'].toString(),
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             color: Colors.white,
                                             fontFamily: 'MontserratBold'),
                                       ),
                                       Text(
-                                        "Address:- ${list[pos]['address'].toString()}",
+                                        "Address:- ${ cities[dropVal][pos]['address'].toString()}",
                                         style: TextStyle(
                                           fontSize: 15.0,
                                           color: Color(0xfff0f8ff),
@@ -152,7 +173,7 @@ class _NGOsState extends State<NGOs> {
                                                 size: 20.0,
                                               ),
                                               Text(
-                                                " ${list[pos]['capacity'].toString()}",
+                                                " ${ cities[dropVal][pos]['capacity'].toString()}",
                                                 style: TextStyle(
                                                     fontSize: 13.0,
                                                     color: Colors.white,
@@ -188,7 +209,7 @@ class _NGOsState extends State<NGOs> {
                                             size: 20.0,
                                           ),
                                           Text(
-                                            " ${list[pos]['phone'].toString()}",
+                                            " ${ cities[dropVal][pos]['phone'].toString()}",
                                             style: TextStyle(
                                                 fontSize: 13.0,
                                                 color: Colors.white,
@@ -218,7 +239,7 @@ class _NGOsState extends State<NGOs> {
                       //   ),
                       // );
                     },
-                    itemCount: list.length,
+                    itemCount: cities[dropVal].length,
                     shrinkWrap: true,
                   ),
                   Center(child: Text('No NGO registered yet')),
