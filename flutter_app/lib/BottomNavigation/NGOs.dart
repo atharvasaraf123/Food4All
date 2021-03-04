@@ -13,7 +13,8 @@ class _NGOsState extends State<NGOs> {
   bool load = true;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference ngoCol = FirebaseFirestore.instance.collection('NGO');
-  CollectionReference donCol = FirebaseFirestore.instance.collection('donation');
+  CollectionReference donCol =
+      FirebaseFirestore.instance.collection('donation');
   List list;
   List donationList;
 
@@ -24,11 +25,11 @@ class _NGOsState extends State<NGOs> {
     checkNgo();
   }
 
-  getDonationList()async{
-    await donCol.get().then((value){
+  getDonationList() async {
+    await donCol.get().then((value) {
       setState(() {
-        donationList=value.docs;
-        load=false;
+        donationList = value.docs;
+        load = false;
       });
     });
   }
@@ -46,7 +47,7 @@ class _NGOsState extends State<NGOs> {
         //   list.add(element);
         // });
       });
-    }else{
+    } else {
       await getDonationList();
     }
     print(list);
@@ -66,11 +67,11 @@ class _NGOsState extends State<NGOs> {
     return load == true
         ? Center(child: CircularProgressIndicator())
         : ngo
-            ? ListView.builder(itemBuilder: (BuildContext context,int pos){
-              return ListTile(
-                title: Text(),
-              );
-    })
+            ? ListView.builder(itemBuilder: (BuildContext context, int pos) {
+                return ListTile(
+                  title: Text(),
+                );
+              })
             : ListView(
                 children: [
                   ListView.builder(
@@ -131,7 +132,6 @@ class _NGOsState extends State<NGOs> {
                                       Row(
                                         children: [
                                           Row(
-
                                             children: [
                                               Icon(
                                                 Icons.people,
@@ -143,7 +143,8 @@ class _NGOsState extends State<NGOs> {
                                                 style: TextStyle(
                                                     fontSize: 13.0,
                                                     color: Colors.white,
-                                                    fontFamily: 'MontserratMed'),
+                                                    fontFamily:
+                                                        'MontserratMed'),
                                               ),
                                             ],
                                           ),
@@ -164,7 +165,6 @@ class _NGOsState extends State<NGOs> {
                                           //     ),
                                           //   ],
                                           // ),
-
                                         ],
                                       ),
                                       Row(
