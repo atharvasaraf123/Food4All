@@ -27,6 +27,7 @@ class _SettingsState extends State<Settings> {
 
   getUserData()async{
     String uid=FirebaseAuth.instance.currentUser.uid;
+
     DocumentSnapshot ds=await userCol.doc(uid).get();
     if(ds.exists){
       Map<String,dynamic>mapp=ds.data();
@@ -37,6 +38,8 @@ class _SettingsState extends State<Settings> {
       setState(() {
         load=false;
       });
+    }else{
+      print("Data Doesn't exists");
     }
   }
 

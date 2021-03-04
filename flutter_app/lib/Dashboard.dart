@@ -99,9 +99,14 @@ class _MyHomePageState extends State {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         actions: [
-          IconButton(icon: Icon(Icons.logout), onPressed: ()async{
-            await logout();
-          })
+          Row(
+            children: [
+              Text('City'),
+              IconButton(icon: Icon(Icons.location_on_outlined),padding: EdgeInsets.all(0.0), onPressed: ()async{
+                // await logout();
+              }),
+            ],
+          )
         ],
         title: Text('Food Donation'),
         centerTitle: true,
