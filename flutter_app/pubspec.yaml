@@ -45,6 +45,9 @@ dependencies:
   dotted_border: ^1.0.7
   intl: ^0.16.1
   firebase_storage: "^7.0.0"
+  flutter_screenutil: ^4.0.3+2
+  line_awesome_flutter: ^1.0.1
+  animated_theme_switcher: ^1.0.9
 
 dev_dependencies:
   flutter_test:
@@ -61,7 +64,7 @@ flutter:
   uses-material-design: true
 
   assets:
-  - images/
+    - images/
 
   fonts:
     - family: MontserratReg
