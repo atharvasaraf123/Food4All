@@ -46,6 +46,9 @@ class _NGOsState extends State<NGOs> {
         // value.docs.forEach((element) {
         //   list.add(element);
         // });
+        setState(() {
+          load=false;
+        });
       });
     } else {
       await getDonationList();
@@ -69,7 +72,7 @@ class _NGOsState extends State<NGOs> {
         : ngo
             ? ListView.builder(itemBuilder: (BuildContext context, int pos) {
                 return ListTile(
-                  title: Text(),
+                  title: Text('abc'),
                 );
               })
             : ListView(
