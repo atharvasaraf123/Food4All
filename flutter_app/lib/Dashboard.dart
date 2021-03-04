@@ -98,16 +98,6 @@ class _MyHomePageState extends State {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        actions: [
-          Row(
-            children: [
-              Text('City'),
-              IconButton(icon: Icon(Icons.location_on_outlined),padding: EdgeInsets.all(0.0), onPressed: ()async{
-                // await logout();
-              }),
-            ],
-          )
-        ],
         title: Text('Food Donation'),
         centerTitle: true,
       ),

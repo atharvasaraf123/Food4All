@@ -37,7 +37,8 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin {
       'address': add,
       'phone': phone,
       'capacity': capacity,
-      'uid':uid
+      'uid':uid,
+      'city':city
     };
     print(ngo);
     ngoCol.doc(uid).set(ngo).then((value) {

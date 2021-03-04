@@ -18,6 +18,7 @@ class _NGOsState extends State<NGOs> {
       FirebaseFirestore.instance.collection('donation');
   List list;
   List donationList;
+  Map<String,List>cities;
 
   @override
   void initState() {
@@ -44,6 +45,16 @@ class _NGOsState extends State<NGOs> {
       list = List();
       await ngoCol.get().then((value) {
         list = value.docs;
+        cities=Map();
+        for(int i=0;i<list.length;i++){
+          if(list[i]==null)continue;
+          if(cities.containsKey(list[i]['city'])){
+            cities[list[i]['city']].add(list[i]);
+          }else{
+            cities[list[i]['city']]=List();
+            cities[list[i]['city']].add(list[i]);
+          }
+        }
         // value.docs.forEach((element) {
         //   list.add(element);
         // });
@@ -65,6 +76,8 @@ class _NGOsState extends State<NGOs> {
       radius: 45,
     ),
   );
+
+
 
   @override
   Widget build(BuildContext context) {
