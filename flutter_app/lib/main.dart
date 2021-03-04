@@ -16,7 +16,7 @@ void main() {
 class App extends StatelessWidget {
   // Create the initialization Future outside of `build`:
 
-  Future fun()async{
+  Future initialise()async{
     await Firebase.initializeApp();
     CollectionReference userCol = FirebaseFirestore.instance.collection('users');
     if(FirebaseAuth.instance.currentUser!=null){
@@ -42,7 +42,7 @@ class App extends StatelessWidget {
       home: Scaffold(
         body: FutureBuilder(
           // Initialize FlutterFire:
-          future: fun(),
+          future: initialise(),
           builder: (context, snapshot) {
             // Check for errors
             print('abc${ snapshot.data}');
