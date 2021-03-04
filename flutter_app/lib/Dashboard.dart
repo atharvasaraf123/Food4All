@@ -37,7 +37,6 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-
 class _MyHomePageState extends State {
 
 
@@ -76,6 +75,7 @@ class _MyHomePageState extends State {
 
   int currentIndex;
   BuildContext context;
+
   @override
   void initState() {
     super.initState();
@@ -107,23 +107,25 @@ class _MyHomePageState extends State {
       children: [
         SpeedDialChild(
           backgroundColor: Colors.orange.shade400,
-          child: Icon(Icons.add),
+          child: Image.asset('images/fooddonationhand.png',fit: BoxFit.contain,height: 24,width: 24,),
           label: 'Donate Food',
           labelBackgroundColor: Colors.grey.shade400,
-          onTap:() => Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => Donate_Food())),
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => Donate_Food())),
         ),
         SpeedDialChild(
-            backgroundColor: Colors.orange.shade400,
-            child: Icon(Icons.add_a_photo),
-            label: 'Add Hunger Spot',
-            labelBackgroundColor: Colors.grey.shade400,
-          onTap:() => Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => Add_Hunger_Spot())),
-
+          backgroundColor: Colors.orange.shade400,
+          child: Icon(Icons.add_a_photo),
+          label: 'Add Hunger Spot',
+          labelBackgroundColor: Colors.grey.shade400,
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => Add_Hunger_Spot())),
         ),
       ],
-
     );
   }
 
@@ -139,67 +141,64 @@ class _MyHomePageState extends State {
     this.context=context;
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: Text('Food Donation'),
-        centerTitle: true,
-      ),
-      floatingActionButton: _speedDial(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: BubbleBottomBar(
-        opacity: 0.2,
-        backgroundColor: Colors.white,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16.0),
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          title: Text('Food Donation'),
+          centerTitle: true,
         ),
-        currentIndex: currentIndex,
-        hasInk: true,
-        inkColor: Colors.black12,
-        hasNotch: true,
-        fabLocation: BubbleBottomBarFabLocation.end,
-        onTap: changePage,
-        items: [
-          BubbleBottomBarItem(
-            backgroundColor: Colors.orangeAccent,
-            icon: Icon(
-              Icons.dashboard,
-              color: Colors.black,
-
-            ),
-            activeIcon: Icon(
-              Icons.dashboard,
-              color: Colors.orangeAccent,
-            ),
-            title: Text('Dashboard'),
-
+        floatingActionButton: _speedDial(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        bottomNavigationBar: BubbleBottomBar(
+          opacity: 0.2,
+          backgroundColor: Colors.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(16.0),
           ),
-          BubbleBottomBarItem(
-            backgroundColor: Colors.orangeAccent,
-            icon: Icon(
-              Icons.account_balance_sharp,
-              color: Colors.black,
+          currentIndex: currentIndex,
+          hasInk: true,
+          inkColor: Colors.black12,
+          hasNotch: true,
+          fabLocation: BubbleBottomBarFabLocation.end,
+          onTap: changePage,
+          items: [
+            BubbleBottomBarItem(
+              backgroundColor: Colors.orangeAccent,
+              icon: Icon(
+                Icons.dashboard,
+                color: Colors.black87,
+              ),
+              activeIcon: Icon(
+                Icons.dashboard,
+                color: Colors.orangeAccent,
+              ),
+              title: Text('Dashboard'),
             ),
-            activeIcon: Icon(
-              Icons.account_balance_sharp,
-              color: Colors.orangeAccent,
+            BubbleBottomBarItem(
+              backgroundColor: Colors.orangeAccent,
+              icon: Icon(
+                Icons.account_balance_sharp,
+                color: Colors.black87,
+              ),
+              activeIcon: Icon(
+                Icons.account_balance_sharp,
+                color: Colors.orangeAccent,
+              ),
+              title: Text('NGOs'),
             ),
-            title: Text('NGOs'),
-          ),
-          BubbleBottomBarItem(
-            backgroundColor: Colors.orangeAccent,
-            icon: Icon(
-              Icons.group,
-              color: Colors.black,
+            BubbleBottomBarItem(
+              backgroundColor: Colors.orangeAccent,
+              icon: Icon(
+                Icons.settings_outlined,
+                color: Colors.black87,
+              ),
+              activeIcon: Icon(
+                Icons.settings_outlined,
+                color: Colors.orangeAccent,
+              ),
+              title: Text('Settings'),
             ),
-            activeIcon: Icon(
-              Icons.group,
-              color: Colors.orangeAccent,
-            ),
-            title: Text('Profile'),
-          ),
-        ],
-      ),
-      body: list[currentIndex]
-    );
+          ],
+        ),
+        body: list[currentIndex]);
   }
 }
