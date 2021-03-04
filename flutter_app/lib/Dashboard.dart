@@ -102,20 +102,6 @@ class _MyHomePageState extends State {
         appBar: AppBar(
           title: Text('Food Donation'),
           centerTitle: true,
-          actions: [
-            Row(
-              children: [
-                Text('City'),
-                IconButton(
-                    icon: Icon(Icons.location_on_outlined),
-                    iconSize: 22.0,
-                    padding: EdgeInsets.all(0.0),
-                    onPressed: () async {
-                      // await logout();
-                    }),
-              ],
-            )
-          ],
         ),
         floatingActionButton: _speedDial(),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
