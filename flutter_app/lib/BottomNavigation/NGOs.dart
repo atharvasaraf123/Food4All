@@ -13,13 +13,24 @@ class _NGOsState extends State<NGOs> {
   bool load = true;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference ngoCol = FirebaseFirestore.instance.collection('NGO');
+  CollectionReference donCol = FirebaseFirestore.instance.collection('donation');
   List list;
+  List donationList;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     checkNgo();
+  }
+
+  getDonationList()async{
+    await donCol.get().then((value){
+      setState(() {
+        donationList=value.docs;
+        load=false;
+      });
+    });
   }
 
   checkNgo() async {
@@ -35,10 +46,9 @@ class _NGOsState extends State<NGOs> {
         //   list.add(element);
         // });
       });
+    }else{
+      await getDonationList();
     }
-    setState(() {
-      load = false;
-    });
     print(list);
   }
 
@@ -47,12 +57,11 @@ class _NGOsState extends State<NGOs> {
     return load == true
         ? CircularProgressIndicator()
         : ngo
-            ? Container(
-                child: Text(
-                  'abc',
-                  style: TextStyle(color: Colors.black),
-                ),
-              )
+            ? ListView.builder(itemBuilder: (BuildContext context,int pos){
+              return ListTile(
+                title: Text(),
+              );
+    })
             : ListView(
                 children: [
                   ListView.builder(
