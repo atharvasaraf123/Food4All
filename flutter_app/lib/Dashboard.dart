@@ -44,12 +44,9 @@ class _MyHomePageState extends State {
     currentIndex = 0;
   }
 
-  logout() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => Login()),
-        (route) => false);
+  logout()async{
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
   }
 
   changePage(int index) {
@@ -58,7 +55,11 @@ class _MyHomePageState extends State {
     });
   }
 
-  List<Widget> list = [Container(), NGOs(), Settings()];
+  List<Widget>list=[
+    Container(),
+    NGOs(),
+    Settings()
+  ];
 
   SpeedDial _speedDial() {
     return SpeedDial(
