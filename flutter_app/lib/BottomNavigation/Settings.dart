@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/konstants/ProfileListItem.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../AddNgo.dart';
+import 'EditProfile.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -26,7 +28,8 @@ class _SettingsState extends State<Settings> {
               AppBackground(),
               SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 10.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -37,7 +40,7 @@ class _SettingsState extends State<Settings> {
                           children: [
                             Container(
                               padding: EdgeInsets.all(10.0),
-                              height: 250,
+                              height: 230,
                               width: 180,
                               child: Card(
                                 shape: RoundedRectangleBorder(
@@ -61,56 +64,101 @@ class _SettingsState extends State<Settings> {
                               child: Container(
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 35.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      // Text('Profile', style: TextStyle(
-                                      //     fontFamily: 'MontserratBold',
-                                      //     color: Colors.grey.shade700,
-                                      //     fontSize: 16),),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3.0),
-                                        child: Align(
-                                          alignment: Alignment.topRight,
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        // Text('Profile', style: TextStyle(
+                                        //     fontFamily: 'MontserratBold',
+                                        //     color: Colors.grey.shade700,
+                                        //     fontSize: 16),),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 3.0,left: 3.0),
                                           child: Text(
                                             'Vaibhav Pallod',
                                             style: TextStyle(
-                                                fontFamily: 'MontserratReg',
+                                                fontFamily: 'MontserratBold',
                                                 color: Colors.grey.shade700,
-                                                fontSize: 14),
+                                                fontSize: 16),
                                           ),
                                         ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 3.0),
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 5.0,left: 3.0),
                                           child: Text(
                                             'vaibhavpallod@gmail.com',
                                             style: TextStyle(
-                                                fontFamily: 'MontserratReg',
+                                                fontFamily: 'MontserratMed',
                                                 color: Colors.grey.shade700,
-                                                fontSize: 14),
+                                                fontSize: 13),
                                           ),
                                         ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: Padding(
+
+                                        Padding(
+                                          padding: const EdgeInsets.only(top:10.0),
+                                          child: LinearPercentIndicator(
+                                            width:
+                                                MediaQuery.of(context).size.width/2.5,
+                                            animation: true,
+                                            lineHeight: 14.0,
+                                            animationDuration: 2500,
+                                            percent: 0.8,
+
+                                            linearStrokeCap:
+                                                LinearStrokeCap.roundAll,
+                                            linearGradient: LinearGradient(
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                              colors: [
+                                                Color(0xe1ec9f05),
+                                                Color(0xdaff4e00)
+                                              ],
+                                            ),
+                                            // progressColor: Colors.green,
+                                          ),
+                                        ),
+
+                                        Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 3.0),
+                                              vertical: 5.0,horizontal: 3.0),
                                           child: Text(
-                                            '9422668223',
+                                            '80 % Profile Completed',
                                             style: TextStyle(
                                                 fontFamily: 'MontserratReg',
                                                 color: Colors.grey.shade700,
-                                                fontSize: 14),
+                                                fontSize: 13),
                                           ),
                                         ),
-                                      ),
-                                    ],
+
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10.0,horizontal: 3.0),
+                                          child: OutlineButton(
+                                            borderSide: BorderSide(
+                                                color: Colors.orangeAccent,
+                                                width: 1,
+                                                style: BorderStyle.solid),
+                                            child: Text(
+                                              "Edit Profile",
+                                              style: TextStyle(fontSize: 15.0),
+                                            ),
+                                            highlightedBorderColor: Colors.red,
+                                            splashColor: Colors.deepOrange,
+                                            highlightColor: Colors.red,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            onPressed: () {
+
+                                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>EditProfile()));
+
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -243,136 +291,5 @@ class _SettingsState extends State<Settings> {
         ),
       ),
     );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // ScreenUtil.init(context, height: 650, width: 414, allowFontScaling: true);
-    // ScreenUtil.init(context);
-    // ScreenUtil.instance = ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
-/*
-
-    var profileInfo = Expanded(
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: kSpacingUnit.w * 10,
-            width: kSpacingUnit.w * 10,
-            margin: EdgeInsets.only(top: kSpacingUnit.w * 3),
-            child: Stack(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: kSpacingUnit.w * 5,
-                  backgroundImage: AssetImage('assets/images/avatar.png'),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: kSpacingUnit.w * 2.5,
-                    width: kSpacingUnit.w * 2.5,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      heightFactor: kSpacingUnit.w * 1.5,
-                      widthFactor: kSpacingUnit.w * 1.5,
-                      child: Icon(
-                        LineAwesomeIcons.pen,
-                        color: kDarkPrimaryColor,
-                        size: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: kSpacingUnit.w * 2),
-          Text(
-            'Nicolas Adams',
-            style: kTitleTextStyle,
-          ),
-          SizedBox(height: kSpacingUnit.w * 0.5),
-          Text(
-            'nicolasadams@gmail.com',
-            style: kCaptionTextStyle,
-          ),
-          SizedBox(height: kSpacingUnit.w * 2),
-          Container(
-            height: kSpacingUnit.w * 4,
-            width: kSpacingUnit.w * 20,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
-              color: Theme.of(context).accentColor,
-            ),
-            child: Center(
-              child: Text(
-                'Upgrade to PRO',
-                style: kButtonTextStyle,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
- */
-/*   var themeSwitcher = ThemeSwitcher(
-      builder: (context) {
-        return AnimatedCrossFade(
-          duration: Duration(milliseconds: 200),
-          crossFadeState:
-              ThemeProvider.of(context).brightness == Brightness.dark
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
-          firstChild: GestureDetector(
-            onTap: () =>
-                ThemeSwitcher.of(context).changeTheme(theme: kLightTheme),
-            child: Icon(
-              LineAwesomeIcons.sun,
-              size: ScreenUtil().setSp(kSpacingUnit.w * 3),
-            ),
-          ),
-          secondChild: GestureDetector(
-            onTap: () =>
-                ThemeSwitcher.of(context).changeTheme(theme: kDarkTheme),
-            child: Icon(
-              LineAwesomeIcons.moon,
-              size: ScreenUtil().setSp(kSpacingUnit.w * 3),
-            ),
-          ),
-        );
-      },
-    );*/ /*
-
-
-    var header = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(width: kSpacingUnit.w * 3),
-        Icon(
-          LineAwesomeIcons.arrow_left,
-          size: ScreenUtil().setSp(kSpacingUnit.w * 3),
-        ),
-        profileInfo,
-        // themeSwitcher,
-        SizedBox(width: kSpacingUnit.w * 3),
-      ],
-    );
-*/
-
-    /* return ThemeSwitchingArea(
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            body:
-          );
-        },
-      ),
-    );*/
   }
 }
