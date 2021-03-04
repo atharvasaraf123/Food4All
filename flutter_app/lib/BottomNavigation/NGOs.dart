@@ -9,12 +9,12 @@ class NGOs extends StatefulWidget {
 }
 
 class _NGOsState extends State<NGOs> {
-
-  bool ngo=false;
-  bool load=true;
+  bool ngo = false;
+  bool load = true;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference ngoCol = FirebaseFirestore.instance.collection('NGO');
   List list;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -22,53 +22,68 @@ class _NGOsState extends State<NGOs> {
     checkNgo();
   }
 
-  checkNgo()async{
-    User user=FirebaseAuth.instance.currentUser;
+  checkNgo() async {
+    User user = FirebaseAuth.instance.currentUser;
     DocumentSnapshot ds = await ngoCol.doc(user.uid).get();
-    ngo=ds.exists;
+    ngo = ds.exists;
     print(ngo);
-    if(!ngo){
-      list=List();
-      await ngoCol.get().then((value){
-        list=value.docs;
+    if (!ngo) {
+      list = List();
+      await ngoCol.get().then((value) {
+        list = value.docs;
         // value.docs.forEach((element) {
         //   list.add(element);
         // });
       });
     }
     setState(() {
-      load=false;
+      load = false;
     });
     print(list);
   }
 
   @override
   Widget build(BuildContext context) {
-    return load==true?CircularProgressIndicator():ngo?Container(
-      child: Text('abc',style: TextStyle(color: Colors.black),),
-    ):ListView(
-      children: [
-        ListView.builder(itemBuilder: (BuildContext context,int pos){
-          return ListTile(
-            title: Text(list[pos]['name'].toString()),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Address:- ${list[pos]['address'].toString()}"),
-                Text("Capacity:- ${list[pos]['capacity'].toString()}"),
-                Text("Phone:- ${list[pos]['phone'].toString()}"),
-              ],
-            ),
-          );
-        },
-        itemCount: list.length,shrinkWrap: true,),
-        Center(child: Text('No NGO registered yet')),
-    GestureDetector(child: Center(child: Text('Register here')),
-    onTap: (){
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>AddNGO()));
-    }
-    ),
-      ],
-    );
+    return load == true
+        ? CircularProgressIndicator()
+        : ngo
+            ? Container(
+                child: Text(
+                  'abc',
+                  style: TextStyle(color: Colors.black),
+                ),
+              )
+            : ListView(
+                children: [
+                  ListView.builder(
+                    itemBuilder: (BuildContext context, int pos) {
+                      return ListTile(
+                        title: Text(list[pos]['name'].toString()),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "Address:- ${list[pos]['address'].toString()}"),
+                            Text(
+                                "Capacity:- ${list[pos]['capacity'].toString()}"),
+                            Text("Phone:- ${list[pos]['phone'].toString()}"),
+                          ],
+                        ),
+                      );
+                    },
+                    itemCount: list.length,
+                    shrinkWrap: true,
+                  ),
+                  Center(child: Text('No NGO registered yet')),
+                  GestureDetector(
+                      child: Center(child: Text('Register here')),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => AddNGO()));
+                      }),
+                ],
+              );
   }
 }
