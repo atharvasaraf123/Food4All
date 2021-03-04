@@ -12,11 +12,46 @@ class NgoPerson extends StatefulWidget {
 class _NgoPersonState extends State<NgoPerson> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemBuilder: (BuildContext context, int pos) {
-      return ListTile(
-        title: Text(widget.donationList[pos]['foodItems']),
-      );
-    },
-      itemCount: widget.donationList.length,);
+    return Scaffold(
+
+
+
+      body: Container(
+
+
+        child: Column(
+
+          children: [
+
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: Colors.pink.shade100,
+                border: Border(
+                  // bottom: BorderRadius
+                )
+
+              ),
+            )
+
+          ],
+
+
+
+
+
+        ),
+
+      ),
+
+    ) ;
+
+    //   ListView.builder(itemBuilder: (BuildContext context, int pos) {
+    //   return ListTile(
+    //     title: Text(widget.donationList[pos]['foodItems']),
+    //   );
+    // },
+    //   itemCount: widget.donationList.length,);
   }
 }
