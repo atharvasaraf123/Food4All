@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/konstants/ProfileListItem.dart';
@@ -14,9 +16,39 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+
+
+  CollectionReference userCol = FirebaseFirestore.instance.collection('users');
+  String name="";
+  String email="";
+  bool load=true;
+
+
+  getUserData()async{
+    String uid=FirebaseAuth.instance.currentUser.uid;
+    DocumentSnapshot ds=await userCol.doc(uid).get();
+    if(ds.exists){
+      Map<String,dynamic>mapp=ds.data();
+      name=mapp['name'].toString().capitalize();
+      email=mapp['email'];
+      print(name);
+      setState(() {
+        load=false;
+      });
+    }
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
+    return load?Center(child: CircularProgressIndicator()):ScreenUtilInit(
       designSize: Size(360, 690),
       allowFontScaling: false,
       builder: () => Scaffold(
@@ -53,7 +85,7 @@ class _SettingsState extends State<Settings> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5.0))),
                                     child: Image.asset(
-                                      'images/vaibhav.png',
+                                      'images/placeholder.jpg',
                                       fit: BoxFit.fitHeight,
                                     ),
                                   ),
@@ -77,7 +109,7 @@ class _SettingsState extends State<Settings> {
                                         Padding(
                                           padding: const EdgeInsets.only(top: 3.0,left: 3.0),
                                           child: Text(
-                                            'Vaibhav Pallod',
+                                            name,
                                             style: TextStyle(
                                                 fontFamily: 'MontserratBold',
                                                 color: Colors.grey.shade700,
@@ -87,7 +119,7 @@ class _SettingsState extends State<Settings> {
                                         Padding(
                                           padding: const EdgeInsets.only(bottom: 5.0,left: 3.0),
                                           child: Text(
-                                            'vaibhavpallod@gmail.com',
+                                            email,
                                             style: TextStyle(
                                                 fontFamily: 'MontserratMed',
                                                 color: Colors.grey.shade700,
@@ -291,5 +323,10 @@ class _SettingsState extends State<Settings> {
         ),
       ),
     );
+  }
+}
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }
