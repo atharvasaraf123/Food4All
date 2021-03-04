@@ -2,8 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/Dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:location/location.dart';
+
+import 'ResponsiveWidget.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -16,6 +21,7 @@ TextEditingController nameController = TextEditingController();
 TextEditingController usernameController = TextEditingController();
 TextEditingController emailController = TextEditingController();
 TextEditingController phoneController = TextEditingController();
+TextEditingController cityController = TextEditingController();
 TextEditingController collegeController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 TextEditingController password1Controller = TextEditingController();
@@ -30,6 +36,7 @@ bool _large;
 bool _medium;
 bool _obscureText = true;
 String pictRegID;
+String city;
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
@@ -42,6 +49,45 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+
+  getUserLocation() async {
+    //call this async method from whereever you need
+
+    LocationData myLocation;
+    String error;
+    Location location = new Location();
+    try {
+      print('1');
+      myLocation = await location.getLocation();
+      print('1');
+      final coordinates =
+      new Coordinates(myLocation.latitude, myLocation.longitude);
+      var addresses =
+      await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+      print(
+          ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+      setState(() {
+        city = addresses.first.locality;
+        cityController.text=city;
+      });
+    } on PlatformException catch (e) {
+      print(e.code);
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'please grant permission';
+        print(error);
+      }
+      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        error = 'permission denied- please enable it from app settings';
+        print(error);
+      }
+      myLocation = null;
+    }catch(e){
+      print(e.toString());
+    }
+
   }
 
   createUser() async {
@@ -60,7 +106,8 @@ class _SignUpState extends State<SignUp> {
       Map<String,dynamic>user={
         'email':mail,
         'name':name,
-        'phone':phoneNumber
+        'phone':phoneNumber,
+        'city':city
       };
       print(user);
       users.doc(uid).set(user).then((value) {
@@ -364,6 +411,37 @@ class _SignUpState extends State<SignUp> {
             },
           ),
         ),
+        SizedBox(height: _height / 30.0),
+        Material(
+          borderRadius: BorderRadius.circular(10.0),
+          elevation: _large ? 12 : (_medium ? 10 : 8),
+          child: TextFormField(
+            validator: (val) {
+              if (val.isEmpty) {
+                return 'This field cannot be empty!';
+              } else if (val.trim().length<10) {
+                return 'Enter a valid phone number!';
+              }
+              return null;
+            },
+            onSaved: (val) => city = val,
+            controller: cityController,
+            keyboardType: TextInputType.phone,
+            cursorColor: Color(0xff0aa9d7),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.location_city,
+                  color: Color(0xff0aa9d7), size: 20),
+              hintText: "City",
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  borderSide: BorderSide.none),
+            ),
+            readOnly: true,
+            onTap: ()async{
+             await getUserLocation();
+            },
+          ),
+        ),
       ],
     );
   }
@@ -479,19 +557,7 @@ class BackgroundSignUp extends CustomPainter {
   }
 }
 
-class ResponsiveWidget {
-  static bool isScreenLarge(double width, double pixel) {
-    return width * pixel >= 1440;
-  }
 
-  static bool isScreenMedium(double width, double pixel) {
-    return width * pixel < 1440 && width * pixel >= 1080;
-  }
-
-  static bool isScreenSmall(double width, double pixel) {
-    return width * pixel <= 720;
-  }
-}
 
 class _CustomClipper extends CustomClipper<Path> {
   @override

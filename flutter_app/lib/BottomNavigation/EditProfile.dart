@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/Dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:location/location.dart';
 import 'package:path/path.dart' as path;
 
 class EditProfile extends StatefulWidget {
@@ -21,20 +24,61 @@ class _EditProfileState extends State<EditProfile> {
 
 
 
+
+
   CollectionReference userCol = FirebaseFirestore.instance.collection('users');
   String name="";
   String email="";
   String phone="";
   String profileUrl="";
   bool load=true;
+  String city="";
   TextEditingController nameController=TextEditingController();
   TextEditingController emailController=TextEditingController();
   TextEditingController phoneController=TextEditingController();
+  TextEditingController cityController=TextEditingController();
   final imagePicker = ImagePicker();
   File _file;
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
 
+
+  getUserLocation() async {
+    //call this async method from whereever you need
+
+    LocationData myLocation;
+    String error;
+    Location location = new Location();
+    try {
+      print('1');
+      myLocation = await location.getLocation();
+      print('1');
+      final coordinates =
+      new Coordinates(myLocation.latitude, myLocation.longitude);
+      var addresses =
+      await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+      print(
+          ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+      setState(() {
+        cityController.text=addresses.first.locality;
+      });
+    } on PlatformException catch (e) {
+      print(e.code);
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'please grant permission';
+        print(error);
+      }
+      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        error = 'permission denied- please enable it from app settings';
+        print(error);
+      }
+      myLocation = null;
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
 
   updateProfile()async{
     String uid=FirebaseAuth.instance.currentUser.uid;
@@ -49,6 +93,9 @@ class _EditProfileState extends State<EditProfile> {
     }
     if(phone!=phoneController.text.toString()){
       mapp['phone']=phoneController.text.toString();
+    }
+    if(city!=cityController.text.toString()){
+      mapp['phone']=cityController.text.toString();
     }
     if(_file!=null){
       await storage.ref().child(path.basename(_file.path)).putFile(_file).then((val)async{
@@ -114,7 +161,7 @@ class _EditProfileState extends State<EditProfile> {
     String hintText,
     IconData icon,
     TextEditingController controller,
-    bool edit=false
+    bool edit=false,
   }) {
     return Material(
       elevation: 4,
@@ -127,6 +174,9 @@ class _EditProfileState extends State<EditProfile> {
       child: TextField(
         readOnly: edit,
         controller: controller,
+        onTap: hintText=='City'?()async{
+          await getUserLocation();
+    }:null,
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderSide: BorderSide.none,
@@ -173,6 +223,15 @@ class _EditProfileState extends State<EditProfile> {
               hintText: 'Contact Number',
               icon: Icons.phone,
               controller: phoneController
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical:12.0,horizontal: 10.0),
+            child: _textFormField(
+                hintText: 'City',
+                icon: Icons.location_city,
+                controller: cityController,
+              edit: true
             ),
           ),
           Padding(
@@ -262,6 +321,9 @@ class _EditProfileState extends State<EditProfile> {
       phone=mapp['phone'];
       if(phone==null)phone="";
       phoneController.text=phone;
+      city=mapp['city'];
+      if(city==null)city="";
+      cityController.text=city;
       profileUrl=mapp['profileUrl'];
       print(name);
       setState(() {

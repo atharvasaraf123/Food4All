@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/googlesignindialog.dart';
 import 'package:flutter_app/signup.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:flutter_signin_button/button_list.dart';
@@ -10,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Dashboard.dart';
+import 'ResponsiveWidget.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -54,34 +56,44 @@ class _LoginState extends State<Login> {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(credential);
       String uid=userCredential.user.uid;
-      // users
-      //     .add({
-      //   'email': mail, // John Doe
-      //   'name': name, //// 42
-      // })
-      //     .then((value) => print("User Added"))
-      //     .catchError((error) => print("Failed to add user: $error"));
-      User user1=userCredential.user;
-      Map<String, dynamic>user;
-      if(user1.phoneNumber!=null&&user1.phoneNumber.isNotEmpty) {
-       user = {
-          'email': user1.email,
-          'name': user1.displayName,
-          'phone': user1.phoneNumber
-        };
-      }else{
-        user = {
-          'email': user1.email,
-          'name': user1.displayName,
-        };
-      }
-      users.doc(uid).set(user).then((value) {
-        Fluttertoast.showToast(msg: 'Signed Up Successfully');
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => Dashboard()), (route) => false);
-      }).catchError((onError){
-        Fluttertoast.showToast(msg: onError.toString());
-      });
-    }catch(e){
+      DocumentSnapshot ds=await users.doc(uid).get();
+      if(ds.exists){
+        if(ds.data().containsKey('city')){
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => Dashboard()), (route) => false);
+        }else{
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => googlesignindialog()), (route) => false);
+        }
+      }else {
+        // users
+        //     .add({
+        //   'email': mail, // John Doe
+        //   'name': name, //// 42
+        // })
+        //     .then((value) => print("User Added"))
+        //     .catchError((error) => print("Failed to add user: $error"));
+        User user1 = userCredential.user;
+        Map<String, dynamic>user;
+        if (user1.phoneNumber != null && user1.phoneNumber.isNotEmpty) {
+          user = {
+            'email': user1.email,
+            'name': user1.displayName,
+            'phone': user1.phoneNumber
+          };
+        } else {
+          user = {
+            'email': user1.email,
+            'name': user1.displayName,
+          };
+        }
+        users.doc(uid).set(user).then((value) {
+          Fluttertoast.showToast(msg: 'Signed Up Successfully');
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+              builder: (BuildContext context) => googlesignindialog()), (
+              route) => false);
+        }).catchError((onError) {
+          Fluttertoast.showToast(msg: onError.toString());
+        });
+      }}catch(e){
       print(e.toString());
     }
   }
