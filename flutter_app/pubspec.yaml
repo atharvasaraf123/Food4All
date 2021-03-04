@@ -48,6 +48,9 @@ dependencies:
   flutter_screenutil: ^4.0.3+2
   line_awesome_flutter: ^1.0.1
   animated_theme_switcher: ^1.0.9
+  percent_indicator: ^2.1.9+1
+
+
 
 dev_dependencies:
   flutter_test:
