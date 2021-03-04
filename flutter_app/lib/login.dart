@@ -162,220 +162,220 @@ class _LoginState extends State<Login> {
 
     return  Scaffold(
       body: SafeArea(
-        child: Center(
-          child: CustomPaint(
-            painter: BackgroundSignIn(),
-            // color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(36.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    // SizedBox(
-                    //   height: 155.0,
-                    //   child: Image.asset(
-                    //     "assets/logo.png",
-                    //     fit: BoxFit.contain,
-                    //   ),
-                    // ),
-                    SizedBox(height: 145.0),
-                    Material(
-                      borderRadius: BorderRadius.circular(25.0),
-                      elevation: _large ? 12 : (_medium ? 10 : 8),
-                      child: TextFormField(
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        cursorColor: Color(0xff0aa9d7),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.email,
-                              color: Color(0xff0aa9d7), size: 20),
-                          hintText: "Email",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: BorderSide.none),
-                        ),
-                        onChanged: (val) {
-                          // setState(() {
-                          //   email = val;
-                          // });
-                        },
-                      ),
-                    ),
-                // TextFormField(
-                //   obscureText: false,
-                //   decoration: InputDecoration(
-                //       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                //       hintText: "Email",
-                //       border:
-                //       OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-                //   validator: (val) {
-                //     if (val.isEmpty) {
-                //       return 'This field cannot be empty!';
-                //     } else if (!validateEmail(val)) {
-                //       return 'Enter a valid email!';
-                //     }
-                //     return null;
-                //   },
-                //   onSaved: (val) => _mail = val,
-                // ),
-                    SizedBox(height: 25.0),
-
-                    Material(
-                      borderRadius: BorderRadius.circular(25.0),
-                      elevation: _large ? 12 : (_medium ? 10 : 8),
-                      child: TextFormField(
-                        controller: passwordController,
-                        keyboardType: TextInputType.text,
-                        cursorColor: Color(0xff0aa9d7),
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock,
+        child: CustomPaint(
+          painter: BackgroundSignIn(),
+          child: Padding(
+            padding: const EdgeInsets.all(36.0),
+            child: Expanded(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      // SizedBox(
+                      //   height: 155.0,
+                      //   child: Image.asset(
+                      //     "assets/logo.png",
+                      //     fit: BoxFit.contain,
+                      //   ),
+                      // ),
+                      SizedBox(height: 145.0),
+                      Material(
+                        borderRadius: BorderRadius.circular(25.0),
+                        elevation: _large ? 12 : (_medium ? 10 : 8),
+                        child: TextFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          cursorColor: Color(0xff0aa9d7),
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.email,
                                 color: Color(0xff0aa9d7), size: 20),
-                            hintText: "Password",
+                            hintText: "Email",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                                 borderSide: BorderSide.none),
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.remove_red_eye),
-                              color: Color(0xff0aa9d7),
-                            )),
-                        onChanged: (val) {
-                          // setState(() {
-                          //   password = val;
-                          // });
-                        },
-                        obscureText: _obscureText,
-                      ),
-                    ),
-                    SizedBox(height: _height / 30.0),
-
-
-                    // Row(
-                //   children: [
-                //     Expanded(
-                //       child: TextFormField(
-                //       obscureText: _obscureText,
-                //         decoration: InputDecoration(
-                //             contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                //             hintText: "Password",
-                //             border:
-                //             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-                //
-                //         validator: (val) => val.length < 6
-                //             ? 'Password must be at least 6 characters long!'
-                //             : null,
-                //         onChanged: (val) => _password = val,
-                //
-                //       ),
-                //     ),
-                //     IconButton(
-                //       icon: Icon(
-                //         _obscureText
-                //             ? Icons.visibility_off
-                //             : Icons.visibility,
-                //         color:
-                //         Colors.black,
-                //       ),
-                //       onPressed: () {
-                //         setState(() {
-                //           _obscureText = !_obscureText;
-                //         });
-                //       },
-                //     ),
-                //   ],
-                // ),
-                    SizedBox(
-                      height: 35.0,
-                    ),
-                    Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(30.0),
-                      color: Colors.orangeAccent.shade400,
-                      child: MaterialButton(
-
-                        minWidth: MediaQuery.of(context).size.width*0.6,
-                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        onPressed: ()async{
-                          if (_formKey.currentState.validate()) {
-                            _formKey.currentState.save();
-                            await login();
-                          }
-                        },
-                        child: Text("Login",
-                          textAlign: TextAlign.center,
+                          ),
+                          onChanged: (val) {
+                            // setState(() {
+                            //   email = val;
+                            // });
+                          },
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    _getBottomRow(context),
+                  // TextFormField(
+                  //   obscureText: false,
+                  //   decoration: InputDecoration(
+                  //       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                  //       hintText: "Email",
+                  //       border:
+                  //       OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                  //   validator: (val) {
+                  //     if (val.isEmpty) {
+                  //       return 'This field cannot be empty!';
+                  //     } else if (!validateEmail(val)) {
+                  //       return 'Enter a valid email!';
+                  //     }
+                  //     return null;
+                  //   },
+                  //   onSaved: (val) => _mail = val,
+                  // ),
+                      SizedBox(height: 25.0),
 
-                    SizedBox(
-                      height: 30.0,
-                    ),
+                      Material(
+                        borderRadius: BorderRadius.circular(25.0),
+                        elevation: _large ? 12 : (_medium ? 10 : 8),
+                        child: TextFormField(
+                          controller: passwordController,
+                          keyboardType: TextInputType.text,
+                          cursorColor: Color(0xff0aa9d7),
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.lock,
+                                  color: Color(0xff0aa9d7), size: 20),
+                              hintText: "Password",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: BorderSide.none),
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.remove_red_eye),
+                                color: Color(0xff0aa9d7),
+                              )),
+                          onChanged: (val) {
+                            // setState(() {
+                            //   password = val;
+                            // });
+                          },
+                          obscureText: _obscureText,
+                        ),
+                      ),
+                      SizedBox(height: _height / 30.0),
 
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        horizontalLine(),
-                        Text(" Social Login ",
-                            style: TextStyle(
-                                fontSize: 16.0, fontFamily: "Poppins-Medium")),
-                        horizontalLine()
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Row(
+                      // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: TextFormField(
+                  //       obscureText: _obscureText,
+                  //         decoration: InputDecoration(
+                  //             contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                  //             hintText: "Password",
+                  //             border:
+                  //             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                  //
+                  //         validator: (val) => val.length < 6
+                  //             ? 'Password must be at least 6 characters long!'
+                  //             : null,
+                  //         onChanged: (val) => _password = val,
+                  //
+                  //       ),
+                  //     ),
+                  //     IconButton(
+                  //       icon: Icon(
+                  //         _obscureText
+                  //             ? Icons.visibility_off
+                  //             : Icons.visibility,
+                  //         color:
+                  //         Colors.black,
+                  //       ),
+                  //       onPressed: () {
+                  //         setState(() {
+                  //           _obscureText = !_obscureText;
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
+                      SizedBox(
+                        height: 35.0,
+                      ),
+                      Material(
+                        elevation: 5.0,
+                        borderRadius: BorderRadius.circular(30.0),
+                        color: Colors.orangeAccent.shade400,
+                        child: MaterialButton(
+
+                          minWidth: MediaQuery.of(context).size.width*0.6,
+                          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          onPressed: ()async{
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              await login();
+                            }
+                          },
+                          child: Text("Login",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      _getBottomRow(context),
+
+                      SizedBox(
+                        height: 30.0,
+                      ),
+
+
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          SignInButtonBuilder(
-                            text: 'Google',
-                            mini: true,
-                            shape: CircleBorder(),
-                            icon: FontAwesomeIcons.google,
-                            backgroundColor: Colors.red.shade900,
-                            onPressed: () async {
-                              await signInWithGoogle();
-                              // try {
-                              //   FirebaseUser user =
-                              //   await auth.handleGoogleSignIn(context);
-                              //   validateUser(context, user);
-                              // }catch(e){
-                              //   print('GoogleError');
-                              //   print(e.toString());
-                              // }
-                            },
-                          ),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          SignInButtonBuilder(
-                            text: 'FaceBook',
-                            mini: true,
-                            shape: CircleBorder(),
-                            icon: FontAwesomeIcons.facebook,
-                            onPressed: () async {
-                              await signInWithGoogle();
-                              // try {
-                              //   FirebaseUser user =
-                              //   await auth.handleGoogleSignIn(context);
-                              //   validateUser(context, user);
-                              // }catch(e){
-                              //   print('GoogleError');
-                              //   print(e.toString());
-                              // }
-                            },
-                            backgroundColor: Colors.blue,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
+                          horizontalLine(),
+                          Text(" Social Login ",
+                              style: TextStyle(
+                                  fontSize: 16.0, fontFamily: "Poppins-Medium")),
+                          horizontalLine()
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SignInButtonBuilder(
+                              text: 'Google',
+                              mini: true,
+                              shape: CircleBorder(),
+                              icon: FontAwesomeIcons.google,
+                              backgroundColor: Colors.red.shade900,
+                              onPressed: () async {
+                                await signInWithGoogle();
+                                // try {
+                                //   FirebaseUser user =
+                                //   await auth.handleGoogleSignIn(context);
+                                //   validateUser(context, user);
+                                // }catch(e){
+                                //   print('GoogleError');
+                                //   print(e.toString());
+                                // }
+                              },
+                            ),
+                            SizedBox(
+                              width: 30,
+                            ),
+                            SignInButtonBuilder(
+                              text: 'FaceBook',
+                              mini: true,
+                              shape: CircleBorder(),
+                              icon: FontAwesomeIcons.facebook,
+                              onPressed: () async {
+                                await signInWithGoogle();
+                                // try {
+                                //   FirebaseUser user =
+                                //   await auth.handleGoogleSignIn(context);
+                                //   validateUser(context, user);
+                                // }catch(e){
+                                //   print('GoogleError');
+                                //   print(e.toString());
+                                // }
+                              },
+                              backgroundColor: Colors.blue,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
 
 //                           Text(
 //                             'Login with Google',
@@ -385,11 +385,12 @@ class _LoginState extends State<Login> {
 //                                 fontWeight: FontWeight.bold),
 //                           ),
 
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

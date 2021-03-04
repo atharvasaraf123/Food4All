@@ -102,7 +102,7 @@ class _SettingsState extends State<Settings> {
                                                 MediaQuery.of(context).size.width/2.5,
                                             animation: true,
                                             lineHeight: 14.0,
-                                            animationDuration: 2500,
+                                            animationDuration: 1500,
                                             percent: 0.8,
 
                                             linearStrokeCap:
