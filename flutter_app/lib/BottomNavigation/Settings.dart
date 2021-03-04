@@ -8,6 +8,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../AddNgo.dart';
+import '../login.dart';
 import 'EditProfile.dart';
 
 class Settings extends StatefulWidget {
@@ -24,6 +25,11 @@ class _SettingsState extends State<Settings> {
   String profileUrl="";
   bool load=true;
 
+
+  logout()async{
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
+  }
 
   getUserData()async{
     String uid=FirebaseAuth.instance.currentUser.uid;
@@ -311,10 +317,15 @@ class _SettingsState extends State<Settings> {
                               icon: LineAwesomeIcons.user_plus,
                               text: 'Invite a Friend',
                             ),
-                            ProfileListItem(
-                              icon: LineAwesomeIcons.alternate_sign_out,
-                              text: 'Logout',
-                              hasNavigation: false,
+                            GestureDetector(
+                              onTap: ()async{
+                                await logout();
+                              },
+                              child: ProfileListItem(
+                                icon: LineAwesomeIcons.alternate_sign_out,
+                                text: 'Logout',
+                                hasNavigation: false,
+                              ),
                             ),
                           ],
                         ),

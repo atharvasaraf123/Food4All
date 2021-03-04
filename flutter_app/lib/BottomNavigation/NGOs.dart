@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/AddNgo.dart';
+import 'package:flutter_app/BottomNavigation/NgoPerson.dart';
 
 class NGOs extends StatefulWidget {
   @override
@@ -70,12 +71,7 @@ class _NGOsState extends State<NGOs> {
     return load == true
         ? Center(child: CircularProgressIndicator())
         : ngo
-            ? ListView.builder(itemBuilder: (BuildContext context, int pos) {
-                return ListTile(
-                  title: Text(donationList[pos]['foodItems']),
-                );
-              },
-    itemCount: donationList.length,)
+            ? NgoPerson(donationList: donationList,)
             : ListView(
                 children: [
                   ListView.builder(

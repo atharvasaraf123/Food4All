@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/Dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geocoder/model.dart';
@@ -35,11 +36,13 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin {
       'name': name,
       'address': add,
       'phone': phone,
-      'capacity': capacity
+      'capacity': capacity,
+      'uid':uid
     };
     print(ngo);
     ngoCol.doc(uid).set(ngo).then((value) {
       Fluttertoast.showToast(msg: 'NGO registered');
+      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
     }).catchError((onError) {
       Fluttertoast.showToast(msg: onError.toString());
     });
