@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/BottomNavigation/Add_Hunger_Spot.dart';
 import 'package:flutter_app/BottomNavigation/NGOs.dart';
-import 'package:flutter_app/BottomNavigation/Profile.dart';
+import 'package:flutter_app/BottomNavigation/Settings.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'BottomNavigation/Donate_Food.dart';
@@ -58,7 +58,7 @@ class _MyHomePageState extends State {
   List<Widget>list=[
     Container(),
     NGOs(),
-    Profile()
+    Settings()
   ];
 
   SpeedDial _speedDial() {
