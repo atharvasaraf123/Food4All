@@ -267,7 +267,8 @@ class _NgoPersonState extends State<NgoPerson> {
   showAcceptedDonations() {
     return Container(
       height: 190,
-      child: ListView.builder(
+      child: PageView.builder(
+        pageSnapping: false,
         itemBuilder: (BuildContext context, int pos) {
           return Align(
             alignment: Alignment.centerLeft,
@@ -416,7 +417,7 @@ class _NgoPersonState extends State<NgoPerson> {
         },
         scrollDirection: Axis.horizontal,
         itemCount: 3,
-        shrinkWrap: true,
+        // shrinkWrap: true,
       ),
     );
   }
