@@ -7,7 +7,7 @@ import 'package:flutter_app/konstants/ProfileListItem.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../AddNgo.dart';
 import '../login.dart';
 import 'EditProfile.dart';
@@ -26,10 +26,12 @@ class _SettingsState extends State<Settings> {
   String profileUrl="";
   bool load=true;
   double per=0;
+  final storage=FlutterSecureStorage();
 
 
   logout()async{
     await FirebaseAuth.instance.signOut();
+    await storage.deleteAll();
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
   }
 
