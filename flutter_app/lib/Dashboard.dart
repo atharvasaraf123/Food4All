@@ -1,3 +1,4 @@
+import 'package:android_intent/android_intent.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:location/location.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'BottomNavigation/Donate_Food.dart';
 import 'login.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -52,6 +54,13 @@ class _MyHomePageState extends State {
   final storage=FlutterSecureStorage();
   bool load=true;
 
+  openLocationSetting() async {
+    final AndroidIntent intent = new AndroidIntent(
+      action: 'android.settings.LOCATION_SOURCE_SETTINGS',
+    );
+    await intent.launch();
+  }
+
   getUserLocation() async {
     if (await storage.containsKey(key: 'city')){
       city=await storage.read(key: 'city');
@@ -60,33 +69,43 @@ class _MyHomePageState extends State {
         load=false;
       });
     } else {
-      Location location = new Location();
-      bool _serviceEnabled;
-      PermissionStatus _permissionGranted;
-      LocationData myLocation;
-      _serviceEnabled = await location.serviceEnabled();
-      if (!_serviceEnabled) {
-        _serviceEnabled = await location.requestService();
-        if (!_serviceEnabled) {
-          setState(() {
-            load=false;
-          });
-          return;
+      bool serviceEnabled;
+      LocationPermission permission;
+
+      // Test if location services are enabled.
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Location services are not enabled don't continue
+        // accessing the position and request users of the
+        // App to enable the location services.
+        await openLocationSetting();
+      }
+
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.deniedForever) {
+          // Permissions are denied forever, handle appropriately.
+          return Future.error(
+              'Location permissions are permanently denied, we cannot request permissions.');
+        }
+
+        if (permission == LocationPermission.denied) {
+          // Permissions are denied, next time you could try
+          // requesting permissions again (this is also where
+          // Android's shouldShowRequestPermissionRationale
+          // returned true. According to Android guidelines
+          // your App should show an explanatory UI now.
+          return Future.error(
+              'Location permissions are denied');
         }
       }
-      _permissionGranted = await location.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await location.requestPermission();
-        if (_permissionGranted != PermissionStatus.granted) {
-          setState(() {
-            load=false;
-          });
-          return;
-        }
-      }
-      myLocation = await location.getLocation();
+
+      // When we reach here, permissions are granted and we can
+      // continue accessing the position of the device.
+      Position position= await Geolocator.getCurrentPosition();
       final coordinates =
-      new Coordinates(myLocation.latitude, myLocation.longitude);
+      new Coordinates(position.latitude, position.longitude);
       var addresses =
       await Geocoder.local.findAddressesFromCoordinates(coordinates);
       var first = addresses.first;
@@ -116,8 +135,8 @@ class _MyHomePageState extends State {
   }
 
   logout()async{
-      await FirebaseAuth.instance.signOut();
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
   }
 
   changePage(int index) {
