@@ -28,7 +28,7 @@ class App extends StatelessWidget {
       Map<String,dynamic>mapp=ds.data();
       if(mapp.containsKey('city')){
         print('dash');
-        return Dashboard();
+        return MyHomePage();
       }else{
         return googlesignindialog();
       }
@@ -42,6 +42,11 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
+      title: 'Food Donation',
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+      ),
+
       home: Scaffold(
         body: Center(
           child: FutureBuilder(

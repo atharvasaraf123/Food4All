@@ -29,13 +29,9 @@ class _DashboardState extends State<Dashboard> {
     SizeConfig().init(context);
 
 
-    return MaterialApp(
-      title: 'Food Donation',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-      ),
-      home: MyHomePage(),
-      debugShowCheckedModeBanner: false,
+    return Scaffold(
+      body: MyHomePage(),
+      // debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -104,14 +100,13 @@ class _MyHomePageState extends State {
     }
   }
 
-  int currentIndex;
+  int currentIndex=0;
   BuildContext context;
 
   @override
   void initState() {
     super.initState();
 
-    currentIndex = 0;
     getUserLocation();
   }
 
