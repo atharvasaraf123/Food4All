@@ -373,30 +373,7 @@ class _LoginState extends State<Login> {
                               // }
                             },
                           ),
-                          SizedBox(
-                            width: 30,
-                          ),
-                          SignInButtonBuilder(
-                            text: 'FaceBook',
-                            mini: true,
-                            shape: CircleBorder(),
-                            icon: FontAwesomeIcons.facebook,
-                            onPressed: () async {
-                              await signInWithGoogle();
-                              // try {
-                              //   FirebaseUser user =
-                              //   await auth.handleGoogleSignIn(context);
-                              //   validateUser(context, user);
-                              // }catch(e){
-                              //   print('GoogleError');
-                              //   print(e.toString());
-                              // }
-                            },
-                            backgroundColor: Colors.blue,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
+
 
 //                           Text(
 //                             'Login with Google',

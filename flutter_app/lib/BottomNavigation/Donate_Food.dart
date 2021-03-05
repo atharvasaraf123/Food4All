@@ -6,9 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/Dashboard.dart';
+import 'package:flutter_app/konstants/functions.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -182,13 +184,55 @@ class _Donate_FoodState extends State<Donate_Food> {
   getUserLocation() async {
     //call this async method from whereever you need
 
-    LocationData myLocation;
     String error;
-    Location location = new Location();
-    lat=myLocation.latitude;
-    long=myLocation.longitude;
     try {
-      myLocation = await location.getLocation();
+      bool serviceEnabled;
+      LocationPermission permission;
+
+      // Test if location services are enabled.
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Location services are not enabled don't continue
+        // accessing the position and request users of the
+        // App to enable the location services.
+        await openLocationSetting();
+      }
+
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.deniedForever) {
+          // Permissions are denied forever, handle appropriately.
+          return Future.error(
+              'Location permissions are permanently denied, we cannot request permissions.');
+        }
+
+        if (permission == LocationPermission.denied) {
+          // Permissions are denied, next time you could try
+          // requesting permissions again (this is also where
+          // Android's shouldShowRequestPermissionRationale
+          // returned true. According to Android guidelines
+          // your App should show an explanatory UI now.
+          return Future.error(
+              'Location permissions are denied');
+        }
+      }
+
+      // When we reach here, permissions are granted and we can
+      // continue accessing the position of the device.
+      Position position= await Geolocator.getCurrentPosition();
+      final coordinates =
+      new Coordinates(position.latitude, position.longitude);
+      var addresses =
+      await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+      print(
+          ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+      setState(() {
+        address = addresses.first.toString();
+        _addressController.text = addresses.first.addressLine;
+        city = addresses.first.locality;
+      });
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
@@ -198,21 +242,7 @@ class _Donate_FoodState extends State<Donate_Food> {
         error = 'permission denied- please enable it from app settings';
         print(error);
       }
-      myLocation = null;
     }
-    LocationData currentLocation = myLocation;
-    final coordinates =
-        new Coordinates(myLocation.latitude, myLocation.longitude);
-    var addresses =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    var first = addresses.first;
-    print(
-        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
-    setState(() {
-      address = addresses.first.toString();
-      _addressController.text = addresses.first.addressLine;
-      city = addresses.first.locality;
-    });
   }
 
   @override
@@ -280,6 +310,7 @@ class _Donate_FoodState extends State<Donate_Food> {
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: TextFormField(
+                          readOnly: true,
                           onTap: ()async{
                             await getUserLocation();
                           },
@@ -364,7 +395,7 @@ class _Donate_FoodState extends State<Donate_Food> {
                             }, onConfirm: (date) {
                               selectedDateTime = date;
                               dateController.text = DateFormat.yMMMEd().add_jm().format(date);
-                            }, currentTime: DateTime(2020, 01, 01, 12, 00, 00));
+                            }, currentTime: DateTime.now());
                           }),
                           style: TextStyle(
                             fontFamily: 'MontserratMed',
