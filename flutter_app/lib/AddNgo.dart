@@ -22,6 +22,8 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin {
   String address;
   String name;
   String add;
+  double lat;
+  double long;
   String phone;
   String city;
   User _user;
@@ -38,7 +40,9 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin {
       'phone': phone,
       'capacity': capacity,
       'uid':uid,
-      'city':city
+      'city':city,
+      "lat":lat,
+      "long":long
     };
     print(ngo);
     ngoCol.doc(uid).set(ngo).then((value) {
@@ -57,6 +61,8 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin {
     Location location = new Location();
     try {
       myLocation = await location.getLocation();
+      lat=myLocation.latitude;
+      long=myLocation.longitude;
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
@@ -102,7 +108,7 @@ class _AddNGOState extends State<AddNGO> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           AppBackground(),

@@ -35,6 +35,8 @@ bool pict = false;
 bool _large;
 bool _medium;
 bool _obscureText = true;
+double lat;
+double long;
 String pictRegID;
 String city;
 
@@ -61,6 +63,8 @@ class _SignUpState extends State<SignUp> {
     try {
       print('1');
       myLocation = await location.getLocation();
+      lat=myLocation.latitude;
+      long=myLocation.longitude;
       print('1');
       final coordinates =
       new Coordinates(myLocation.latitude, myLocation.longitude);
@@ -107,7 +111,9 @@ class _SignUpState extends State<SignUp> {
         'email':mail,
         'name':name,
         'phone':phoneNumber,
-        'city':city
+        'city':city,
+        'lat':lat,
+        'long':long
       };
       print(user);
       users.doc(uid).set(user).then((value) {

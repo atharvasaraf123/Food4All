@@ -21,6 +21,8 @@ class Donate_Food extends StatefulWidget {
 }
 
 class CustomPicker extends CommonPickerModel {
+
+
   String digits(int value, int length) {
     return '$value'.padLeft(length, "0");
   }
@@ -96,6 +98,7 @@ class CustomPicker extends CommonPickerModel {
 }
 
 class _Donate_FoodState extends State<Donate_Food> {
+  double lat,long;
   DateTime selectedDateTime;
   TextEditingController dateController = TextEditingController();
 
@@ -156,7 +159,9 @@ class _Donate_FoodState extends State<Donate_Food> {
       'dateTime':dateController.text.toString().trim(),
       'minQ':capacitymin.ceil(),
       'maxQ':capacitymax.ceil(),
-      'url':url
+      'url':url,
+      'lat':lat,
+      'long':long
     };
     await donation.add(mapp).then((value)async{
       await dona.add(mapp).then((value) {
@@ -179,6 +184,8 @@ class _Donate_FoodState extends State<Donate_Food> {
     LocationData myLocation;
     String error;
     Location location = new Location();
+    lat=myLocation.latitude;
+    long=myLocation.longitude;
     try {
       myLocation = await location.getLocation();
     } on PlatformException catch (e) {
@@ -212,7 +219,7 @@ class _Donate_FoodState extends State<Donate_Food> {
     return Scaffold(
 
       backgroundColor: Colors.white,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [
