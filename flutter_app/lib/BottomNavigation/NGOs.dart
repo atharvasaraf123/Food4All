@@ -55,7 +55,7 @@ class _NGOsState extends State<NGOs> {
           activeDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
         }else if(list[i]['completed']==false){
           activeDonationList[returnDateFrom(list[i]['dateTime'])]=List();
-          completedDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
+          activeDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
       }
     }});
   }
