@@ -64,7 +64,7 @@ class _SettingsState extends State<Settings> {
       allowFontScaling: false,
       builder: () => Scaffold(
         backgroundColor: Colors.white,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Stack(
             children: [

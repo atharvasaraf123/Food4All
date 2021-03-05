@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/signup.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:image_picker/image_picker.dart';
@@ -100,7 +101,9 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
       'hungerSpotType':selectedChoice,
      'minP':capacitymin.ceil(),
       'maxP':capacitymax.ceil(),
-      'url':url
+      'url':url,
+      'lat':lat,
+      'long':long
     };
     await donation.add(mapp).then((value)async{
       await hungerspot.add(mapp).then((value) {
@@ -121,7 +124,7 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [
@@ -556,6 +559,8 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
     Location location = new Location();
     try {
       myLocation = await location.getLocation();
+      lat=myLocation.latitude;
+      long=myLocation.longitude;
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
