@@ -83,6 +83,8 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
   addHungerSpot(BuildContext context)async{
     User user=FirebaseAuth.instance.currentUser;
     CollectionReference donation=userCol.doc(user.uid).collection('hungerspot');
+    DocumentSnapshot ds=await userCol.doc(user.uid).get();
+    Map<String,dynamic>data=ds.data();
     url=List();
     for(int i=0;i<image.length;i++){
       // await storage.ref(basename(image[i].path)).putFile(image[i]).then((val)async{
@@ -103,7 +105,9 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
       'maxP':capacitymax.ceil(),
       'url':url,
       'lat':lat,
-      'long':long
+      'long':long,
+      'name':data['name'],
+      'phone':data['phone']
     };
     await donation.add(mapp).then((value)async{
       await hungerspot.add(mapp).then((value) {
