@@ -188,6 +188,10 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
                                       Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: TextFormField(
+                                          onTap: ()async{
+                                            await getUserLocation();
+                                          },
+                                          readOnly: true,
                                           validator: (val) {
                                             if (val.isEmpty) {
                                               return 'This field cannot be empty!';
@@ -201,26 +205,16 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
                                             });
                                           },
                                           decoration: InputDecoration(
-                                              contentPadding: EdgeInsets.all(0.0),
+                                              contentPadding: EdgeInsets.only(left: 10),
                                               border: OutlineInputBorder(
                                                   borderSide: BorderSide(
                                                 color: Colors.grey.shade500,
                                                 width: 1.0,
                                               )),
-                                              prefixIcon: IconButton(
-                                                onPressed: () async {
-                                                  await getUserLocation();
-                                                },
-                                                icon: Icon(
+                                              suffixIcon:Icon(
                                                   Icons.my_location_outlined,
                                                 ),
                                               ),
-                                              suffixIcon: IconButton(
-                                                onPressed: () async {
-                                                  //  await getUserLocation();
-                                                },
-                                                icon: Icon(Icons.edit),
-                                              )),
                                           style: TextStyle(
                                             fontSize: 16.0,
                                             fontFamily: 'MontserratMed',

@@ -5,11 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/BottomNavigation/Add_Hunger_Spot.dart';
 import 'package:flutter_app/BottomNavigation/NGOs.dart';
 import 'package:flutter_app/BottomNavigation/Settings.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geocoder/model.dart';
 import 'package:location/location.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import 'BottomNavigation/Donate_Food.dart';
 import 'login.dart';
 
@@ -19,8 +20,13 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+
+
+
   @override
   Widget build(BuildContext context) {
+
+
     return MaterialApp(
       title: 'Food Donation',
       theme: ThemeData(
@@ -41,36 +47,50 @@ class _MyHomePageState extends State {
 
 
   String city="";
+  final storage=FlutterSecureStorage();
+  bool load=true;
 
   getUserLocation() async {
-    //call this async method from whereever you need
-
-    LocationData myLocation;
-    String error;
-    Location location = new Location();
-    try {
-      myLocation = await location.getLocation();
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        error = 'please grant permission';
-        print(error);
+    if (await storage.containsKey(key: 'city')) {
+      city=await storage.read(key: 'city');
+      print('hello');
+      setState(() {
+        load=false;
+      });
+    } else {
+      LocationData myLocation;
+      String error;
+      Location location = new Location();
+      try {
+        myLocation = await location.getLocation();
+      } on PlatformException catch (e) {
+        if (e.code == 'PERMISSION_DENIED') {
+          error = 'please grant permission';
+          print(error);
+        }
+        if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+          error = 'permission denied- please enable it from app settings';
+          print(error);
+        }
       }
-      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
-        error = 'permission denied- please enable it from app settings';
-        print(error);
-      }
+      LocationData currentLocation = myLocation;
+      final coordinates =
+      new Coordinates(myLocation.latitude, myLocation.longitude);
+      var addresses =
+      await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+      print(
+          ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first
+              .subAdminArea},${first.addressLine}, ${first.featureName},${first
+              .thoroughfare}, ${first.subThoroughfare}');
+      setState(() {
+        city = addresses.first.locality;
+      });
+      await storage.write(key: 'city', value: city);
+      setState(() {
+        load=false;
+      });
     }
-    LocationData currentLocation = myLocation;
-    final coordinates =
-    new Coordinates(myLocation.latitude, myLocation.longitude);
-    var addresses =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    var first = addresses.first;
-    print(
-        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
-    setState(() {
-      city = addresses.first.locality;
-    });
   }
 
   int currentIndex;
@@ -140,9 +160,12 @@ class _MyHomePageState extends State {
 
     this.context=context;
 
-    return Scaffold(
+    return load?CircularProgressIndicator():Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
+          actions: [
+            Text(city)
+          ],
           title: Text('Food Donation'),
           centerTitle: true,
         ),
