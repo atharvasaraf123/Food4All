@@ -43,6 +43,8 @@ class _EditProfileState extends State<EditProfile> {
       firebase_storage.FirebaseStorage.instance;
 
 
+
+
   getUserLocation() async {
     //call this async method from whereever you need
 
@@ -301,6 +303,13 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _file=null;
+  }
   @override
   void initState() {
     // TODO: implement initState
