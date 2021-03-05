@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +25,7 @@ class _SettingsState extends State<Settings> {
   String email="";
   String profileUrl="";
   bool load=true;
+  double per=0;
 
 
   logout()async{
@@ -40,7 +42,17 @@ class _SettingsState extends State<Settings> {
       name=mapp['name'].toString().capitalize();
       email=mapp['email'];
       profileUrl=mapp['profileUrl'];
+      print(profileUrl);
       print(name);
+      if(profileUrl==null){
+        setState(() {
+          per=0.8;
+        });
+      }else{
+        setState(() {
+          per=1;
+        });
+      }
       setState(() {
         load=false;
       });
@@ -95,10 +107,15 @@ class _SettingsState extends State<Settings> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5.0))),
-                                    child: profileUrl==null||profileUrl.isEmpty?Image.asset(
-                                      'images/placeholder.jpg',
-                                      fit: BoxFit.fitHeight,
-                                    ):Image.network(profileUrl),
+                                    // child: profileUrl==null||profileUrl.isEmpty?Image.asset(
+                                    //   'images/placeholder.jpg',
+                                    //   fit: BoxFit.fitHeight,
+                                    // ):Image.network(profileUrl),
+                                    child: CachedNetworkImage(
+                                      imageUrl: profileUrl,
+                                      placeholder: (context, url) => Image.asset('images/placeholder.jpg',),
+                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -146,8 +163,7 @@ class _SettingsState extends State<Settings> {
                                             animation: true,
                                             lineHeight: 14.0,
                                             animationDuration: 1500,
-                                            percent: 0.8,
-
+                                            percent: per,
                                             linearStrokeCap:
                                                 LinearStrokeCap.roundAll,
                                             linearGradient: LinearGradient(
@@ -166,7 +182,7 @@ class _SettingsState extends State<Settings> {
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 5.0,horizontal: 3.0),
                                           child: Text(
-                                            '80 % Profile Completed',
+                                            '${per*100} % Profile Completed',
                                             style: TextStyle(
                                                 fontFamily: 'MontserratReg',
                                                 color: Colors.grey.shade700,
