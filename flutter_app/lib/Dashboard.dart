@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/BottomNavigation/Add_Hunger_Spot.dart';
 import 'package:flutter_app/BottomNavigation/NGOs.dart';
 import 'package:flutter_app/BottomNavigation/Settings.dart';
+import 'package:flutter_app/size_config.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:geocoder/geocoder.dart';
@@ -25,6 +26,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
 
 
     return MaterialApp(
