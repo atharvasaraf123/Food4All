@@ -51,29 +51,38 @@ class _MyHomePageState extends State {
   bool load=true;
 
   getUserLocation() async {
-    if (await storage.containsKey(key: 'city')) {
+    if (await storage.containsKey(key: 'city')){
       city=await storage.read(key: 'city');
       print('hello');
       setState(() {
         load=false;
       });
     } else {
-      LocationData myLocation;
-      String error;
       Location location = new Location();
-      try {
-        myLocation = await location.getLocation();
-      } on PlatformException catch (e) {
-        if (e.code == 'PERMISSION_DENIED') {
-          error = 'please grant permission';
-          print(error);
-        }
-        if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
-          error = 'permission denied- please enable it from app settings';
-          print(error);
+      bool _serviceEnabled;
+      PermissionStatus _permissionGranted;
+      LocationData myLocation;
+      _serviceEnabled = await location.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await location.requestService();
+        if (!_serviceEnabled) {
+          setState(() {
+            load=false;
+          });
+          return;
         }
       }
-      LocationData currentLocation = myLocation;
+      _permissionGranted = await location.hasPermission();
+      if (_permissionGranted == PermissionStatus.denied) {
+        _permissionGranted = await location.requestPermission();
+        if (_permissionGranted != PermissionStatus.granted) {
+          setState(() {
+            load=false;
+          });
+          return;
+        }
+      }
+      myLocation = await location.getLocation();
       final coordinates =
       new Coordinates(myLocation.latitude, myLocation.longitude);
       var addresses =

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/AddNgo.dart';
 import 'package:flutter_app/BottomNavigation/NgoPerson.dart';
+import 'package:intl/intl.dart';
 
 class NGOs extends StatefulWidget {
   String city;
@@ -24,7 +25,8 @@ class _NGOsState extends State<NGOs> {
   FirebaseFirestore.instance.collection('hungerspot');
   List list;
   String dropVal;
-  List donationList;
+  Map<String,List> completedDonationList=Map();
+  Map<String,List> activeDonationList=Map();
   List hungerList;
   Map<String,List>cities;
 
@@ -35,12 +37,27 @@ class _NGOsState extends State<NGOs> {
     checkNgo();
   }
 
+  String returnDateFrom(String dateTime){
+    print(DateFormat.MMMMd().format(DateFormat.yMMMEd().add_jm().parse(dateTime)));
+    return DateFormat.MMMMd().format(DateFormat.yMMMEd().add_jm().parse(dateTime));
+  }
+
   getDonationList() async {
     await donCol.get().then((value) {
-      setState(() {
-        donationList = value.docs;
-      });
-    });
+      List list=value.docs;
+      for(int i=0;i<list.length;i++){
+        if(list[i]['completed']==true&&completedDonationList.containsKey(returnDateFrom(list[i]['dateTime']))){
+          completedDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
+        }else if(list[i]['completed']==true){
+          completedDonationList[returnDateFrom(list[i]['dateTime'])]=List();
+          completedDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
+        }else if(list[i]['completed']==false&&completedDonationList.containsKey(returnDateFrom(list[i]['dateTime']))){
+          activeDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
+        }else if(list[i]['completed']==false){
+          activeDonationList[returnDateFrom(list[i]['dateTime'])]=List();
+          completedDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
+      }
+    }});
   }
 
    getHungerSpots()async{
@@ -104,7 +121,7 @@ class _NGOsState extends State<NGOs> {
     return load == true
         ? Center(child: CircularProgressIndicator())
         : ngo
-            ? NgoPerson(donationList: donationList,)
+            ? NgoPerson(donationList: completedDonationList,)
             : ListView(
                 children: [
                   Padding(

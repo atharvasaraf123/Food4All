@@ -425,8 +425,6 @@ class _SignUpState extends State<SignUp> {
             validator: (val) {
               if (val.isEmpty) {
                 return 'This field cannot be empty!';
-              } else if (val.trim().length<10) {
-                return 'Enter a valid phone number!';
               }
               return null;
             },

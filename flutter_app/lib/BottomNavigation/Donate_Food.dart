@@ -161,7 +161,8 @@ class _Donate_FoodState extends State<Donate_Food> {
       'maxQ':capacitymax.ceil(),
       'url':url,
       'lat':lat,
-      'long':long
+      'long':long,
+      'completed':false
     };
     await donation.add(mapp).then((value)async{
       await dona.add(mapp).then((value) {

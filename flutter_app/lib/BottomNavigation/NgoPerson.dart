@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 
 import 'IndividualScreen.dart';
 
 class NgoPerson extends StatefulWidget {
-  List donationList;
+  Map<String,List> donationList;
 
   NgoPerson({this.donationList});
 
@@ -14,6 +15,20 @@ class NgoPerson extends StatefulWidget {
 }
 
 class _NgoPersonState extends State<NgoPerson> {
+  DateTime dateTime=DateTime.now();
+
+
+  String format(DateTime dateTime){
+    return DateFormat.MMMMd().format(dateTime);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +56,7 @@ class _NgoPersonState extends State<NgoPerson> {
                                 height: 45,
                                 child: Center(
                                   child: Text(
-                                    'March 05',
+                                    format(dateTime.add(Duration(days: pos))),
                                     style: TextStyle(
                                         fontSize: 14.0,
                                         color: Color(0xffffe4e1),
@@ -260,7 +275,7 @@ class _NgoPersonState extends State<NgoPerson> {
                             padding: const EdgeInsets.only(top: 3.0),
                             child: Align(
                               alignment: Alignment.bottomCenter,
-                              child: RaisedButton(
+                              child: MaterialButton(
                                 padding: EdgeInsets.all(0.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
