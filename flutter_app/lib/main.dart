@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Dashboard.dart';
+import 'package:flutter_app/size_config.dart';
 import 'googlesignindialog.dart';
 
 import 'login.dart';
@@ -40,30 +41,31 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-
     return MaterialApp(
       home: Scaffold(
-        body: FutureBuilder(
-          // Initialize FlutterFire:
-          future: initialise(),
-          builder: (context, snapshot) {
-            // Check for errors
-            print('abc${ snapshot.data}');
-            if (snapshot.hasError) {
-              return Text("SomethingWentWrong", textDirection: TextDirection.ltr);
-            }
+        body: Center(
+          child: FutureBuilder(
+            // Initialize FlutterFire:
+            future: initialise(),
+            builder: (context, snapshot) {
+              // Check for errors
+              print('abc${ snapshot.data}');
+              if (snapshot.hasError) {
+                return Text("SomethingWentWrong", textDirection: TextDirection.ltr);
+              }
 
-            // Once complete, show your application
-            if (snapshot.connectionState == ConnectionState.done) {
-              // print(snapshot.data);
-              // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>snapshot.data), (route) => false);
-              return snapshot.data;
+              // Once complete, show your application
+              if (snapshot.connectionState == ConnectionState.done) {
+                // print(snapshot.data);
+                // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>snapshot.data), (route) => false);
+                return snapshot.data;
 
-            }
+              }
 
-            // Otherwise, show something whilst waiting for initialization to complete
-            return Text("Loading", textDirection: TextDirection.ltr);
-          },
+              // Otherwise, show something whilst waiting for initialization to complete
+              return Text("Loading", textDirection: TextDirection.ltr);
+            },
+          ),
         ),
       ),
     );
