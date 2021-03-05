@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:like_button/like_button.dart';
 
+import 'IndividualScreen.dart';
+
 class NgoPerson extends StatefulWidget {
   List donationList;
 
@@ -273,7 +275,9 @@ class _NgoPersonState extends State<NgoPerson> {
                                 ),
                                 textColor: Color(0xffffe4e1),
                                 color: Colors.black,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext conntext)=>IndividualScreen()));
+                                },
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
