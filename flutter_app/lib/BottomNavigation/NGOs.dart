@@ -20,9 +20,12 @@ class _NGOsState extends State<NGOs> {
   CollectionReference ngoCol = FirebaseFirestore.instance.collection('NGO');
   CollectionReference donCol =
       FirebaseFirestore.instance.collection('donation');
+  CollectionReference hungSpot =
+  FirebaseFirestore.instance.collection('hungerspot');
   List list;
   String dropVal;
   List donationList;
+  List hungerList;
   Map<String,List>cities;
 
   @override
@@ -36,9 +39,17 @@ class _NGOsState extends State<NGOs> {
     await donCol.get().then((value) {
       setState(() {
         donationList = value.docs;
-        load = false;
       });
     });
+  }
+
+   getHungerSpots()async{
+     await hungSpot.get().then((value) {
+       setState(() {
+         hungerList = value.docs;
+         load = false;
+       });
+     });
   }
 
   checkNgo() async {
@@ -72,6 +83,7 @@ class _NGOsState extends State<NGOs> {
       });
     } else {
       await getDonationList();
+      await getHungerSpots();
     }
     print(list);
   }
