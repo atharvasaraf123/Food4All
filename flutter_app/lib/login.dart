@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/googlesignindialog.dart';
 import 'package:flutter_app/signup.dart';
+import 'package:flutter_app/size_config.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
@@ -205,54 +206,179 @@ class _LoginState extends State<Login> {
     _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
 
     return  Scaffold(
+      resizeToAvoidBottomInset: true,
       body: load==true?Container(child: spinkit):SafeArea(
         child: CustomPaint(
+          size:Size.fromHeight(MediaQuery.of(context).size.height),
           painter: BackgroundSignIn(),
-          child: Padding(
-            padding: const EdgeInsets.all(36.0),
-            child: SingleChildScrollView(
+          child: Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(36.0),
               child: Form(
                 key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: ListView(
+
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    // SizedBox(
-                    //   height: 155.0,
-                    //   child: Image.asset(
-                    //     "assets/logo.png",
-                    //     fit: BoxFit.contain,
-                    //   ),
-                    // ),
-                    SizedBox(height: 145.0),
-                    Material(
-                      borderRadius: BorderRadius.circular(25.0),
-                      elevation: _large ? 12 : (_medium ? 10 : 8),
-                      child: TextFormField(
-                        onSaved:(val){
-                          setState(() {
-                            _mail=val;
-                          });
-                        },
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        cursorColor: Color(0xff0aa9d7),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.email,
-                              color: Color(0xff0aa9d7), size: 20),
-                          hintText: "Email",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: BorderSide.none),
-                        ),
-                        onChanged: (val) {
-                          // setState(() {
-                          //   email = val;
-                          // });
-                        },
+                    SizedBox(
+                      height: SizeConfig.screenHeight/6,
+                      child: Image.asset(
+                        "images/login.png",
+                        fit: BoxFit.contain,
                       ),
                     ),
-                // TextFormField(
+                    Column(
+                      children: [
+                        SizedBox(height: 40.0),
+                        Material(
+                          borderRadius: BorderRadius.circular(25.0),
+                          elevation: _large ? 12 : (_medium ? 10 : 8),
+                          child: TextFormField(
+                            onSaved:(val){
+                              setState(() {
+                                _mail=val;
+                              });
+                            },
+                            controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            cursorColor:Colors.orangeAccent.shade400,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.email,
+                                  color: Colors.orangeAccent.shade400, size: 20),
+                              hintText: "Email",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: BorderSide.none),
+                            ),
+                            onChanged: (val) {
+                              // setState(() {
+                              //   email = val;
+                              // });
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 25.0),
+
+                        Material(
+                          borderRadius: BorderRadius.circular(25.0),
+                          elevation: _large ? 12 : (_medium ? 10 : 8),
+                          child: TextFormField(
+                            onSaved:(val){
+                              setState(() {
+                                _password=val;
+                              });
+                            },
+                            controller: passwordController,
+                            keyboardType: TextInputType.text,
+                            cursorColor: Colors.orangeAccent.shade400,
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.lock,
+                                    color: Colors.orangeAccent.shade400, size: 20),
+                                hintText: "Password",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    borderSide: BorderSide.none),
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.remove_red_eye),
+                                  color: Colors.orangeAccent.shade400,
+                                )),
+                            onChanged: (val) {
+                              // setState(() {
+                              //   password = val;
+                              // });
+                            },
+                            obscureText: _obscureText,
+                          ),
+                        ),
+                        SizedBox(height: _height / 30.0),
+
+                        SizedBox(
+                          height: 35.0,
+                        ),
+                        Material(
+                          elevation: 5.0,
+                          borderRadius: BorderRadius.circular(30.0),
+                          color: Colors.orangeAccent.shade400,
+                          child: MaterialButton(
+
+                            minWidth: MediaQuery.of(context).size.width*0.6,
+                            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                            onPressed: ()async{
+                              if (_formKey.currentState.validate()) {
+                                _formKey.currentState.save();
+                                setState(() {
+                                  load=true;
+                                });
+                                await login();
+                              }
+                            },
+                            child: Text("Login",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15.0,
+                        ),
+                        _getBottomRow(context),
+
+                        SizedBox(
+                          height: 30.0,
+                        ),
+
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            horizontalLine(),
+                            Text(" Social Login ",
+                                style: TextStyle(
+                                    fontSize: 16.0, fontFamily: "Poppins-Medium")),
+                            horizontalLine()
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              SignInButtonBuilder(
+                                text: 'Google',
+                                mini: true,
+                                shape: CircleBorder(),
+                                icon: FontAwesomeIcons.google,
+                                backgroundColor: Colors.red.shade900,
+                                onPressed: () async {
+                                  await signInWithGoogle();
+                                  // try {
+                                  //   FirebaseUser user =
+                                  //   await auth.handleGoogleSignIn(context);
+                                  //   validateUser(context, user);
+                                  // }catch(e){
+                                  //   print('GoogleError');
+                                  //   print(e.toString());
+                                  // }
+                                },
+                              ),
+
+
+//                           Text(
+//                             'Login with Google',
+// //                                style: GoogleFonts.openSans(),
+//                             style: TextStyle(
+//                                 color: Colors.black,
+//                                 fontWeight: FontWeight.bold),
+//                           ),
+
+                            ],
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  // TextFormField(
                 //   obscureText: false,
                 //   decoration: InputDecoration(
                 //       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -269,40 +395,6 @@ class _LoginState extends State<Login> {
                 //   },
                 //   onSaved: (val) => _mail = val,
                 // ),
-                    SizedBox(height: 25.0),
-
-                    Material(
-                      borderRadius: BorderRadius.circular(25.0),
-                      elevation: _large ? 12 : (_medium ? 10 : 8),
-                      child: TextFormField(
-                        onSaved:(val){
-                          setState(() {
-                            _password=val;
-                          });
-                        },
-                        controller: passwordController,
-                        keyboardType: TextInputType.text,
-                        cursorColor: Color(0xff0aa9d7),
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock,
-                                color: Color(0xff0aa9d7), size: 20),
-                            hintText: "Password",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                borderSide: BorderSide.none),
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.remove_red_eye),
-                              color: Color(0xff0aa9d7),
-                            )),
-                        onChanged: (val) {
-                          // setState(() {
-                          //   password = val;
-                          // });
-                        },
-                        obscureText: _obscureText,
-                      ),
-                    ),
-                    SizedBox(height: _height / 30.0),
 
 
                     // Row(
@@ -339,88 +431,6 @@ class _LoginState extends State<Login> {
                 //     ),
                 //   ],
                 // ),
-                    SizedBox(
-                      height: 35.0,
-                    ),
-                    Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(30.0),
-                      color: Colors.orangeAccent.shade400,
-                      child: MaterialButton(
-
-                        minWidth: MediaQuery.of(context).size.width*0.6,
-                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        onPressed: ()async{
-                          if (_formKey.currentState.validate()) {
-                            _formKey.currentState.save();
-                            setState(() {
-                              load=true;
-                            });
-                            await login();
-                          }
-                        },
-                        child: Text("Login",
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    _getBottomRow(context),
-
-                    SizedBox(
-                      height: 30.0,
-                    ),
-
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        horizontalLine(),
-                        Text(" Social Login ",
-                            style: TextStyle(
-                                fontSize: 16.0, fontFamily: "Poppins-Medium")),
-                        horizontalLine()
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          SignInButtonBuilder(
-                            text: 'Google',
-                            mini: true,
-                            shape: CircleBorder(),
-                            icon: FontAwesomeIcons.google,
-                            backgroundColor: Colors.red.shade900,
-                            onPressed: () async {
-                              await signInWithGoogle();
-                              // try {
-                              //   FirebaseUser user =
-                              //   await auth.handleGoogleSignIn(context);
-                              //   validateUser(context, user);
-                              // }catch(e){
-                              //   print('GoogleError');
-                              //   print(e.toString());
-                              // }
-                            },
-                          ),
-
-
-//                           Text(
-//                             'Login with Google',
-// //                                style: GoogleFonts.openSans(),
-//                             style: TextStyle(
-//                                 color: Colors.black,
-//                                 fontWeight: FontWeight.bold),
-//                           ),
-
-                        ],
-                      ),
-                    ),
 
                   ],
                 ),
