@@ -36,12 +36,15 @@ class _Donation_imagesState extends State<Donation_images> {
             ),
           ),
           // SizedBox(height: getProportionateScreenWidth(20)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ...List.generate(widget.donation.images.length,
-                  (index) => buildSmallProductPreview(index)),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ...List.generate(widget.donation.images.length,
+                    (index) => buildSmallProductPreview(index)),
+              ],
+            ),
           )
         ],
       ),

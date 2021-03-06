@@ -27,7 +27,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
               AppBackground(),
               _getBackBtn(),
               // _likeButton(),
-              Column(
+              ListView(
                 children: [
                   Body(donation: Donation(id: 0, images: images)),
                   Expanded(
@@ -196,123 +196,35 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                     ),
                                   ),
                                   Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                    child: Column(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  size: 22.0,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4.0),
-                                                  child: Container(
-                                                    child: Text(
-                                                      'location distance',
-                                                      style: TextStyle(
-                                                          fontSize: 12.0,
-                                                          fontFamily:
-                                                              'MontserratBold'),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 8.0,
-                                                            horizontal: 10.0),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  10.0)),
-                                                      color: Colors.white70,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Text(
+                                            'Address ',
+                                            style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontFamily: 'MontserratBold'),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Icon(
-                                                  Icons.location_city,
-                                                  size: 22.0,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4.0),
-                                                  child: Container(
-                                                    child: Text(
-                                                      'Spot Type',
-                                                      style: TextStyle(
-                                                          fontSize: 12.0,
-                                                          fontFamily:
-                                                              'MontserratBold'),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 8.0,
-                                                            horizontal: 10.0),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  10.0)),
-                                                      color: Colors.white70,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Icon(
-                                                  Icons.people_alt_rounded,
-                                                  size: 22.0,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4.0),
-                                                  child: Container(
-                                                    child: Text(
-                                                      '150-200',
-                                                      style: TextStyle(
-                                                          fontSize: 12.0,
-                                                          fontFamily:
-                                                              'MontserratBold'),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 8.0,
-                                                            horizontal: 10.0),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  10.0)),
-                                                      color: Colors.white70,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(
+                                                'Moti Nagar, Latur',
+                                                style: TextStyle(
+                                                    fontSize: 14.0,
+                                                    fontFamily:
+                                                    'MontserratReg'),
+                                                textAlign: TextAlign.justify,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -327,6 +239,144 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                           Color(0xffdddddd),
                                           Color(0xffffffff)
                                         ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.today_rounded,
+                                                    size: 22.0,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(4.0),
+                                                    child: Container(
+                                                      child: Text(
+                                                        'Day',
+                                                        style: TextStyle(
+                                                            fontSize: 12.0,
+                                                            fontFamily:
+                                                                'MontserratBold'),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 8.0,
+                                                              horizontal: 10.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10.0)),
+                                                        color: Colors.white70,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.timelapse,
+                                                    size: 22.0,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(4.0),
+                                                    child: Container(
+                                                      child: Text(
+                                                        'Time',
+                                                        style: TextStyle(
+                                                            fontSize: 12.0,
+                                                            fontFamily:
+                                                                'MontserratBold'),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 8.0,
+                                                              horizontal: 10.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10.0)),
+                                                        color: Colors.white70,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.people_alt_rounded,
+                                                    size: 22.0,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(4.0),
+                                                    child: Container(
+                                                      child: Text(
+                                                        '150-200',
+                                                        style: TextStyle(
+                                                            fontSize: 12.0,
+                                                            fontFamily:
+                                                                'MontserratBold'),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 8.0,
+                                                              horizontal: 10.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10.0)),
+                                                        color: Colors.white70,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      padding: EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)),
+                                        gradient: LinearGradient(
+                                          begin: Alignment.centerLeft,
+                                          end: Alignment.centerRight,
+                                          colors: [
+                                            Color(0xffdddddd),
+                                            Color(0xffffffff)
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -356,7 +406,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                                 vertical: 10, horizontal: 20),
                                             child: Center(
                                                 child: Text(
-                                                  'Submit',
+                                                  'Accept',
                                                   style: TextStyle(
                                                       fontSize: 20,
                                                       color: Colors.white,
@@ -376,7 +426,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(20.0)),
+                              topRight: Radius.circular(30.0)),
                           color: Colors.grey.shade400,
                         ),
                       ),
