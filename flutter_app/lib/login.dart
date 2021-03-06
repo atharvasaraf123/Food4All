@@ -211,131 +211,130 @@ class _LoginState extends State<Login> {
         child: CustomPaint(
           size:Size.fromHeight(MediaQuery.of(context).size.height),
           painter: BackgroundSignIn(),
-          child: Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(36.0),
-              child: Form(
-                key: _formKey,
-                child: ListView(
+          child: Padding(
+            padding: const EdgeInsets.all(36.0),
+            child: Form(
+              key: _formKey,
+              child: ListView(
 
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: SizeConfig.screenHeight/6,
-                      child: Image.asset(
-                        "images/login.png",
-                        fit: BoxFit.contain,
-                      ),
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: SizeConfig.screenHeight/6,
+                    child: Image.asset(
+                      "images/login.png",
+                      fit: BoxFit.contain,
                     ),
-                    Column(
-                      children: [
-                        SizedBox(height: 40.0),
-                        Material(
-                          borderRadius: BorderRadius.circular(25.0),
-                          elevation: _large ? 12 : (_medium ? 10 : 8),
-                          child: TextFormField(
-                            onSaved:(val){
-                              setState(() {
-                                _mail=val;
-                              });
-                            },
-                            controller: emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            cursorColor:Colors.orangeAccent.shade400,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.email,
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(height: 40.0),
+                      Material(
+                        borderRadius: BorderRadius.circular(25.0),
+                        elevation: _large ? 12 : (_medium ? 10 : 8),
+                        child: TextFormField(
+                          onSaved:(val){
+                            setState(() {
+                              _mail=val;
+                            });
+                          },
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          cursorColor:Colors.orangeAccent.shade400,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.email,
+                                color: Colors.orangeAccent.shade400, size: 20),
+                            hintText: "Email",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                                borderSide: BorderSide.none),
+                          ),
+                          onChanged: (val) {
+                            // setState(() {
+                            //   email = val;
+                            // });
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 25.0),
+
+                      Material(
+                        borderRadius: BorderRadius.circular(25.0),
+                        elevation: _large ? 12 : (_medium ? 10 : 8),
+                        child: TextFormField(
+                          onSaved:(val){
+                            setState(() {
+                              _password=val;
+                            });
+                          },
+                          controller: passwordController,
+                          keyboardType: TextInputType.text,
+                          cursorColor: Colors.orangeAccent.shade400,
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.lock,
                                   color: Colors.orangeAccent.shade400, size: 20),
-                              hintText: "Email",
+                              hintText: "Password",
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30.0),
                                   borderSide: BorderSide.none),
-                            ),
-                            onChanged: (val) {
-                              // setState(() {
-                              //   email = val;
-                              // });
-                            },
-                          ),
+                              suffixIcon: IconButton(
+                                onPressed: (){
+                                  setState(() {
+                                    _obscureText=!_obscureText;
+                                  });
+                                },
+                                icon: _obscureText?Icon(Icons.visibility):Icon(Icons.visibility_off),
+                                color: Colors.orangeAccent.shade400,
+                              )),
+                          onChanged: (val) {
+                            // setState(() {
+                            //   password = val;
+                            // });
+                          },
+                          obscureText: _obscureText,
                         ),
-                        SizedBox(height: 25.0),
+                      ),
+                      SizedBox(height: _height / 30.0),
 
-                        Material(
-                          borderRadius: BorderRadius.circular(25.0),
-                          elevation: _large ? 12 : (_medium ? 10 : 8),
-                          child: TextFormField(
-                            onSaved:(val){
+                      SizedBox(
+                        height: 35.0,
+                      ),
+                      Material(
+                        elevation: 5.0,
+                        borderRadius: BorderRadius.circular(30.0),
+                        color: Colors.orangeAccent.shade400,
+                        child: MaterialButton(
+
+                          minWidth: MediaQuery.of(context).size.width*0.6,
+                          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          onPressed: ()async{
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
                               setState(() {
-                                _password=val;
+                                load=true;
                               });
-                            },
-                            controller: passwordController,
-                            keyboardType: TextInputType.text,
-                            cursorColor: Colors.orangeAccent.shade400,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.lock,
-                                    color: Colors.orangeAccent.shade400, size: 20),
-                                hintText: "Password",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    borderSide: BorderSide.none),
-                                suffixIcon: IconButton(
-                                  onPressed: (){
-                                    setState(() {
-                                      _obscureText=!_obscureText;
-                                    });
-                                  },
-                                  icon: _obscureText?Icon(Icons.visibility):Icon(Icons.visibility_off),
-                                  color: Colors.orangeAccent.shade400,
-                                )),
-                            onChanged: (val) {
-                              // setState(() {
-                              //   password = val;
-                              // });
-                            },
-                            obscureText: _obscureText,
-                          ),
-                        ),
-                        SizedBox(height: _height / 30.0),
-
-                        SizedBox(
-                          height: 35.0,
-                        ),
-                        Material(
-                          elevation: 5.0,
-                          borderRadius: BorderRadius.circular(30.0),
-                          color: Colors.orangeAccent.shade400,
-                          child: MaterialButton(
-
-                            minWidth: MediaQuery.of(context).size.width*0.6,
-                            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            onPressed: ()async{
-                              if (_formKey.currentState.validate()) {
-                                _formKey.currentState.save();
-                                setState(() {
-                                  load=true;
-                                });
-                                await login();
-                              }
-                            },
-                            child: Text("Login",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'MontserratSemi',
-                                fontSize: 20,
-                                color: Colors.white
-                              ),
+                              await login();
+                            }
+                          },
+                          child: Text("Login",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'MontserratSemi',
+                              fontSize: 20,
+                              color: Colors.white
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 15.0,
-                        ),
-                        _getBottomRow(context),
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      _getBottomRow(context),
 
-                        SizedBox(
-                          height: 30.0,
-                        ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
 
 
 //                         // Row(
@@ -386,64 +385,63 @@ class _LoginState extends State<Login> {
 //                           ),
 //                         ),
 
-                      ],
-                    ),
-                  // TextFormField(
-                //   obscureText: false,
-                //   decoration: InputDecoration(
-                //       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                //       hintText: "Email",
-                //       border:
-                //       OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-                //   validator: (val) {
-                //     if (val.isEmpty) {
-                //       return 'This field cannot be empty!';
-                //     } else if (!validateEmail(val)) {
-                //       return 'Enter a valid email!';
-                //     }
-                //     return null;
-                //   },
-                //   onSaved: (val) => _mail = val,
-                // ),
+                    ],
+                  ),
+                // TextFormField(
+              //   obscureText: false,
+              //   decoration: InputDecoration(
+              //       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+              //       hintText: "Email",
+              //       border:
+              //       OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+              //   validator: (val) {
+              //     if (val.isEmpty) {
+              //       return 'This field cannot be empty!';
+              //     } else if (!validateEmail(val)) {
+              //       return 'Enter a valid email!';
+              //     }
+              //     return null;
+              //   },
+              //   onSaved: (val) => _mail = val,
+              // ),
 
 
-                    // Row(
-                //   children: [
-                //     Expanded(
-                //       child: TextFormField(
-                //       obscureText: _obscureText,
-                //         decoration: InputDecoration(
-                //             contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                //             hintText: "Password",
-                //             border:
-                //             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-                //
-                //         validator: (val) => val.length < 6
-                //             ? 'Password must be at least 6 characters long!'
-                //             : null,
-                //         onChanged: (val) => _password = val,
-                //
-                //       ),
-                //     ),
-                //     IconButton(
-                //       icon: Icon(
-                //         _obscureText
-                //             ? Icons.visibility_off
-                //             : Icons.visibility,
-                //         color:
-                //         Colors.black,
-                //       ),
-                //       onPressed: () {
-                //         setState(() {
-                //           _obscureText = !_obscureText;
-                //         });
-                //       },
-                //     ),
-                //   ],
-                // ),
+                  // Row(
+              //   children: [
+              //     Expanded(
+              //       child: TextFormField(
+              //       obscureText: _obscureText,
+              //         decoration: InputDecoration(
+              //             contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+              //             hintText: "Password",
+              //             border:
+              //             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+              //
+              //         validator: (val) => val.length < 6
+              //             ? 'Password must be at least 6 characters long!'
+              //             : null,
+              //         onChanged: (val) => _password = val,
+              //
+              //       ),
+              //     ),
+              //     IconButton(
+              //       icon: Icon(
+              //         _obscureText
+              //             ? Icons.visibility_off
+              //             : Icons.visibility,
+              //         color:
+              //         Colors.black,
+              //       ),
+              //       onPressed: () {
+              //         setState(() {
+              //           _obscureText = !_obscureText;
+              //         });
+              //       },
+              //     ),
+              //   ],
+              // ),
 
-                  ],
-                ),
+                ],
               ),
             ),
           ),
