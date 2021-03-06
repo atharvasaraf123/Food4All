@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/konstants/Constansts.dart';
 
@@ -31,7 +32,11 @@ class _Donation_imagesState extends State<Donation_images> {
               aspectRatio: 1,
               child: Hero(
                 tag: widget.donation.id.toString(),
-                child: Image.asset(widget.donation.images[selectedImage]),
+                child: CachedNetworkImage(
+                  imageUrl: widget.donation.images[selectedImage],
+                    placeholder: (context, url) => Container(child: Center(child: CircularProgressIndicator()),height: 20,width: 20,),
+                    errorWidget: (context, url, error) => Icon(Icons.error)
+                ),
               ),
             ),
           ),
@@ -70,7 +75,11 @@ class _Donation_imagesState extends State<Donation_images> {
           border: Border.all(
               color: kPrimaryColor.withOpacity(selectedImage == index ? 1 : 0)),
         ),
-        child: Image.asset(widget.donation.images[index]),
+        child: CachedNetworkImage(
+            imageUrl: widget.donation.images[selectedImage],
+            placeholder: (context, url) => Container(child: Center(child: CircularProgressIndicator()),height: 5,width: 5,),
+            errorWidget: (context, url, error) => Icon(Icons.error)
+        ),
       ),
     );
   }

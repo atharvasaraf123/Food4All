@@ -638,7 +638,7 @@ class _NgoPersonState extends State<NgoPerson> {
                           textColor: Color(0xffffe4e1),
                           color: Colors.black,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>IndividualHungerSpot()));
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>IndividualHungerSpot(data: widget.hungerspot[pos],)));
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),

@@ -5,6 +5,10 @@ import 'package:flutter_app/IndivisualView/body.dart';
 import 'package:like_button/like_button.dart';
 
 class IndividualHungerSpot extends StatefulWidget {
+  dynamic data;
+
+  IndividualHungerSpot({this.data});
+
   @override
   _IndividualHungerSpotState createState() => _IndividualHungerSpotState();
 }
@@ -12,10 +16,6 @@ class IndividualHungerSpot extends StatefulWidget {
 class _IndividualHungerSpotState extends State<IndividualHungerSpot> {
 
 
-  List<String> images = [
-    "images/ngoCharity2.png",
-    "images/fooddonationhand.png",
-  ];
 
 
   @override
@@ -37,7 +37,7 @@ class _IndividualHungerSpotState extends State<IndividualHungerSpot> {
               _likeButton(),
               Column(
                 children: [
-                  Body(donation: Donation(id: 0, images: images)),
+                  Body(donation: Donation(id: 0, images: widget.data['url'])),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0, top: 10.0),
