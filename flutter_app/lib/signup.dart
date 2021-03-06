@@ -199,7 +199,7 @@ class _SignUpState extends State<SignUp> {
     _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: load==true?spinkit:SafeArea(
         child: Stack(
@@ -210,15 +210,26 @@ class _SignUpState extends State<SignUp> {
                 children: <Widget>[
                   _getBackImage(),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: Form(
-                      key: _formKey,
+                    padding: const EdgeInsets.symmetric(horizontal: 35,vertical: 20),
+                    child: SingleChildScrollView(
                       child: Column(
-                        children: <Widget>[
-                          _getHeader(),
-                          _getTextFields(),
-                          _getSignIn(),
-                          _getBottomRow(context),
+                        children: [
+                          Container(
+
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+
+                                children: <Widget>[
+                                  _getHeader(),
+                                  _getTextFields(),
+                                  _getSignIn(),
+                                  _getBottomRow(context),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -268,59 +279,56 @@ class _SignUpState extends State<SignUp> {
   }
 
   _getBottomRow(context) {
-    return Expanded(
-      flex: 1,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Already a user Sign in here',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
-          Text(
-            '',
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            'Already a user Sign in here',
             style: TextStyle(
+              color: Colors.black,
               fontSize: 15,
               fontWeight: FontWeight.w500,
               decoration: TextDecoration.underline,
             ),
           ),
-        ],
-      ),
+        ),
+        Text(
+          '',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            decoration: TextDecoration.underline,
+          ),
+        ),
+      ],
     );
   }
 
   _getSignIn() {
-    return Expanded(
-      flex: 1,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            'Sign up',
-            style: TextStyle(
-                color: Colors.white, fontSize: 25, fontWeight: FontWeight.w500),
-          ),
-          InkWell(
-            onTap: ()async{
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                setState(() {
-                  load=true;
-                });
-                await createUser();
-              }
-            },
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          'Sign up',
+          style: TextStyle(
+              color: Colors.white, fontSize: 25, fontWeight: FontWeight.w500),
+        ),
+        InkWell(
+          onTap: ()async{
+            if (_formKey.currentState.validate()) {
+              _formKey.currentState.save();
+              setState(() {
+                load=true;
+              });
+              await createUser();
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical:20.0),
             child: CircleAvatar(
               backgroundColor: Colors.grey.shade800,
               radius: 40,
@@ -329,9 +337,9 @@ class _SignUpState extends State<SignUp> {
                 color: Colors.white,
               ),
             ),
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 
@@ -355,10 +363,10 @@ class _SignUpState extends State<SignUp> {
             },
             onSaved: (val) => name = val,
             keyboardType: TextInputType.text,
-            cursorColor: Color(0xff0aa9d7),
+            cursorColor:Colors.orange.shade300,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.person,
-                  color: Color(0xff0aa9d7), size: 20),
+                  color: Colors.orange.shade300, size: 20),
               hintText: "Name",
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.0),
@@ -387,10 +395,10 @@ class _SignUpState extends State<SignUp> {
             onSaved: (val) => mail = val,
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
-            cursorColor: Color(0xff0aa9d7),
+            cursorColor: Colors.orange.shade300,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.email,
-                  color: Color(0xff0aa9d7), size: 20),
+                  color: Colors.orange.shade300, size: 20),
               hintText: "Email",
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.0),
@@ -414,17 +422,17 @@ class _SignUpState extends State<SignUp> {
             onSaved: (val) => password = val,
             controller: passwordController,
             keyboardType: TextInputType.text,
-            cursorColor: Color(0xff0aa9d7),
+            cursorColor: Colors.orange.shade300,
             decoration: InputDecoration(
                 prefixIcon: Icon(Icons.lock,
-                    color: Color(0xff0aa9d7), size: 20),
+                    color: Colors.orange.shade300, size: 20),
                 hintText: "Password",
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none),
                 suffixIcon: IconButton(
                   icon: _obscureText?Icon(Icons.visibility):Icon(Icons.visibility_off),
-                  color: Color(0xff0aa9d7),
+                  color:Colors.orange.shade300,
                   onPressed: (){
                     setState(() {
                       _obscureText=!_obscureText;
@@ -451,10 +459,10 @@ class _SignUpState extends State<SignUp> {
             onSaved: (val) => phoneNumber = val,
             controller: phoneController,
             keyboardType: TextInputType.phone,
-            cursorColor: Color(0xff0aa9d7),
+            cursorColor:Colors.orange.shade300,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.phone,
-                  color: Color(0xff0aa9d7), size: 20),
+                  color: Colors.orange.shade300, size: 20),
               hintText: "Phone Number",
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.0),
@@ -481,10 +489,10 @@ class _SignUpState extends State<SignUp> {
             onSaved: (val) => city = val,
             controller: cityController,
             keyboardType: TextInputType.phone,
-            cursorColor: Color(0xff0aa9d7),
+            cursorColor: Colors.orange.shade300,
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.location_city,
-                  color: Color(0xff0aa9d7), size: 20),
+                  color: Colors.orange.shade300, size: 20),
               hintText: "City",
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.0),
@@ -501,14 +509,12 @@ class _SignUpState extends State<SignUp> {
   }
 
   _getHeader() {
-    return Expanded(
-      flex: 3,
-      child: Container(
-        alignment: Alignment.bottomLeft,
-        child: Text(
-          'Create\nAccount',
-          style: TextStyle(color: Colors.white, fontSize: 40),
-        ),
+    return Container(
+      margin: EdgeInsets.only(top: 50),
+      alignment: Alignment.bottomLeft,
+      child: Text(
+        'Create\nAccount',
+        style: TextStyle(color: Colors.white, fontSize: 40),
       ),
     );
   }
@@ -596,13 +602,13 @@ class BackgroundSignUp extends CustomPainter {
     paint.color = Colors.orange;
     canvas.drawPath(blueWave, paint);
 
-    // Path greyWave = Path();
-    // greyWave.lineTo(sw, 0);
-    // greyWave.lineTo(sw, sh * 0.3);
-    // greyWave.cubicTo(sw * 0.65, sh * 0.45, sw * 0.25, sh * 0.35, 0, sh * 0.5);
-    // greyWave.close();
-    // paint.color = Colors.grey.shade800;
-    // canvas.drawPath(greyWave, paint);
+    Path greyWave = Path();
+    greyWave.lineTo(sw, 0);
+    greyWave.lineTo(sw, sh * 0.3);
+    greyWave.cubicTo(sw * 0.65, sh * 0.45, sw * 0.25, sh * 0.35, 0, sh * 0.5);
+    greyWave.close();
+    paint.color = Colors.grey.shade800;
+    canvas.drawPath(greyWave, paint);
   }
 
   @override
@@ -636,293 +642,3 @@ class _CustomClipper extends CustomClipper<Path> {
 }
 
 
-
-
-
-
-
-
-
-
-/*
-
- child: Form(
-          key: _formKey,
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            tooltip: 'Back',
-                          )
-                        ],
-                      ),
-                    ),
-                    Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Container(
-                        margin: EdgeInsets.only(top: 8),
-                        height: 1.0,
-                        width: 35.0,
-                        color: Colors.black),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade700,
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: TextFormField(
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(left: 12),
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              hintText: 'Name',
-                              hintStyle: TextStyle(
-                                  color:Colors.black)),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade700,
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: TextFormField(
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(left: 12),
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              hintText: 'Email',
-                              hintStyle: TextStyle(
-                                  color:Colors.black)),
-                          validator: (val) {
-                            if (val.isEmpty) {
-                              return 'This field cannot be empty!';
-                            } else if (!validateEmail(val)) {
-                              return 'Enter a valid email!';
-                            }
-                            return null;
-                          },
-                          onSaved: (val) => _mail = val,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade700,
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextFormField(
-                                style: TextStyle(
-                                  color:
-                                  Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(left: 12),
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  hintText: 'Password',
-//                            alignLabelWithHint: true,
-                                  hintStyle: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                validator: (val) => val.length < 6
-                                    ? 'Password must be at least 6 characters long!'
-                                    : null,
-                                onChanged: (val) => _password = val,
-                                obscureText: _obscureText,
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                _obscureText
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color:
-                                Colors.black,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade700,
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: TextFormField(
-                                style: TextStyle(
-                                  color:
-                                  Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(left: 12),
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  hintText: 'Confirm Password',
-//                            alignLabelWithHint: true,
-                                  hintStyle: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                onSaved: (val) => _password1 = val,
-                                obscureText: _obscureText1,
-                                validator: (val) {
-                                  if (val.isEmpty) {
-                                    return 'This field cannot be empty!';
-                                  } else if (val.compareTo(_password) != 0) {
-                                    return 'Passwords doesn\'t match!';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                _obscureText1
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color:
-                                Colors.black,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscureText1 = !_obscureText1;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: RaisedButton(
-                        splashColor: Colors.grey.shade900,
-                        color: Colors.redAccent,
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            _formKey.currentState.save();
-                            await createUser();
-                          }
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
-                              child: Text('Sign Up',
-                                  style: TextStyle(
-                                      fontSize: 15, color: Colors.white)),
-                            ),
-//                          Icon(
-//                            Icons.keyboard_arrow_right,
-//                            color: Colors.white,
-//                          ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: RichText(
-                                      text: TextSpan(children: <TextSpan>[
-                                        TextSpan(
-                                          text: 'Not the first time here? ',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: 'Log In.',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ]),
-                                    ),
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
-            ),
-          ),
-
-*/
