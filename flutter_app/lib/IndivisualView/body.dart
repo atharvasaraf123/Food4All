@@ -10,11 +10,6 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Donation_images(donation: donation),
-
-      ],
-    );
+    return Donation_images(donation: donation);
   }
 }
