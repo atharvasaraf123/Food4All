@@ -12,6 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Dashboard.dart';
 import 'ResponsiveWidget.dart';
+import 'konstants/loaders.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -33,12 +34,15 @@ class _LoginState extends State<Login> {
   bool _large;
   bool _medium;
   String pictRegID;
-
+  bool load=false;
 
 
 
 
   signInWithGoogle() async {
+    setState(() {
+      load=true;
+    });
     // Trigger the authentication flow
     try {
       final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
@@ -59,8 +63,14 @@ class _LoginState extends State<Login> {
       DocumentSnapshot ds=await users.doc(uid).get();
       if(ds.exists){
         if(ds.data().containsKey('city')){
+          setState(() {
+            load=false;
+          });
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => Dashboard()), (route) => false);
         }else{
+          setState(() {
+            load=false;
+          });
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => googlesignindialog()), (route) => false);
         }
       }else {
@@ -87,6 +97,9 @@ class _LoginState extends State<Login> {
         }
         users.doc(uid).set(user).then((value) {
           Fluttertoast.showToast(msg: 'Signed Up Successfully');
+          setState(() {
+            load=false;
+          });
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
               builder: (BuildContext context) => googlesignindialog()), (
               route) => false);
@@ -94,6 +107,10 @@ class _LoginState extends State<Login> {
           Fluttertoast.showToast(msg: onError.toString());
         });
       }}catch(e){
+      setState(() {
+        load=false;
+      });
+      Fluttertoast.showToast(msg: 'Something went wrong');
       print(e.toString());
     }
   }
@@ -106,14 +123,29 @@ class _LoginState extends State<Login> {
           email: "$_mail",
           password: "$_password"
       );
+      setState(() {
+        load=false;
+      });
       Fluttertoast.showToast(msg: 'Logged in');
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => Dashboard()), (route) => false);
     } catch (e) {
+      setState(() {
+        load=false;
+      });
       if (e.toString().toLowerCase().contains('user_not_found')) {
+        setState(() {
+          load=false;
+        });
         Fluttertoast.showToast(msg:'No user found for that email.');
       } else if (e.toString().toLowerCase().contains('wrong-password')) {
+        setState(() {
+          load=false;
+        });
         Fluttertoast.showToast(msg:'Wrong password provided for that user.');
       }else{
+        setState(() {
+          load=false;
+        });
         Fluttertoast.showToast(msg: e.toString());
       }
     }
@@ -173,7 +205,7 @@ class _LoginState extends State<Login> {
     _medium = ResponsiveWidget.isScreenMedium(_width, _pixelRatio);
 
     return  Scaffold(
-      body: SafeArea(
+      body: load==true?Container(child: spinkit):SafeArea(
         child: CustomPaint(
           painter: BackgroundSignIn(),
           child: Padding(
@@ -321,6 +353,9 @@ class _LoginState extends State<Login> {
                         onPressed: ()async{
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();
+                            setState(() {
+                              load=true;
+                            });
                             await login();
                           }
                         },
