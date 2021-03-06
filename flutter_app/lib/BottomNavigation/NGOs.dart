@@ -29,6 +29,7 @@ class _NGOsState extends State<NGOs> {
   List activeDonationList=List();
   List hungerList;
   Map<String,List>cities;
+  DateTime _dateTime=DateTime.now().add(Duration(days: 5));
 
   @override
   void initState() {
@@ -47,15 +48,16 @@ class _NGOsState extends State<NGOs> {
       List list=value.docs;
       print(list.length);
       for(int i=0;i<list.length;i++){
-        if(list[i]['completed']==true&&completedDonationList.containsKey(returnDateFrom(list[i]['dateTime']))){
+        if(list[i]['completed']==true&&list[i]['ngoUID']==FirebaseAuth.instance.currentUser.uid&&isBefore(list[i]['dateTime'])&&completedDonationList.containsKey(returnDateFrom(list[i]['dateTime']))){
           completedDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
-        }else if(list[i]['completed']==true){
+        }else if(list[i]['completed']==true&&list[i]['ngoUID']==FirebaseAuth.instance.currentUser.uid&&isBefore(list[i]['dateTime'])){
           completedDonationList[returnDateFrom(list[i]['dateTime'])]=List();
           completedDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
-        }else {
+        }else if((list[i]['completed']==false)){
           activeDonationList.add(list[i]);
         }
     }});
+    print('hell');
   }
 
    getHungerSpots()async{
@@ -65,6 +67,10 @@ class _NGOsState extends State<NGOs> {
          load = false;
        });
      });
+  }
+
+  bool isBefore(String date){
+    return DateFormat.yMMMEd().add_jm().parse(date).isBefore(_dateTime);
   }
 
   checkNgo() async {

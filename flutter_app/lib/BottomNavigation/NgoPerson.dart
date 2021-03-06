@@ -25,6 +25,8 @@ class _NgoPersonState extends State<NgoPerson> {
   double long;
   bool load=true;
   String city;
+  int selDate=0;
+  String selDate1=DateFormat.MMMMd().format(DateTime.now());
 
   String format(DateTime dateTime){
     return DateFormat.MMMMd().format(dateTime);
@@ -44,8 +46,6 @@ class _NgoPersonState extends State<NgoPerson> {
     String long1=(await storage.read(key: 'long'));
     lat=double.parse(lat1);
     long=double.parse(long1);
-    print(lat);
-    print(long);
     setState(() {
       load=false;
     });
@@ -77,28 +77,36 @@ class _NgoPersonState extends State<NgoPerson> {
                       height: 80,
                       child: ListView.builder(
                         itemBuilder: (BuildContext context, int pos) {
-                          return Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                padding: EdgeInsets.all(5.0),
-                                width: 100,
-                                height: 45,
-                                child: Center(
-                                  child: Text(
-                                    format(dateTime.add(Duration(days: pos))),
-                                    style: TextStyle(
-                                        fontSize: 14.0,
-                                        color: Color(0xffffe4e1),
-                                        fontFamily: 'MontserratBold'),
+                          return GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                selDate=pos;
+                                selDate1=format(dateTime.add(Duration(days: pos)));
+                              });
+                            },
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  width: 100,
+                                  height: 45,
+                                  child: Center(
+                                    child: Text(
+                                      format(dateTime.add(Duration(days: pos))),
+                                      style: TextStyle(
+                                          fontSize: 14.0,
+                                          color: pos!=selDate?Color(0xffffe4e1):Colors.black87,
+                                          fontFamily: 'MontserratBold'),
+                                    ),
                                   ),
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
-                                  shape: BoxShape.rectangle,
-                                  color: Colors.black87,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    shape: BoxShape.rectangle,
+                                    color: pos==selDate?Color(0xffffe4e1):Colors.black87,
+                                  ),
                                 ),
                               ),
                             ),
@@ -116,7 +124,14 @@ class _NgoPersonState extends State<NgoPerson> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          !widget.completeDonation.containsKey(selDate1)||widget.completeDonation[selDate1].length==0? Text(
+                            'NO ONGOING DONATIONS',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12.0,
+                                fontFamily: 'MontserratBold'),
+                          ):Text(
                             'ONGOING DONATIONS',
                             textAlign: TextAlign.start,
                             style: TextStyle(
@@ -371,157 +386,162 @@ class _NgoPersonState extends State<NgoPerson> {
 
   showAcceptedDonations() {
     return Container(
-      height: 190,
-      child: ListView.builder(
-        itemBuilder: (BuildContext context, int pos) {
-          return Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-              child: Container(
-                height: 175,
-                width: 180,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.access_time_outlined,
-                                  size: 20.0,
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
+      height: !widget.completeDonation.containsKey(selDate1)||widget.completeDonation[selDate1].length==0?40:190,
+      child: !widget.completeDonation.containsKey(selDate1)||widget.completeDonation[selDate1].length==0?Container():Align(
+        alignment: Alignment.centerLeft,
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int pos) {
+            return Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+                child: Container(
+                  height: 175,
+                  width: 180,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.access_time_outlined,
+                                    size: 20.0,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      giveTime(widget.completeDonation[selDate1][pos]['dateTime']),
+                                      style: TextStyle(
+                                          fontSize: 12.0,
+                                          fontFamily: 'MontserratBold'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                // alignment: Alignment.topRight,
+                                padding: EdgeInsets.all(5.0),
+                                width: 40,
+                                height: 25,
+                                child: Center(
                                   child: Text(
-                                    '9:45 AM',
+                                    'Live',
                                     style: TextStyle(
                                         fontSize: 12.0,
+                                        color: Color(0xffffe4e1),
                                         fontFamily: 'MontserratBold'),
                                   ),
                                 ),
-                              ],
-                            ),
-                            Container(
-                              // alignment: Alignment.topRight,
-                              padding: EdgeInsets.all(5.0),
-                              width: 40,
-                              height: 25,
-                              child: Center(
-                                child: Text(
-                                  'Live',
-                                  style: TextStyle(
-                                      fontSize: 12.0,
-                                      color: Color(0xffffe4e1),
-                                      fontFamily: 'MontserratBold'),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(3.0)),
+                                  shape: BoxShape.rectangle,
+                                  color: Colors.black87,
                                 ),
                               ),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(3.0)),
-                                shape: BoxShape.rectangle,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Center(
-                        child: Text(
-                          'Vaibhav Pallod',
-                          style: TextStyle(
-                              fontSize: 15.0, fontFamily: 'MontserratBold'),
-                          textAlign: TextAlign.center,
+                            ]),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Center(
+                          child: Text(
+                              widget.completeDonation[selDate1][pos]['name'],
+                            style: TextStyle(
+                                fontSize: 15.0, fontFamily: 'MontserratBold'),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 4.0),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Food Items : ',
+                                style: TextStyle(
+                                    fontSize: 12.0, fontFamily: 'MontserratBold'),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                widget.completeDonation[selDate1][pos]['foodItems'],
+                                style: TextStyle(
+                                    fontSize: 12.0, fontFamily: 'MontserratReg'),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0, left: 8.0),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              'Food Items : ',
-                              style: TextStyle(
-                                  fontSize: 12.0, fontFamily: 'MontserratBold'),
-                              textAlign: TextAlign.center,
+                            Icon(
+                              Icons.people_alt_outlined,
+                              size: 16.0,
                             ),
+                            SizedBox(width: 5,),
                             Text(
-                              'Paneer bhurji,Pav Bhaji,Pani puri',
+                              ' ${widget.completeDonation[selDate1][pos]['minQ']} - ${widget.completeDonation[selDate1][pos]['maxQ']}',
                               style: TextStyle(
-                                  fontSize: 12.0, fontFamily: 'MontserratReg'),
-                              textAlign: TextAlign.center,
-                            ),
+                                  fontSize: 12.0, fontFamily: 'MontserratMed'),
+                            )
                           ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                      child: Row(
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              size: 16.0,
+                            ),
+                            SizedBox(width: 5,),
+                            Text(
+                              '${distanceBetween1(lat, long, widget.completeDonation[selDate1][pos]['lat'], widget.completeDonation[selDate1][pos]['long'])}',
+                              style: TextStyle(
+                                  fontSize: 12.0, fontFamily: 'MontserratMed'),
+                            )
+                          ],
+                        ),
+                      ),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.people_alt_outlined,
-                            size: 16.0,
-                          ),
+                          Icon(Icons.location_on_outlined),
                           Text(
-                            ' 100 - 200',
+                            'Latur,Maharashtra',
                             style: TextStyle(
                                 fontSize: 12.0, fontFamily: 'MontserratMed'),
                           )
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.location_on,
-                            size: 16.0,
-                          ),
-                          Text(
-                            ' 1.3 km ',
-                            style: TextStyle(
-                                fontSize: 12.0, fontFamily: 'MontserratMed'),
-                          )
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.location_on_outlined),
-                        Text(
-                          'Latur,Maharashtra',
-                          style: TextStyle(
-                              fontSize: 12.0, fontFamily: 'MontserratMed'),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  color: Color(0xffffe4e1),
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(10),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0xffffe4e1),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-        scrollDirection: Axis.horizontal,
-        itemCount: 3,
-        shrinkWrap: true,
+            );
+          },
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.completeDonation[selDate1].length,
+          shrinkWrap: true,
+        ),
       ),
     );
   }

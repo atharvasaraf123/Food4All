@@ -32,7 +32,7 @@ class _Donation_imagesState extends State<Donation_images> {
               aspectRatio: 1,
               child: Hero(
                 tag: widget.donation.id.toString(),
-                child: CachedNetworkImage(
+                child: widget.donation.images.length==0?Image.asset('images/foodPlaceholder1.jpg'):CachedNetworkImage(
                   imageUrl: widget.donation.images[selectedImage],
                     placeholder: (context, url) => Container(child: Center(child: CircularProgressIndicator()),height: 20,width: 20,),
                     errorWidget: (context, url, error) => Icon(Icons.error)

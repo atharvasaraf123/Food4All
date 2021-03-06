@@ -170,7 +170,8 @@ class _Donate_FoodState extends State<Donate_Food> {
     };
     await donation.add(mapp).then((value)async{
       await dona.add(mapp).then((value) async{
-        await donation.doc(value.id).update({'documentId':value.id}).then((value){
+        print(value.id);
+        await value.update({'documentId':value.id}).then((value){
           Fluttertoast.showToast(msg: 'Donations added');
           Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
         }).catchError((onError){

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Dashboard.dart';
 import 'package:flutter_app/IndivisualView/Donation.dart';
 import 'package:flutter_app/IndivisualView/body.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -39,6 +40,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
       };
       await donCol.doc(widget.data['documentId']).update(mapp).then((value){
         Fluttertoast.showToast(msg: 'Donation accepted by NGO');
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()), (route) => false);
       }).catchError((onError){
         Fluttertoast.showToast(msg: 'Something went wrong');
       });
@@ -423,6 +425,9 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: InkWell(
+                                        onTap: ()async{
+                                          await accept();
+                                        },
                                         // onTap: ()async{
                                         //   if(_formKey.currentState.validate()){
                                         //     _formKey.currentState.save();

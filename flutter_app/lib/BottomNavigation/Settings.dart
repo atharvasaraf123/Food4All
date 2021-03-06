@@ -119,7 +119,7 @@ class _SettingsState extends State<Settings> {
                                     //   'images/placeholder.jpg',
                                     //   fit: BoxFit.fitHeight,
                                     // ):Image.network(profileUrl),
-                                    child: CachedNetworkImage(
+                                    child: profileUrl==null?Image.asset('images/placeholder.jpg',):CachedNetworkImage(
                                       imageUrl: profileUrl,
                                       placeholder: (context, url) => Image.asset('images/placeholder.jpg',),
                                       errorWidget: (context, url, error) => Icon(Icons.error),
