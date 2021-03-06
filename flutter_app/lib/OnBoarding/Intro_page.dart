@@ -1,5 +1,9 @@
 // import 'package:app_intro_food_delivery/models/step_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/konstants/Constansts.dart';
+import 'package:flutter_app/login.dart';
+import 'package:flutter_app/signup.dart';
+
 import 'StepModel.dart';
 
 class IntroPage extends StatefulWidget {
@@ -21,19 +25,21 @@ class _IntroPageState extends State<IntroPage> {
     });
 
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          _appBar(),
-          _body(_controller),
-          _indicator(),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            _appBar(),
+            _body(_controller),
+            _indicator(),
+          ],
+        ),
       ),
     );
   }
 
   _appBar() {
     return Container(
-      margin: EdgeInsets.only(top: 25),
+      // margin: EdgeInsets.only(top: 25),
       padding: EdgeInsets.all(12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +55,7 @@ class _IntroPageState extends State<IntroPage> {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: Colors.grey.withAlpha(50),
+                color: Colors.orangeAccent.withAlpha(50),
                 borderRadius: BorderRadius.all(
                   Radius.circular(15),
                 ),
@@ -57,22 +63,7 @@ class _IntroPageState extends State<IntroPage> {
               child: Icon(Icons.arrow_back_ios),
             ),
           ),
-          FlatButton(
-            onPressed: () {
-              if (initialPage < list.length)
-                _controller.animateToPage(list.length,
-                    duration: Duration(microseconds: 500),
-                    curve: Curves.easeInOut);
-            },
-            child: Text(
-              "Skip",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-          ),
+
         ],
       ),
     );
@@ -82,21 +73,32 @@ class _IntroPageState extends State<IntroPage> {
     return Expanded(
       child: PageView.builder(
         controller: controller,
-        itemCount: list.length,
+        itemCount: list.length + 1,
         itemBuilder: (context, index) {
-          return Column(
-            children: <Widget>[
-              index == 1
-                  ? _displayText(list[index].text)
-                  : _displayImage(list[index].id),
-              SizedBox(
-                height: 25,
-              ),
-              index == 1
-                  ? _displayImage(list[index].id)
-                  : _displayText(list[index].text),
-            ],
-          );
+          return index < list.length
+              ? Column(
+                  children: <Widget>[
+                    _displayImage(list[index].id),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    _displayText(list[index].text),
+                  ],
+                )
+              : Column(
+                  children: <Widget>[
+                    _displayImage(4),
+                    Text(
+                      'Get Started',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    _displaybutton(),
+                  ],
+                );
         },
       ),
     );
@@ -115,7 +117,8 @@ class _IntroPageState extends State<IntroPage> {
               width: 90,
               height: 90,
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.purple),
+                valueColor:
+                    AlwaysStoppedAnimation(Colors.orangeAccent.shade200),
                 value: (initialPage + 1) / (list.length + 1),
               ),
             ),
@@ -133,7 +136,7 @@ class _IntroPageState extends State<IntroPage> {
                 width: 65,
                 height: 65,
                 decoration: BoxDecoration(
-                  color: Colors.purple,
+                  color: Colors.orangeAccent.shade400,
                   borderRadius: BorderRadius.all(
                     Radius.circular(100),
                   ),
@@ -163,8 +166,78 @@ class _IntroPageState extends State<IntroPage> {
 
   _displayImage(int path) {
     return Image.asset(
-      "assets/$path.png",
+      "images/on0$path.jpg",
       height: MediaQuery.of(context).size.height * .5,
+    );
+  }
+
+  _displaybutton() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "WELCOME TO EDU",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          RoundedButton(
+            text: "LOGIN",
+            press: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) => Login()),
+              );
+            },
+          ),
+          RoundedButton(
+            text: "SIGN UP",
+            color: kPrimaryLightColor,
+            textColor: Colors.black,
+            press: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) => SignUp()),
+
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RoundedButton extends StatelessWidget {
+  final String text;
+  final Function press;
+  final Color color, textColor;
+
+  const RoundedButton({
+    Key key,
+    this.text,
+    this.press,
+    this.color = Colors.orangeAccent,
+    this.textColor = Colors.white,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      width: size.width * 0.8,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(29),
+        child: FlatButton(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+          color: color,
+          onPressed: press,
+          child: Text(
+            text,
+            style: TextStyle(color: textColor),
+          ),
+        ),
+      ),
     );
   }
 }

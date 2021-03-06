@@ -7,16 +7,17 @@ class StepModel {
   static List<StepModel> list = [
     StepModel(
       id: 1,
-      text: "Browse the menu\nand order directly from\nthe application",
+      text: "Sharing food with another human being and curing their hunger is a noble act",
     ),
     StepModel(
       id: 2,
       text:
-      "Your order will be\nimmediately collected and\nsent by our courier",
+      "Hunger spots are the areas where the hungry and poor people live in community",
     ),
     StepModel(
       id: 3,
-      text: "Pick update delivery\nat your door and enjoy\ngroceries",
+      text: "User can refister for NGO and choose service as NGO's ",
     ),
+
   ];
 }
