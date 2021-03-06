@@ -5,6 +5,8 @@ import 'package:flutter_app/konstants/loaders.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../size_config.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -21,6 +23,7 @@ class _HomeState extends State<Home> {
   List donList;
   bool load=true;
   List userProfile;
+  List city;
 
 
   @override
@@ -50,7 +53,7 @@ class _HomeState extends State<Home> {
               image: imageProvider, fit: BoxFit.cover),
         ),
       ),
-      placeholder: (context, url) => Image.asset('images/placeholder.jpg'),
+      placeholder: (context, url) => Image.asset('images/placeholder.jpg',height: 40,width: 40,),
       errorWidget: (context, url, error) => Icon(Icons.error),
     );
   }
@@ -58,14 +61,18 @@ class _HomeState extends State<Home> {
   getDashboard()async{
     donList=List();
     userProfile=List();
+    city=List();
     await donCol.get().then((value)async{
       donList=value.docs;
       for(int i=0;i<donList.length;i++){
         String url='url';
+        String city1='city';
         await userCol.doc(donList[i]['uid']).get().then((value){
           url=value.data().containsKey('profileUrl')?value.data()['profileUrl']:"url";
+          city1=value.data().containsKey('city')?value.data()['city']:"city";
         });
         userProfile.add(url);
+        city.add(city1);
       }
       print(donList.length);
       print(userProfile.length);
@@ -116,7 +123,7 @@ class _HomeState extends State<Home> {
                                 textAlign: TextAlign.start,
                               ),
                               Text(
-                                'City name',
+                                city[pos],
                                 style: TextStyle(
                                   fontSize: 13.0,
                                   color: Colors.black87,
@@ -134,7 +141,7 @@ class _HomeState extends State<Home> {
                   ),
 
                   // _displayText(),
-                  _showImage(5),
+                  _showImage(donList[pos]['url']),
                 ],
               ),
               decoration: BoxDecoration(
@@ -148,14 +155,14 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget Image1(dynamic image) {
+  Widget Image1(dynamic image, {bool ass=false}) {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.contain,
           colorFilter: ColorFilter.mode(
               Colors.purple[700].withOpacity(0.8), BlendMode.dstATop),
-          image: AssetImage(image),
+          image: ass?AssetImage(image):NetworkImage(image),
         ),
         borderRadius: BorderRadius.all(Radius.circular(8)),
         // border: Border.all(color: Colors.grey, width: 0.2)
@@ -163,29 +170,32 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _showImage(int count) {
+  _showImage(List list) {
+    print("{abcd ${list.length}");
     return Container(
       alignment: Alignment.center,
       height: 250,
       width: MediaQuery.of(context).size.width * 0.8,
       child: Swiper(
-        itemCount: count,
+        itemCount: list.length==0?5:list.length,
         autoplay: true,
         //set width of image
         duration: 500,
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: list.length==0?(BuildContext context, int index) {
           if (index == 0) {
-            return Image1("images/picture0.jpg");
+            return Image1("images/picture0.jpg",ass: true);
             //create Image1() function
           } else if (index == 1) {
-            return Image1("images/picture1.jpg");
+            return Image1("images/picture1.jpg",ass: true);
           } else if (index == 2) {
-            return Image1("images/picture2.jpg");
+            return Image1("images/picture2.jpg",ass: true);
           } else if (index == 3) {
-            return Image1("images/picture3.jpg");
+            return Image1("images/picture3.jpg",ass: true);
           } else {
-            return Image1("images/picture5.jpg");
+            return Image1("images/picture5.jpg",ass: true);
           }
+        }:(BuildContext context, int index) {
+          return Image1(list[index]);
         },
       ),
     );
