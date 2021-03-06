@@ -1,5 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/konstants/loaders.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -7,9 +11,78 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference userCol = FirebaseFirestore.instance.collection('users');
+  CollectionReference donCol =
+  FirebaseFirestore.instance.collection('donation');
+  List donList;
+  bool load=true;
+  List userProfile;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDashboard();
+  }
+
+  Widget _circleAvatar(int pos) {
+    return userProfile[pos]=='url'?Container(
+      width: 40.0,
+      height: 40.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+            image: AssetImage('images/placeholder.jpg'), fit: BoxFit.cover),
+      ),
+    ):CachedNetworkImage(
+      imageUrl: userProfile[pos],
+      imageBuilder: (context, imageProvider) => Container(
+        width: 40.0,
+        height: 40.0,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+              image: imageProvider, fit: BoxFit.cover),
+        ),
+      ),
+      placeholder: (context, url) => Image.asset('images/placeholder.jpg'),
+      errorWidget: (context, url, error) => Icon(Icons.error),
+    );
+  }
+
+  getDashboard()async{
+    donList=List();
+    userProfile=List();
+    await donCol.get().then((value)async{
+      donList=value.docs;
+      for(int i=0;i<donList.length;i++){
+        String url='url';
+        await userCol.doc(donList[i]['uid']).get().then((value){
+          url=value.data().containsKey('profileUrl')?value.data()['profileUrl']:"url";
+        });
+        userProfile.add(url);
+      }
+      print(donList.length);
+      print(userProfile.length);
+      setState(() {
+        load=false;
+      });
+    }).catchError((onError){
+      Fluttertoast.showToast(msg: 'Try again in sometime');
+      setState(() {
+        load=false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return load?spinkit:Container(
       padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
       child: Container(
           child: ListView.builder(
@@ -26,7 +99,7 @@ class _HomeState extends State<Home> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: _circleAvatar(),
+                          child: _circleAvatar(pos),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -34,7 +107,7 @@ class _HomeState extends State<Home> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Donor name',
+                                donList[pos]['name'],
                                 style: TextStyle(
                                   fontSize: 16.0,
                                   color: Colors.black87,
@@ -70,7 +143,7 @@ class _HomeState extends State<Home> {
             ),
           );
         },
-        itemCount: 5,
+        itemCount: donList.length,
       )),
     );
   }
@@ -125,24 +198,7 @@ class _HomeState extends State<Home> {
   }
 }
 
-Widget _circleAvatar() {
-  return Container(
-    width: 40,
-    height: 40,
-    padding: EdgeInsets.all(10.0),
 
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.red, width: 1),
-
-      shape: BoxShape.circle,
-      color: Colors.white,
-      image: DecorationImage(
-        fit: BoxFit.cover,
-        image: AssetImage('images/vaibhav.jpeg'),
-      ), // Decoration image
-    ), // Box decoration
-  ); // Container
-}
 /*
 *  Container(
           height: 170,

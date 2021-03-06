@@ -53,7 +53,7 @@ class _NgoPersonState extends State<NgoPerson> {
 
   giveDate(String date){
     DateTime dateTime=DateFormat.yMMMEd().add_jm().parse(date);
-    return DateFormat.MMMMEEEEd().format(dateTime);
+    return DateFormat.MMMMd().add_jm().format(dateTime);
   }
   giveTime(String date){
     DateTime dateTime=DateFormat.yMMMEd().add_jm().parse(date);
@@ -175,7 +175,7 @@ class _NgoPersonState extends State<NgoPerson> {
                           Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
-                              'HUNGET SPOTS',
+                              'HUNGER SPOTS',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                   color: Colors.white,
@@ -241,22 +241,11 @@ class _NgoPersonState extends State<NgoPerson> {
                                 Padding(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        giveDate(widget.activeDonation[pos]['dateTime']),
-                                        style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontFamily: 'MontserratBold'),
-                                      ),
-                                      Text(
-                                        giveTime(widget.activeDonation[pos]['dateTime']),
-                                        style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontFamily: 'MontserratBold'),
-                                      ),
-                                    ],
+                                  child: Text(
+                                    giveDate(widget.activeDonation[pos]['dateTime']),
+                                    style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontFamily: 'MontserratBold'),
                                   ),
                                 ),
                               ],
@@ -369,7 +358,7 @@ class _NgoPersonState extends State<NgoPerson> {
                   ],
                 ),
                 decoration: BoxDecoration(
-                  color: Color(0xffffe4e1),
+                  color: Colors.orangeAccent.withAlpha(100),
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(10),
                 ),

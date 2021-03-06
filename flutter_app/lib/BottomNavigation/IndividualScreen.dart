@@ -67,7 +67,6 @@ class _IndividualScreenState extends State<IndividualScreen> {
           child: Stack(
             children: [
               AppBackground(),
-              _getBackBtn(),
               // _likeButton(),
               ListView(
                 children: [
@@ -475,9 +474,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                   ),
                 ],
               ),
-              Column(
-                children: [],
-              ),
+              _getBackBtn(),
             ],
           ),
         ),
@@ -486,35 +483,31 @@ class _IndividualScreenState extends State<IndividualScreen> {
   }
 
   _getBackBtn() {
-    return GestureDetector(
-      onTap: (){
-        Navigator.pop(context);
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10,left: 15),
-        child: Row(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: Material(
-                elevation: 10,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Color(0xFFea9b72),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  iconSize: 24,
+    return Padding(
+      padding: const EdgeInsets.only(top: 10,left: 15),
+      child: Row(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Material(
+              elevation: 10,
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Color(0xFFea9b72),
                 ),
-                color: Colors.white,
-                shape: CircleBorder(),
+                onPressed: () {
+                  print('hrllo');
+                  Navigator.pop(context);
+                },
+                iconSize: 24,
               ),
+              color: Colors.white,
+              shape: CircleBorder(),
             ),
-            Spacer(),
-          ],
-        ),
+          ),
+          Spacer(),
+        ],
       ),
     );
   }

@@ -17,6 +17,7 @@ import 'package:location/location.dart';
 import 'package:path/path.dart' as path;
 import '../Dashboard.dart';
 import 'Donate_Food.dart';
+import 'package:flutter_app/konstants/loaders.dart';
 
 class Add_Hunger_Spot extends StatefulWidget {
   @override
@@ -31,6 +32,7 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
   String city;
   TextEditingController _addressController = TextEditingController();
 
+  bool load=false;
   var gradesRange = RangeValues(0, 500);
   double capacitymin = 0;
   double capacitymax = 500;
@@ -116,10 +118,19 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
       await hungerspot.add(mapp).then((value) {
         Fluttertoast.showToast(msg: 'Hunger Spot added');
         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
+        setState(() {
+          load=false;
+        });
       }).catchError((onError){
+        setState(() {
+          load=false;
+        });
         Fluttertoast.showToast(msg: 'Something went wrong');
       });
     }).catchError((onError){
+      setState(() {
+        load=false;
+      });
       Fluttertoast.showToast(msg: 'Something went wrong');
     });
 
@@ -132,7 +143,7 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
+      body: load==true?spinkit:SafeArea(
         child: Stack(
           children: [
             AppBackground(),
@@ -415,6 +426,9 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
                                       onTap: ()async{
                                         if(_formKey.currentState.validate()){
                                           _formKey.currentState.save();
+                                          setState(() {
+                                            load=true;
+                                          });
                                           await addHungerSpot(context);
                                         }
 

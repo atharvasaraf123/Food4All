@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/Dashboard.dart';
+import 'package:flutter_app/konstants/loaders.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
@@ -40,9 +41,12 @@ double long;
 String pictRegID;
 String city;
 
+
+
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   String mail, password, password1, name,phoneNumber;
+  bool load=false;
   bool _obscureText = true;
   bool _obscureText1 = true;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -117,19 +121,34 @@ class _SignUpState extends State<SignUp> {
       };
       print(user);
       users.doc(uid).set(user).then((value) {
+        setState(() {
+          load=false;
+        });
       Fluttertoast.showToast(msg: 'Signed Up Successfully');
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => Dashboard()), (route) => false);
       }).catchError((onError){
+        setState(() {
+          load=false;
+        });
        Fluttertoast.showToast(msg: onError.toString());
     });
 
     } catch (e) {
+      setState(() {
+        load=false;
+      });
       if (e.toString().toLowerCase().contains('weak_password')) {
         Fluttertoast.showToast(msg: 'The password provided is too weak.');
       } else if (e.toString().toLowerCase().contains('email_already_in_use')) {
+        setState(() {
+          load=false;
+        });
         Fluttertoast.showToast(
             msg: 'The account already exists for that email.');
       } else {
+        setState(() {
+          load=false;
+        });
         Fluttertoast.showToast(msg: 'Try again in sometime');
       }
     }
@@ -154,7 +173,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: SafeArea(
+      body: load==true?spinkit:SafeArea(
         child: Stack(
           children: [
             CustomPaint(
@@ -268,6 +287,9 @@ class _SignUpState extends State<SignUp> {
             onTap: ()async{
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
+                setState(() {
+                  load=true;
+                });
                 await createUser();
               }
             },

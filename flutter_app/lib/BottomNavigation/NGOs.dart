@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/AddNgo.dart';
 import 'package:flutter_app/BottomNavigation/NgoPerson.dart';
+import 'package:flutter_app/konstants/loaders.dart';
 import 'package:intl/intl.dart';
 
 class NGOs extends StatefulWidget {
@@ -123,7 +124,7 @@ class _NGOsState extends State<NGOs> {
   @override
   Widget build(BuildContext context) {
     return load == true
-        ? Center(child: CircularProgressIndicator())
+        ? spinkit
         : ngo
             ? NgoPerson(completeDonation: completedDonationList,hungerspot: hungerList,activeDonation: activeDonationList,)
             : ListView(

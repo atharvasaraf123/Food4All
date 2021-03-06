@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/Dashboard.dart';
 import 'package:flutter_app/konstants/functions.dart';
+import 'package:flutter_app/konstants/loaders.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
@@ -120,6 +121,7 @@ class _Donate_FoodState extends State<Donate_Food> {
   double capacitymax = 500;
 
   String address;
+  bool load=false;
   String name;
   String add;
   String foodItems;
@@ -174,14 +176,26 @@ class _Donate_FoodState extends State<Donate_Food> {
         await value.update({'documentId':value.id}).then((value){
           Fluttertoast.showToast(msg: 'Donations added');
           Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
+          setState(() {
+            load=false;
+          });
         }).catchError((onError){
           Fluttertoast.showToast(msg: 'Something went wrong');
+          setState(() {
+            load=false;
+          });
         });
       }).catchError((onError){
         Fluttertoast.showToast(msg: 'Something went wrong');
+        setState(() {
+          load=false;
+        });
       });
     }).catchError((onError){
       Fluttertoast.showToast(msg: 'Something went wrong');
+      setState(() {
+        load=false;
+      });
     });
 
 
@@ -260,7 +274,7 @@ class _Donate_FoodState extends State<Donate_Food> {
 
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
+      body: load?spinkit:SafeArea(
         child: Stack(
           children: [
             AppBackground(),
@@ -522,6 +536,9 @@ class _Donate_FoodState extends State<Donate_Food> {
                             onTap: ()async{
                               if(_formKey.currentState.validate()){
                                 _formKey.currentState.save();
+                                setState(() {
+                                  load=true;
+                                });
                                 await donateFood(context);
                               }
                             },

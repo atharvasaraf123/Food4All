@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/konstants/Constansts.dart';
+import 'package:flutter_app/konstants/loaders.dart';
 
 import '../size_config.dart';
 import 'Donation.dart';
@@ -34,7 +35,7 @@ class _Donation_imagesState extends State<Donation_images> {
                 tag: widget.donation.id.toString(),
                 child: widget.donation.images.length==0?Image.asset('images/foodPlaceholder1.jpg'):CachedNetworkImage(
                   imageUrl: widget.donation.images[selectedImage],
-                    placeholder: (context, url) => Container(child: Center(child: CircularProgressIndicator()),height: 20,width: 20,),
+                    placeholder: (context, url) => Container(child: Center(child: spinkit),height: 20,width: 20,),
                     errorWidget: (context, url, error) => Icon(Icons.error)
                 ),
               ),

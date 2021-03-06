@@ -190,9 +190,6 @@ class _MyHomePageState extends State {
     return load?CircularProgressIndicator():Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          actions: [
-            Text(city)
-          ],
           title: Text('Food Donation'),
           centerTitle: true,
         ),

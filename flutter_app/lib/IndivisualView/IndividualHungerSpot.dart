@@ -323,7 +323,7 @@ class _IndividualHungerSpotState extends State<IndividualHungerSpot> {
 
   _getBackBtn() {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 10,left: 15),
       child: Row(
         children: <Widget>[
           Align(
