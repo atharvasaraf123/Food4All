@@ -87,7 +87,7 @@ class _MyHomePageState extends State {
         }
 
         if (permission == LocationPermission.denied) {
-          // Permissions are denied, next time you could try
+          // Permissions are denied, next time you could trysett
           // requesting permissions again (this is also where
           // Android's shouldShowRequestPermissionRationale
           // returned true. According to Android guidelines
@@ -176,6 +176,7 @@ class _MyHomePageState extends State {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -190,7 +191,7 @@ class _MyHomePageState extends State {
     return load?CircularProgressIndicator():Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          title: Text('Food Donation'),
+          title: Text('Food Donation',style: TextStyle(fontFamily: 'Sol Thin',fontWeight: FontWeight.bold,fontSize: 22),),
           centerTitle: true,
         ),
         floatingActionButton: _speedDial(),
@@ -218,7 +219,7 @@ class _MyHomePageState extends State {
                 Icons.dashboard,
                 color: Colors.orangeAccent,
               ),
-              title: Text('Dashboard'),
+              title: Text('Dashboard',style: TextStyle(fontFamily: 'MontserratMed'),),
             ),
             BubbleBottomBarItem(
               backgroundColor: Colors.orangeAccent,
@@ -230,7 +231,7 @@ class _MyHomePageState extends State {
                 Icons.account_balance_sharp,
                 color: Colors.orangeAccent,
               ),
-              title: Text('NGOs'),
+              title: Text('NGOs',style: TextStyle(fontFamily: 'MontserratMed'),),
             ),
             BubbleBottomBarItem(
               backgroundColor: Colors.orangeAccent,
@@ -242,7 +243,7 @@ class _MyHomePageState extends State {
                 Icons.settings_outlined,
                 color: Colors.orangeAccent,
               ),
-              title: Text('Settings'),
+              title: Text('Settings',style: TextStyle(fontFamily: 'MontserratMed'),),
             ),
           ],
         ),

@@ -32,6 +32,11 @@ class _NGOsState extends State<NGOs> {
   Map<String,List>cities;
   DateTime _dateTime=DateTime.now().add(Duration(days: 5));
 
+  BuildContext _context;
+
+
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -43,6 +48,8 @@ class _NGOsState extends State<NGOs> {
     print(DateFormat.MMMMd().format(DateFormat.yMMMEd().add_jm().parse(dateTime)));
     return DateFormat.MMMMd().format(DateFormat.yMMMEd().add_jm().parse(dateTime));
   }
+
+
 
   getDonationList() async {
     await donCol.get().then((value) {
@@ -99,9 +106,20 @@ class _NGOsState extends State<NGOs> {
         // value.docs.forEach((element) {
         //   list.add(element);
         // });
+        final snackBar = SnackBar(content: Text('No NGO registered yet'),action: SnackBarAction(
+          label: 'Register here',
+          onPressed: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => AddNGO()));
+          },
+        ),);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         setState(() {
           load=false;
         });
+
       });
     } else {
       await getDonationList();
@@ -123,6 +141,8 @@ class _NGOsState extends State<NGOs> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return load == true
         ? spinkit
         : ngo
@@ -143,6 +163,7 @@ class _NGOsState extends State<NGOs> {
                     }, ),
                   ),
                   ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int pos) {
                       return Container(
                           margin: const EdgeInsets.only(
@@ -183,14 +204,14 @@ class _NGOsState extends State<NGOs> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        cities[dropVal][pos]['name'].toString(),
+                                        cities[dropVal][0]['name'].toString(),
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             color: Colors.white,
                                             fontFamily: 'MontserratBold'),
                                       ),
                                       Text(
-                                        "Address:- ${ cities[dropVal][pos]['address'].toString()}",
+                                        "Address:- ${ cities[dropVal][0]['address'].toString()}",
                                         style: TextStyle(
                                           fontSize: 15.0,
                                           color: Color(0xfff0f8ff),
@@ -207,7 +228,7 @@ class _NGOsState extends State<NGOs> {
                                                 size: 20.0,
                                               ),
                                               Text(
-                                                " ${ cities[dropVal][pos]['capacity'].toString()}",
+                                                " ${ cities[dropVal][0]['capacity'].toString()}",
                                                 style: TextStyle(
                                                     fontSize: 13.0,
                                                     color: Colors.white,
@@ -243,7 +264,7 @@ class _NGOsState extends State<NGOs> {
                                             size: 20.0,
                                           ),
                                           Text(
-                                            " ${ cities[dropVal][pos]['phone'].toString()}",
+                                            " ${ cities[dropVal][0]['phone'].toString()}",
                                             style: TextStyle(
                                                 fontSize: 13.0,
                                                 color: Colors.white,
@@ -273,7 +294,7 @@ class _NGOsState extends State<NGOs> {
                       //   ),
                       // );
                     },
-                    itemCount: cities[dropVal].length,
+                    itemCount: 10,
                     shrinkWrap: true,
                   ),
                   Center(child: Text('No NGO registered yet')),

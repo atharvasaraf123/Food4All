@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Dashboard.dart';
 import 'package:flutter_app/OnBoarding/Intro_page.dart';
+import 'package:flutter_app/konstants/loaders.dart';
 import 'package:flutter_app/size_config.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -73,7 +74,7 @@ class App extends StatelessWidget {
               }
 
               // Otherwise, show something whilst waiting for initialization to complete
-              return Text("Loading", textDirection: TextDirection.ltr);
+              return spinkit;
             },
           ),
         ),

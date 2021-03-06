@@ -66,7 +66,6 @@ class _NgoPersonState extends State<NgoPerson> {
       body: SingleChildScrollView(
         child: Container(
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -152,6 +151,7 @@ class _NgoPersonState extends State<NgoPerson> {
                       BorderRadius.only(bottomLeft: Radius.circular(25.0)),
                 ),
               ),
+              SizedBox(height: 15,),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, left: 15.0),
                 child: Text(
@@ -162,6 +162,7 @@ class _NgoPersonState extends State<NgoPerson> {
                 ),
               ),
               showAvailableDonations(),
+              SizedBox(height: 15,),
               Container(
                 margin: EdgeInsets.only(left: 10.0),
                 child: Column(
@@ -328,26 +329,29 @@ class _NgoPersonState extends State<NgoPerson> {
                             padding: const EdgeInsets.only(top: 3.0),
                             child: Align(
                               alignment: Alignment.bottomCenter,
-                              child: MaterialButton(
-                                padding: EdgeInsets.all(0.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Interested',
-                                      style: TextStyle(
-                                          fontSize: 13.0,
-                                          fontFamily: 'MontserratMed'),
-                                    ),
-                                  ],
-                                ),
-                                textColor: Color(0xffffe4e1),
-                                color: Colors.black,
-                                onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext conntext)=>IndividualScreen(data: widget.activeDonation[pos],)));
-                                },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: MaterialButton(
+                                  padding: EdgeInsets.all(0.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Interested',
+                                        style: TextStyle(
+                                            fontSize: 13.0,
+                                            fontFamily: 'MontserratMed'),
+                                      ),
+                                    ],
+                                  ),
+                                  textColor: Color(0xffffe4e1),
+                                  color: Colors.black,
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext conntext)=>IndividualScreen(data: widget.activeDonation[pos],)));
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -643,53 +647,45 @@ class _NgoPersonState extends State<NgoPerson> {
                         ],
                       ),
                     ),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      child: Center(
-                        child: LikeButton(
-                          circleColor:
-                          CircleColor(start: Color(0xFFF44336), end: Color(0xFFF44336)),
-                          likeBuilder: (bool isLiked) {
-                            return Icon(
-                              Icons.favorite,
-                              size: 30,
-                              color: isLiked ? Colors.red : Colors.grey,
-                            );
-                          },
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white70),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: RaisedButton(
-                          padding: EdgeInsets.all(0.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: MaterialButton(
+                              padding: EdgeInsets.all(0.0),
+                              child: Text(
                                 'View',
                                 style: TextStyle(
                                     fontSize: 13.0,
                                     fontFamily: 'MontserratMed'),
                               ),
-                            ],
-                          ),
-                          textColor: Color(0xffffe4e1),
-                          color: Colors.black,
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>IndividualHungerSpot(data: widget.hungerspot[pos],lat:lat,long: long,)));
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
+                              textColor: Color(0xffffe4e1),
+                              color: Colors.black,
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>IndividualHungerSpot(data: widget.hungerspot[pos],lat:lat,long: long,)));
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
 
-                        ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: LikeButton(
+                              circleColor:
+                              CircleColor(start: Color(0xFFF44336), end: Color(0xFFF44336)),
+                              likeBuilder: (bool isLiked) {
+                                return Icon(
+                                  Icons.favorite,
+                                  size: 30,
+                                  color: isLiked ? Colors.red : Colors.grey,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
