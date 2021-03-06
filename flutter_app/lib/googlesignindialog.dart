@@ -78,6 +78,7 @@ class _googlesignindialogState extends State<googlesignindialog> {
       });
     } on PlatformException catch (e) {
       print(e.code);
+      print(e.details);
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
         print(error);
