@@ -669,6 +669,7 @@ class _NgoPersonState extends State<NgoPerson> {
                         child: RaisedButton(
                           padding: EdgeInsets.all(0.0),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/BottomNavigation/CompletedDonations.dart';
 import 'package:flutter_app/BottomNavigation/OngoingDonation.dart';
+import 'package:flutter_app/OnBoarding/Intro_page.dart';
 import 'package:flutter_app/konstants/ProfileListItem.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -34,7 +35,7 @@ class _SettingsState extends State<Settings> {
   logout()async{
     await FirebaseAuth.instance.signOut();
     await storage.deleteAll();
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>Login()), (route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context)=>IntroPage()), (route) => false);
   }
 
   getUserData()async{
