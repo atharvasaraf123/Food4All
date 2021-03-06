@@ -34,6 +34,7 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
   var gradesRange = RangeValues(0, 500);
   double capacitymin = 0;
   double capacitymax = 500;
+  double lat,long;
   final _formKey = GlobalKey<FormState>();
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;

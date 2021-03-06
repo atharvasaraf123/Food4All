@@ -22,6 +22,7 @@ class _NgoPersonState extends State<NgoPerson> {
   final storage=FlutterSecureStorage();
   double lat;
   double long;
+  bool load=true;
 
   String format(DateTime dateTime){
     return DateFormat.MMMMd().format(dateTime);
@@ -39,11 +40,16 @@ class _NgoPersonState extends State<NgoPerson> {
     String long1=(await storage.read(key: 'long'));
     lat=double.parse(lat1);
     long=double.parse(long1);
+    print(lat);
+    print(long);
+    setState(() {
+      load=false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return load==true?CircularProgressIndicator():Scaffold(
       body: SingleChildScrollView(
         child: Container(
           child: Column(
@@ -568,7 +574,7 @@ class _NgoPersonState extends State<NgoPerson> {
                             Icons.people_alt_outlined,
                             size: 16.0,
                           ),
-                          Text
+                          Text(
                             '${widget.hungerspot[pos]['minP']} - ${widget.hungerspot[pos]['maxP']}',
                             style: TextStyle(
                                 fontSize: 12.0, fontFamily: 'MontserratMed'),
