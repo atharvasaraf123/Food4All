@@ -26,7 +26,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
             children: [
               AppBackground(),
               _getBackBtn(),
-              _likeButton(),
+              // _likeButton(),
               Column(
                 children: [
                   Body(donation: Donation(id: 0, images: images)),
