@@ -211,7 +211,7 @@ class _SettingsState extends State<Settings> {
                                                 style: BorderStyle.solid),
                                             child: Text(
                                               "Edit Profile",
-                                              style: TextStyle(fontSize: 15.0),
+                                              style: TextStyle(fontSize: 15.0,fontFamily: 'MontserratMed'),
                                             ),
                                             highlightedBorderColor: Colors.red,
                                             splashColor: Colors.deepOrange,

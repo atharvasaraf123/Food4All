@@ -148,7 +148,7 @@ class _MyHomePageState extends State {
     return SpeedDial(
       animatedIcon: AnimatedIcons.menu_close,
       animatedIconTheme: IconThemeData(size: 24.0),
-      curve: Curves.easeInBack,
+      curve: Curves.linear,
       backgroundColor: Colors.orange.shade700,
       heroTag: 'add',
       children: [
@@ -156,6 +156,7 @@ class _MyHomePageState extends State {
           backgroundColor: Colors.orange.shade400,
           child: Image.asset('images/fooddonationhand.png',fit: BoxFit.contain,height: 24,width: 24,),
           label: 'Donate Food',
+          labelStyle: TextStyle( fontFamily: 'MontserratMed',),
           labelBackgroundColor: Colors.grey.shade400,
           onTap: () => Navigator.push(
               context,
@@ -166,6 +167,7 @@ class _MyHomePageState extends State {
           backgroundColor: Colors.orange.shade400,
           child: Icon(Icons.add_a_photo),
           label: 'Add Hunger Spot',
+          labelStyle: TextStyle( fontFamily: 'MontserratMed',),
           labelBackgroundColor: Colors.grey.shade400,
           onTap: () => Navigator.push(
               context,
