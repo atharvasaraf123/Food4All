@@ -1,11 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/IndivisualView/Donation.dart';
 import 'package:flutter_app/IndivisualView/body.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 
 import 'Donate_Food.dart';
 
 class IndividualScreen extends StatefulWidget {
+
+  dynamic data;
+
+  IndividualScreen({this.data});
+
   @override
   _IndividualScreenState createState() => _IndividualScreenState();
 }
@@ -15,7 +24,38 @@ class _IndividualScreenState extends State<IndividualScreen> {
     "images/ngoCharity2.png",
     "images/fooddonationhand.png",
   ];
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference donCol = FirebaseFirestore.instance.collection('donation');
 
+
+
+  accept()async{
+    String uid=FirebaseAuth.instance.currentUser.uid;
+    DocumentSnapshot ds=await donCol.doc(widget.data['documentId']).get();
+    if(ds.exists){
+      Map<String,dynamic>mapp={
+        'completed':true,
+        'ngoUID':uid
+      };
+      await donCol.doc(widget.data['documentId']).update(mapp).then((value){
+        Fluttertoast.showToast(msg: 'Donation accepted by NGO');
+      }).catchError((onError){
+        Fluttertoast.showToast(msg: 'Something went wrong');
+      });
+    }else{
+      Fluttertoast.showToast(msg: 'Try again in sometime');
+    }
+  }
+
+
+  giveDate(String date){
+    DateTime dateTime=DateFormat.yMMMEd().add_jm().parse(date);
+    return DateFormat.MMMMd().format(dateTime);
+  }
+  giveTime(String date){
+    DateTime dateTime=DateFormat.yMMMEd().add_jm().parse(date);
+    return DateFormat.jm().format(dateTime);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +69,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
               // _likeButton(),
               ListView(
                 children: [
-                  Body(donation: Donation(id: 0, images: images)),
+                  Body(donation: Donation(id: 0, images: widget.data['url'])),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(right: 8.0, top: 10.0),
@@ -69,7 +109,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                                       const EdgeInsets.all(4.0),
                                                   child: Container(
                                                     child: Text(
-                                                      'Name',
+                                                      widget.data['name'],
                                                       style: TextStyle(
                                                           fontSize: 12.0,
                                                           fontFamily:
@@ -103,7 +143,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                                       const EdgeInsets.all(4.0),
                                                   child: Container(
                                                     child: Text(
-                                                      '999999999',
+                                                      widget.data['phone'],
                                                       style: TextStyle(
                                                           fontSize: 12.0,
                                                           fontFamily:
@@ -168,7 +208,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Text(
-                                                  'Paneer bhurji,Pav Bhaji,Pani puri',
+                                                  widget.data['foodItems'],
                                                   style: TextStyle(
                                                       fontSize: 14.0,
                                                       fontFamily:
@@ -211,19 +251,15 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 4.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(
-                                                'Moti Nagar, Latur',
-                                                style: TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontFamily:
-                                                    'MontserratReg'),
-                                                textAlign: TextAlign.justify,
-                                              ),
-                                            ],
+                                          child: Expanded(
+                                            child: Text(
+                                              widget.data['address'],
+                                              style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontFamily:
+                                                  'MontserratReg'),
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -262,7 +298,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                                         const EdgeInsets.all(4.0),
                                                     child: Container(
                                                       child: Text(
-                                                        'Day',
+                                                        giveDate(widget.data['dateTime']),
                                                         style: TextStyle(
                                                             fontSize: 12.0,
                                                             fontFamily:
@@ -300,7 +336,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                                         const EdgeInsets.all(4.0),
                                                     child: Container(
                                                       child: Text(
-                                                        'Time',
+                                                        giveTime(widget.data['dateTime']),
                                                         style: TextStyle(
                                                             fontSize: 12.0,
                                                             fontFamily:
@@ -338,7 +374,7 @@ class _IndividualScreenState extends State<IndividualScreen> {
                                                         const EdgeInsets.all(4.0),
                                                     child: Container(
                                                       child: Text(
-                                                        '150-200',
+                                                        '${widget.data['minQ']}-${widget.data['maxQ']}',
                                                         style: TextStyle(
                                                             fontSize: 12.0,
                                                             fontFamily:
@@ -445,16 +481,18 @@ class _IndividualScreenState extends State<IndividualScreen> {
   }
 
   _getBackBtn() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Row(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topLeft,
-            child: Material(
-              elevation: 10,
-              child: Padding(
-                padding: EdgeInsets.all(2),
+    return GestureDetector(
+      onTap: (){
+        Navigator.pop(context);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10,left: 15),
+        child: Row(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topLeft,
+              child: Material(
+                elevation: 10,
                 child: IconButton(
                   icon: Icon(
                     Icons.arrow_back,
@@ -465,13 +503,13 @@ class _IndividualScreenState extends State<IndividualScreen> {
                   },
                   iconSize: 24,
                 ),
+                color: Colors.white,
+                shape: CircleBorder(),
               ),
-              color: Colors.white,
-              shape: CircleBorder(),
             ),
-          ),
-          Spacer(),
-        ],
+            Spacer(),
+          ],
+        ),
       ),
     );
   }

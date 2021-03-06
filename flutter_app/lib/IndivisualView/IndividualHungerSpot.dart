@@ -3,11 +3,14 @@ import 'package:flutter_app/AddNgo.dart';
 import 'package:flutter_app/IndivisualView/Donation.dart';
 import 'package:flutter_app/IndivisualView/body.dart';
 import 'package:like_button/like_button.dart';
+import 'package:flutter_app/konstants/functions.dart';
 
 class IndividualHungerSpot extends StatefulWidget {
   dynamic data;
+  double lat;
+  double long;
 
-  IndividualHungerSpot({this.data});
+  IndividualHungerSpot({this.data,this.lat,this.long});
 
   @override
   _IndividualHungerSpotState createState() => _IndividualHungerSpotState();
@@ -77,7 +80,7 @@ class _IndividualHungerSpotState extends State<IndividualHungerSpot> {
                                                       const EdgeInsets.all(4.0),
                                                   child: Container(
                                                     child: Text(
-                                                      'Name',
+                                                      widget.data['name'],
                                                       style: TextStyle(
                                                           fontSize: 12.0,
                                                           fontFamily:
@@ -111,7 +114,7 @@ class _IndividualHungerSpotState extends State<IndividualHungerSpot> {
                                                       const EdgeInsets.all(4.0),
                                                   child: Container(
                                                     child: Text(
-                                                      '999999999',
+                                                      widget.data['phone'],
                                                       style: TextStyle(
                                                           fontSize: 12.0,
                                                           fontFamily:
@@ -173,7 +176,7 @@ class _IndividualHungerSpotState extends State<IndividualHungerSpot> {
                                                         const EdgeInsets.all(4.0),
                                                     child: Container(
                                                       child: Text(
-                                                        'location distance',
+                                                          "${distanceBetween1(widget.lat, widget.long, widget.data['lat'], widget.data['long'])} km",
                                                         style: TextStyle(
                                                             fontSize: 12.0,
                                                             fontFamily:
@@ -211,7 +214,7 @@ class _IndividualHungerSpotState extends State<IndividualHungerSpot> {
                                                         const EdgeInsets.all(4.0),
                                                     child: Container(
                                                       child: Text(
-                                                        'Spot Type',
+                                                        widget.data['hungerSpotType'],
                                                         style: TextStyle(
                                                             fontSize: 12.0,
                                                             fontFamily:
@@ -249,7 +252,7 @@ class _IndividualHungerSpotState extends State<IndividualHungerSpot> {
                                                         const EdgeInsets.all(4.0),
                                                     child: Container(
                                                       child: Text(
-                                                        '150-200',
+                                                        '${widget.data['minP']}-${widget.data['maxP']}',
                                                         style: TextStyle(
                                                             fontSize: 12.0,
                                                             fontFamily:

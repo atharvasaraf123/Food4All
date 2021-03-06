@@ -153,6 +153,7 @@ class _Donate_FoodState extends State<Donate_Food> {
     }
     DocumentSnapshot ds=await userCol.doc(user.uid).get();
     String name=ds.data()['name'];
+    String phone=ds.data()['phone'];
     Map<String,dynamic>mapp={
       'name':name,
       'uid':user.uid,
@@ -164,12 +165,17 @@ class _Donate_FoodState extends State<Donate_Food> {
       'url':url,
       'lat':lat,
       'long':long,
-      'completed':false
+      'completed':false,
+      'phone':phone
     };
     await donation.add(mapp).then((value)async{
-      await dona.add(mapp).then((value) {
-        Fluttertoast.showToast(msg: 'Donations added');
-        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
+      await dona.add(mapp).then((value) async{
+        await donation.doc(value.id).update({'documentId':value.id}).then((value){
+          Fluttertoast.showToast(msg: 'Donations added');
+          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
+        }).catchError((onError){
+          Fluttertoast.showToast(msg: 'Something went wrong');
+        });
       }).catchError((onError){
         Fluttertoast.showToast(msg: 'Something went wrong');
       });

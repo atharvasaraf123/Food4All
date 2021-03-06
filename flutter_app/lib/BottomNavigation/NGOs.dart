@@ -26,7 +26,7 @@ class _NGOsState extends State<NGOs> {
   List list;
   String dropVal;
   Map<String,List> completedDonationList=Map();
-  Map<String,List> activeDonationList=Map();
+  List activeDonationList=List();
   List hungerList;
   Map<String,List>cities;
 
@@ -45,18 +45,16 @@ class _NGOsState extends State<NGOs> {
   getDonationList() async {
     await donCol.get().then((value) {
       List list=value.docs;
+      print(list.length);
       for(int i=0;i<list.length;i++){
         if(list[i]['completed']==true&&completedDonationList.containsKey(returnDateFrom(list[i]['dateTime']))){
           completedDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
         }else if(list[i]['completed']==true){
           completedDonationList[returnDateFrom(list[i]['dateTime'])]=List();
           completedDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
-        }else if(list[i]['completed']==false&&completedDonationList.containsKey(returnDateFrom(list[i]['dateTime']))){
-          activeDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
-        }else if(list[i]['completed']==false){
-          activeDonationList[returnDateFrom(list[i]['dateTime'])]=List();
-          activeDonationList[returnDateFrom(list[i]['dateTime'])].add(list[i]);
-      }
+        }else {
+          activeDonationList.add(list[i]);
+        }
     }});
   }
 
@@ -121,7 +119,7 @@ class _NGOsState extends State<NGOs> {
     return load == true
         ? Center(child: CircularProgressIndicator())
         : ngo
-            ? NgoPerson(donationList: completedDonationList,hungerspot: hungerList,)
+            ? NgoPerson(completeDonation: completedDonationList,hungerspot: hungerList,activeDonation: activeDonationList,)
             : ListView(
                 children: [
                   Padding(

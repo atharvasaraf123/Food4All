@@ -9,9 +9,10 @@ import 'package:like_button/like_button.dart';
 import 'IndividualScreen.dart';
 
 class NgoPerson extends StatefulWidget {
-  Map<String,List> donationList;
+  Map<String,List> completeDonation;
+  List activeDonation;
   List hungerspot;
-  NgoPerson({this.donationList,this.hungerspot});
+  NgoPerson({this.completeDonation,this.hungerspot,this.activeDonation});
 
   @override
   _NgoPersonState createState() => _NgoPersonState();
@@ -23,6 +24,7 @@ class _NgoPersonState extends State<NgoPerson> {
   double lat;
   double long;
   bool load=true;
+  String city;
 
   String format(DateTime dateTime){
     return DateFormat.MMMMd().format(dateTime);
@@ -33,9 +35,11 @@ class _NgoPersonState extends State<NgoPerson> {
     // TODO: implement initState
     super.initState();
     getLatLong();
+
   }
 
   getLatLong()async{
+    city=await storage.read(key: 'city');
     String lat1=(await storage.read(key: 'lat'));
     String long1=(await storage.read(key: 'long'));
     lat=double.parse(lat1);
@@ -45,6 +49,15 @@ class _NgoPersonState extends State<NgoPerson> {
     setState(() {
       load=false;
     });
+  }
+
+  giveDate(String date){
+    DateTime dateTime=DateFormat.yMMMEd().add_jm().parse(date);
+    return DateFormat.MMMMEEEEd().format(dateTime);
+  }
+  giveTime(String date){
+    DateTime dateTime=DateFormat.yMMMEd().add_jm().parse(date);
+    return DateFormat.jm().format(dateTime);
   }
 
   @override
@@ -182,6 +195,8 @@ class _NgoPersonState extends State<NgoPerson> {
     //   itemCount: widget.donationList.length,);
   }
 
+
+
   showAvailableDonations() {
     return Container(
       height: 225,
@@ -211,11 +226,22 @@ class _NgoPersonState extends State<NgoPerson> {
                                 Padding(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    'Thu, Jan 2, 2020\n\t9:00 PM',
-                                    style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontFamily: 'MontserratBold'),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        giveDate(widget.activeDonation[pos]['dateTime']),
+                                        style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontFamily: 'MontserratBold'),
+                                      ),
+                                      Text(
+                                        giveTime(widget.activeDonation[pos]['dateTime']),
+                                        style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontFamily: 'MontserratBold'),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -226,7 +252,7 @@ class _NgoPersonState extends State<NgoPerson> {
                       padding: const EdgeInsets.all(5.0),
                       child: Center(
                         child: Text(
-                          'Vaibhav Pallod',
+                          widget.activeDonation[pos]['name'],
                           style: TextStyle(
                               fontSize: 15.0, fontFamily: 'MontserratBold'),
                           textAlign: TextAlign.center,
@@ -247,7 +273,7 @@ class _NgoPersonState extends State<NgoPerson> {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              'Paneer bhurji,Pav Bhaji,Pani puri',
+                              widget.activeDonation[pos]['foodItems'],
                               style: TextStyle(
                                   fontSize: 12.0, fontFamily: 'MontserratReg'),
                               textAlign: TextAlign.center,
@@ -265,8 +291,10 @@ class _NgoPersonState extends State<NgoPerson> {
                             Icons.people_alt_outlined,
                             size: 16.0,
                           ),
+                          SizedBox(width: 5,),
                           Text(
-                            ' 100 - 200',
+                            '${widget.activeDonation[pos]['minQ']} - ${widget
+                                .activeDonation[pos]['maxQ']}',
                             style: TextStyle(
                                 fontSize: 12.0, fontFamily: 'MontserratMed'),
                           )
@@ -277,17 +305,20 @@ class _NgoPersonState extends State<NgoPerson> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.location_on_outlined),
-                              Text(
-                                'Latur,Maharashtra',
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontFamily: 'MontserratMed'),
-                              )
-                            ],
+                          SingleChildScrollView(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.location_on_outlined),
+                                Text(
+          widget.activeDonation[pos]['address'],
+                                  style: TextStyle(
+                                      fontSize: 12.0,
+                                      fontFamily: 'MontserratMed'),
+                                )
+                              ],
+                            ),
+                            scrollDirection: Axis.horizontal,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 3.0),
@@ -309,7 +340,7 @@ class _NgoPersonState extends State<NgoPerson> {
                                 textColor: Color(0xffffe4e1),
                                 color: Colors.black,
                                 onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext conntext)=>IndividualScreen()));
+                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext conntext)=>IndividualScreen(data: widget.activeDonation[pos],)));
                                 },
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
@@ -332,7 +363,7 @@ class _NgoPersonState extends State<NgoPerson> {
           );
         },
         scrollDirection: Axis.horizontal,
-        itemCount: 3,
+        itemCount:widget.activeDonation.length,
         shrinkWrap: true,
       ),
     );
@@ -638,7 +669,7 @@ class _NgoPersonState extends State<NgoPerson> {
                           textColor: Color(0xffffe4e1),
                           color: Colors.black,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>IndividualHungerSpot(data: widget.hungerspot[pos],)));
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>IndividualHungerSpot(data: widget.hungerspot[pos],lat:lat,long: long,)));
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
