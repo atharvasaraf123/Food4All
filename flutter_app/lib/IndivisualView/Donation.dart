@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Donation {
   final int id;
   // final String title, description;
-  final List<String> images;
+  final List<dynamic> images;
   // final List<Color> colors;
   // final double rating, price;
   final bool isFavourite, isPopular;
