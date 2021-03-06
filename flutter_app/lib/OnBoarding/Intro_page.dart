@@ -28,7 +28,7 @@ class _IntroPageState extends State<IntroPage> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            _appBar(),
+            // _appBar(),
             _body(_controller),
             _indicator(),
           ],
@@ -96,7 +96,8 @@ class _IntroPageState extends State<IntroPage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    _displaybutton(),
+                    Expanded(child: _displaybutton())
+                    // _displaybutton(),
                   ],
                 );
         },
@@ -159,6 +160,7 @@ class _IntroPageState extends State<IntroPage> {
       style: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 20,
+          fontFamily: 'MontserratSemi',
       ),
       textAlign: TextAlign.center,
     );
@@ -176,10 +178,6 @@ class _IntroPageState extends State<IntroPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
-            "WELCOME TO EDU",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
           RoundedButton(
             text: "LOGIN",
             press: () {
