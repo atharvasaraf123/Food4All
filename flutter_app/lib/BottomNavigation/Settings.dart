@@ -365,37 +365,58 @@ class _SettingsState extends State<Settings> {
                         ),
 
                       ),
+
                       SizedBox(
                         height: 25,
                       ),
                       Container(
-                        height: 300,
-                        child: ListView(
-                          children: <Widget>[
-                            ProfileListItem(
-                              icon: Icons.find_in_page_outlined,
-                              text: 'Research',
-                            ),
-                            ProfileListItem(
-                              icon: Icons.help_outline,
-                              text: 'Help & Support',
-                            ),
-                            ProfileListItem(
-                              icon: LineAwesomeIcons.user_plus,
-                              text: 'Invite a Friend',
-                            ),
-                            GestureDetector(
-                              onTap: ()async{
-                                await logout();
-                              },
-                              child: ProfileListItem(
-                                icon:Icons.logout,
-                                text: 'Logout',
-                                hasNavigation: false,
+                        child: GestureDetector(
+                          onTap: ()async{
+                            await logout();
+                            },
+                          child: Card(
+                            color: Colors.transparent,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0)),
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: [
+                                    Color(0xffEC9F05),
+                                    Color(0xffFF4E00)
+                                  ],
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Logout',
+                                      style: TextStyle(
+                                          fontFamily: 'MontserratBold',
+                                          color: Colors.white,
+                                          fontSize: 16),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.logout,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ],
+                            elevation: 10.0,
+                          ),
                         ),
+                        height: 70,
                       ),
                     ],
                   ),

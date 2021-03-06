@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/Dashboard.dart';
+import 'package:flutter_app/konstants/loaders.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:image_picker/image_picker.dart';
@@ -83,7 +84,6 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   updateProfile()async{
-    String uid=FirebaseAuth.instance.currentUser.uid;
     print(name);
     print(nameController.text.toString());
     print(phone);
@@ -105,10 +105,15 @@ class _EditProfileState extends State<EditProfile> {
         print(s);
       });
       mapp['profileUrl']=s;
-
+      setState(() {
+        load=false;
+      });
     }
     await userCol.doc(FirebaseAuth.instance.currentUser.uid).update(mapp).then((value){
       Fluttertoast.showToast(msg: 'Profile Updated');
+      setState(() {
+        load=false;
+      });
       Navigator.push(context,MaterialPageRoute(builder: (BuildContext context)=>Dashboard()));
     });
   }
@@ -240,6 +245,9 @@ class _EditProfileState extends State<EditProfile> {
             padding: const EdgeInsets.all(20.0),
             child: GestureDetector(
               onTap:_file!=null||name!=nameController.text.toString()||phone!=phoneController.text.toString()? ()async{
+                setState(() {
+                  load=true;
+                });
                 await updateProfile();
               }:null,
               child: Container(
@@ -346,7 +354,7 @@ class _EditProfileState extends State<EditProfile> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
+        body: load?spinkit:SingleChildScrollView(
           child: Stack(
             // alignment: Alignment.center,
             children: [
