@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/BottomNavigation/CompletedDonations.dart';
+import 'package:flutter_app/BottomNavigation/OngoingDonation.dart';
 import 'package:flutter_app/konstants/ProfileListItem.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -251,42 +253,47 @@ class _SettingsState extends State<Settings> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
-                              child: Card(
-                                color: Colors.transparent,
-                                elevation: 10.0,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0)),
+                              child: GestureDetector(
+                                onTap:(){
+                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>OngoingDonation()));
+                      },
+                                child: Card(
+                                  color: Colors.transparent,
+                                  elevation: 10.0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)),
 
-                                    gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      colors: [
-                                        Color(0xffEC9F05),
-                                        Color(0xffFF4E00)
-                                      ],
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [
+                                          Color(0xffEC9F05),
+                                          Color(0xffFF4E00)
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Ongoing\nDonations',
-                                          style: TextStyle(
-                                              fontFamily: 'MontserratBold',
-                                              color: Colors.white,
-                                              fontSize: 16),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Icon(
-                                            Icons.call_made,
-                                            color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Ongoing\nDonations',
+                                            style: TextStyle(
+                                                fontFamily: 'MontserratBold',
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
-                                        )
-                                      ],
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.call_made,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -294,44 +301,49 @@ class _SettingsState extends State<Settings> {
                               height: 100,
                             ),
                             Container(
-                              child: Card(
-                                color: Colors.transparent,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0)),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      colors: [
-                                        Color(0xffEC9F05),
-                                        Color(0xffFF4E00)
-                                      ],
+                              child: GestureDetector(
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (Buildcontext)=>CompletedDonations()));
+                                },
+                                child: Card(
+                                  color: Colors.transparent,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)),
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [
+                                          Color(0xffEC9F05),
+                                          Color(0xffFF4E00)
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Completed\nDonations',
-                                          style: TextStyle(
-                                              fontFamily: 'MontserratBold',
-                                              color: Colors.white,
-                                              fontSize: 16),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Icon(
-                                            Icons.done,
-                                            color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Completed\nDonations',
+                                            style: TextStyle(
+                                                fontFamily: 'MontserratBold',
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
-                                        )
-                                      ],
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.done,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
+                                  elevation: 10.0,
                                 ),
-                                elevation: 10.0,
                               ),
                               height: 100,
                             ),

@@ -10,7 +10,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>IntroPage()));
 
     return Container(
         child: Padding(

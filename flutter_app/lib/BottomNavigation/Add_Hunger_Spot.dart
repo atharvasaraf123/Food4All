@@ -502,7 +502,7 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
   }
 
   Future getImage() async {
-    final imageTemp = await imagePicker.getImage(source: ImageSource.camera);
+    final imageTemp = await imagePicker.getImage(source: ImageSource.camera,imageQuality: 40);
     setState(() {
       image.add(File(imageTemp.path));
     });

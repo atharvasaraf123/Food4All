@@ -516,16 +516,20 @@ class _NgoPersonState extends State<NgoPerson> {
                           ],
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.location_on_outlined),
-                          Text(
-                            'Latur,Maharashtra',
-                            style: TextStyle(
-                                fontSize: 12.0, fontFamily: 'MontserratMed'),
-                          )
-                        ],
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.location_on_outlined),
+                            SizedBox(width: 5,),
+                            Text(
+                              widget.completeDonation[selDate1][pos]['address'],
+                              style: TextStyle(
+                                  fontSize: 12.0, fontFamily: 'MontserratMed'),
+                            )
+                          ],
+                        ),
                       ),
                     ],
                   ),

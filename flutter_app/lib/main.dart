@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Dashboard.dart';
+import 'package:flutter_app/OnBoarding/Intro_page.dart';
 import 'package:flutter_app/size_config.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'googlesignindialog.dart';
 import 'login.dart';
@@ -15,6 +17,8 @@ void main() {
 
 class App extends StatelessWidget {
   // Create the initialization Future outside of `build`:
+
+  final storage=FlutterSecureStorage();
   Future initialise(BuildContext context) async {
 
     await Firebase.initializeApp();
@@ -24,7 +28,7 @@ class App extends StatelessWidget {
       DocumentSnapshot ds =
           await userCol.doc(FirebaseAuth.instance.currentUser.uid).get();
       if (!ds.exists) {
-        return Login();
+        return IntroPage();
       }
       Map<String, dynamic> mapp = ds.data();
       if (mapp.containsKey('city')) {
@@ -34,7 +38,7 @@ class App extends StatelessWidget {
         return googlesignindialog();
       }
     } else {
-      return Login();
+      return IntroPage();
     }
   }
 
