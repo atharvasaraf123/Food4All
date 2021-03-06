@@ -14,6 +14,7 @@ import 'package:geocoder/model.dart';
 import 'package:location/location.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'BottomNavigation/Donate_Food.dart';
+import 'BottomNavigation/Home.dart';
 import 'login.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -179,7 +180,7 @@ class _MyHomePageState extends State {
   Widget build(BuildContext context) {
 
     List<Widget>list=[
-      Container(),
+      Home(),
       NGOs(city: city,),
       Settings()
     ];
