@@ -10,10 +10,19 @@ class IndividualHungerSpot extends StatefulWidget {
 }
 
 class _IndividualHungerSpotState extends State<IndividualHungerSpot> {
+
+
   List<String> images = [
     "images/ngoCharity2.png",
     "images/fooddonationhand.png",
   ];
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_app/IndivisualView/IndividualHungerSpot.dart';
+import 'package:flutter_app/konstants/functions.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 
@@ -8,8 +10,8 @@ import 'IndividualScreen.dart';
 
 class NgoPerson extends StatefulWidget {
   Map<String,List> donationList;
-
-  NgoPerson({this.donationList});
+  List hungerspot;
+  NgoPerson({this.donationList,this.hungerspot});
 
   @override
   _NgoPersonState createState() => _NgoPersonState();
@@ -17,7 +19,9 @@ class NgoPerson extends StatefulWidget {
 
 class _NgoPersonState extends State<NgoPerson> {
   DateTime dateTime=DateTime.now();
-
+  final storage=FlutterSecureStorage();
+  double lat;
+  double long;
 
   String format(DateTime dateTime){
     return DateFormat.MMMMd().format(dateTime);
@@ -27,7 +31,14 @@ class _NgoPersonState extends State<NgoPerson> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getLatLong();
+  }
 
+  getLatLong()async{
+    String lat1=(await storage.read(key: 'lat'));
+    String long1=(await storage.read(key: 'long'));
+    lat=double.parse(lat1);
+    long=double.parse(long1);
   }
 
   @override
@@ -495,23 +506,26 @@ class _NgoPersonState extends State<NgoPerson> {
                   // crossAxisAlignment: CrossAxisAlignment.,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 5.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Add: ',
-                            style: TextStyle(
-                                fontSize: 12.0, fontFamily: 'MontserratBold'),
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            'Latur,Maharashtra',
-                            style: TextStyle(
-                                fontSize: 12.0, fontFamily: 'MontserratMed'),
-                          )
-                        ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 5.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Add: ',
+                              style: TextStyle(
+                                  fontSize: 12.0, fontFamily: 'MontserratBold'),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              widget.hungerspot[pos]['address'],
+                              style: TextStyle(
+                                  fontSize: 12.0, fontFamily: 'MontserratMed'),
+                            )
+                          ],
+                        ),
                       ),
                     ),
 
@@ -527,7 +541,7 @@ class _NgoPersonState extends State<NgoPerson> {
                             textAlign: TextAlign.center,
                           ),
                           Text(
-                            'SLUM',
+                            widget.hungerspot[pos]['hungerSpotType'],
                             style: TextStyle(
                                 fontSize: 12.0, fontFamily: 'MontserratReg'),
                             textAlign: TextAlign.center,
@@ -554,8 +568,8 @@ class _NgoPersonState extends State<NgoPerson> {
                             Icons.people_alt_outlined,
                             size: 16.0,
                           ),
-                          Text(
-                            ' 100 - 200',
+                          Text
+                            '${widget.hungerspot[pos]['minP']} - ${widget.hungerspot[pos]['maxP']}',
                             style: TextStyle(
                                 fontSize: 12.0, fontFamily: 'MontserratMed'),
                           )
@@ -572,7 +586,7 @@ class _NgoPersonState extends State<NgoPerson> {
                             size: 16.0,
                           ),
                           Text(
-                            ' 1.3 km ',
+                            "${distanceBetween1(lat, long, widget.hungerspot[pos]['lat'], widget.hungerspot[pos]['long'])} km",
                             style: TextStyle(
                                 fontSize: 12.0, fontFamily: 'MontserratMed'),
                           )
@@ -639,7 +653,7 @@ class _NgoPersonState extends State<NgoPerson> {
           );
         },
         scrollDirection: Axis.horizontal,
-        itemCount: 3,
+        itemCount: widget.hungerspot.length,
         shrinkWrap: true,
       ),
     );

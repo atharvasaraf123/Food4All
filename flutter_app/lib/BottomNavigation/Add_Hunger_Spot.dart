@@ -593,6 +593,9 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
       Position position= await Geolocator.getCurrentPosition();
       final coordinates =
       new Coordinates(position.latitude, position.longitude);
+      lat=position.latitude;
+      long=position.longitude;
+
       var addresses =
       await Geocoder.local.findAddressesFromCoordinates(coordinates);
       var first = addresses.first;
@@ -614,6 +617,7 @@ class _Add_Hunger_SpotState extends State<Add_Hunger_Spot> {
       }
     }
   }
+
 
 
 }

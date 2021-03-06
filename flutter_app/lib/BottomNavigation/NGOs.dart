@@ -121,7 +121,7 @@ class _NGOsState extends State<NGOs> {
     return load == true
         ? Center(child: CircularProgressIndicator())
         : ngo
-            ? NgoPerson(donationList: completedDonationList,)
+            ? NgoPerson(donationList: completedDonationList,hungerspot: hungerList,)
             : ListView(
                 children: [
                   Padding(

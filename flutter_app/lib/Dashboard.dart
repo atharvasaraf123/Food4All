@@ -112,6 +112,8 @@ class _MyHomePageState extends State {
         city = addresses.first.locality;
       });
       await storage.write(key: 'city', value: city);
+      await storage.write(key: 'lat', value: position.latitude.toString());
+      await storage.write(key: 'long', value: position.longitude.toString());
       setState(() {
         load=false;
       });
