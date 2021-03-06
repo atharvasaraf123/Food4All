@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_app/IndivisualView/IndividualHungerSpot.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 
@@ -616,10 +617,13 @@ class _NgoPersonState extends State<NgoPerson> {
                           ),
                           textColor: Color(0xffffe4e1),
                           color: Colors.black,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>IndividualHungerSpot()));
+                          },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
+
                         ),
                       ),
                     ),
