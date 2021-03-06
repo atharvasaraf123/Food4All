@@ -280,6 +280,9 @@ class _LoginState extends State<Login> {
                                     borderRadius: BorderRadius.circular(30.0),
                                     borderSide: BorderSide.none),
                                 suffixIcon: IconButton(
+                                  onPressed: (){
+
+                                  },
                                   icon: Icon(Icons.remove_red_eye),
                                   color: Colors.orangeAccent.shade400,
                                 )),
