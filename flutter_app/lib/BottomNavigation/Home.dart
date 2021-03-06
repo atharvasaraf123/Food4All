@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/OnBoarding/Intro_page.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class Home extends StatefulWidget {
@@ -9,6 +10,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>IntroPage()));
+
     return Container(
         child: Padding(
       padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
