@@ -91,7 +91,6 @@ class _SettingsState extends State<Settings> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Container(
-                        color: Colors.white,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -100,15 +99,22 @@ class _SettingsState extends State<Settings> {
                               height: 230,
                               width: 180,
                               child: Card(
+                                color:Color(0xffF0FFFF),
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5.0))),
                                 child: Padding(
                                   padding: const EdgeInsets.all(7.0),
                                   child: Card(
+                                    elevation: 10.0,
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0))),
+                                            Radius.circular(5.0)),
+                                    side: BorderSide(
+                                      color:Colors.blue.shade100,
+                                      width: 0.2
+                                    )
+                                    ),
                                     // child: profileUrl==null||profileUrl.isEmpty?Image.asset(
                                     //   'images/placeholder.jpg',
                                     //   fit: BoxFit.fitHeight,
@@ -222,24 +228,37 @@ class _SettingsState extends State<Settings> {
                                     ),
                                   ),
                                 ),
+
                               ),
                             ),
                           ],
                         ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(10.0)),
+
+                          color: Colors.white
+                        ),
+
                       ),
                       SizedBox(
                         height: 15,
                       ),
                       Container(
+                        padding: EdgeInsets.all(10.0),
                         alignment: Alignment.center,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Container(
                               child: Card(
+                                color: Colors.transparent,
                                 elevation: 10.0,
                                 child: Container(
                                   decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0)),
+
                                     gradient: LinearGradient(
                                       begin: Alignment.centerLeft,
                                       end: Alignment.centerRight,
@@ -276,8 +295,11 @@ class _SettingsState extends State<Settings> {
                             ),
                             Container(
                               child: Card(
+                                color: Colors.transparent,
                                 child: Container(
                                   decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0)),
                                     gradient: LinearGradient(
                                       begin: Alignment.centerLeft,
                                       end: Alignment.centerRight,
@@ -315,6 +337,21 @@ class _SettingsState extends State<Settings> {
                             ),
                           ],
                         ),
+
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(10.0)),
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+
+                            colors: [
+                              Color(0xffffffff).withOpacity(1),
+                              Colors.grey.shade200,
+                            ],
+                          ),
+                        ),
+
                       ),
                       SizedBox(
                         height: 25,
@@ -324,11 +361,11 @@ class _SettingsState extends State<Settings> {
                         child: ListView(
                           children: <Widget>[
                             ProfileListItem(
-                              icon: LineAwesomeIcons.user_shield,
-                              text: 'Privacy',
+                              icon: Icons.help,
+                              text: 'Research',
                             ),
                             ProfileListItem(
-                              icon: LineAwesomeIcons.question_circle,
+                              icon: Icons.help_outline,
                               text: 'Help & Support',
                             ),
                             ProfileListItem(
@@ -340,7 +377,7 @@ class _SettingsState extends State<Settings> {
                                 await logout();
                               },
                               child: ProfileListItem(
-                                icon: LineAwesomeIcons.alternate_sign_out,
+                                icon:Icons.logout,
                                 text: 'Logout',
                                 hasNavigation: false,
                               ),
