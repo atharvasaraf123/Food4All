@@ -281,9 +281,11 @@ class _LoginState extends State<Login> {
                                     borderSide: BorderSide.none),
                                 suffixIcon: IconButton(
                                   onPressed: (){
-
+                                    setState(() {
+                                      _obscureText=!_obscureText;
+                                    });
                                   },
-                                  icon: Icon(Icons.remove_red_eye),
+                                  icon: _obscureText?Icon(Icons.visibility):Icon(Icons.visibility_off),
                                   color: Colors.orangeAccent.shade400,
                                 )),
                             onChanged: (val) {
@@ -318,6 +320,11 @@ class _LoginState extends State<Login> {
                             },
                             child: Text("Login",
                               textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'MontserratSemi',
+                                fontSize: 20,
+                                color: Colors.white
+                              ),
                             ),
                           ),
                         ),
@@ -331,53 +338,53 @@ class _LoginState extends State<Login> {
                         ),
 
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            horizontalLine(),
-                            Text(" Social Login ",
-                                style: TextStyle(
-                                    fontSize: 16.0, fontFamily: "Poppins-Medium")),
-                            horizontalLine()
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SignInButtonBuilder(
-                                text: 'Google',
-                                mini: true,
-                                shape: CircleBorder(),
-                                icon: FontAwesomeIcons.google,
-                                backgroundColor: Colors.red.shade900,
-                                onPressed: () async {
-                                  await signInWithGoogle();
-                                  // try {
-                                  //   FirebaseUser user =
-                                  //   await auth.handleGoogleSignIn(context);
-                                  //   validateUser(context, user);
-                                  // }catch(e){
-                                  //   print('GoogleError');
-                                  //   print(e.toString());
-                                  // }
-                                },
-                              ),
-
-
-//                           Text(
-//                             'Login with Google',
-// //                                style: GoogleFonts.openSans(),
-//                             style: TextStyle(
-//                                 color: Colors.black,
-//                                 fontWeight: FontWeight.bold),
+//                         // Row(
+//                         //   mainAxisAlignment: MainAxisAlignment.center,
+//                         //   children: <Widget>[
+//                         //     horizontalLine(),
+//                         //     Text(" Social Login ",
+//                         //         style: TextStyle(
+//                         //             fontSize: 16.0, fontFamily: "Poppins-Medium")),
+//                         //     horizontalLine()
+//                         //   ],
+//                         // ),
+//                         // Padding(
+//                         //   padding: const EdgeInsets.only(top: 10.0),
+//                         //   child: Row(
+//                         //     mainAxisAlignment: MainAxisAlignment.center,
+//                         //     crossAxisAlignment: CrossAxisAlignment.center,
+//                         //     children: <Widget>[
+//                         //       SignInButtonBuilder(
+//                         //         text: 'Google',
+//                         //         mini: true,
+//                         //         shape: CircleBorder(),
+//                         //         icon: FontAwesomeIcons.google,
+//                         //         backgroundColor: Colors.red.shade900,
+//                         //         onPressed: () async {
+//                         //           await signInWithGoogle();
+//                         //           // try {
+//                         //           //   FirebaseUser user =
+//                         //           //   await auth.handleGoogleSignIn(context);
+//                         //           //   validateUser(context, user);
+//                         //           // }catch(e){
+//                         //           //   print('GoogleError');
+//                         //           //   print(e.toString());
+//                         //           // }
+//                         //         },
+//                         //       ),
+//
+//
+// //                           Text(
+// //                             'Login with Google',
+// // //                                style: GoogleFonts.openSans(),
+// //                             style: TextStyle(
+// //                                 color: Colors.black,
+// //                                 fontWeight: FontWeight.bold),
+// //                           ),
+//
+//                             ],
 //                           ),
-
-                            ],
-                          ),
-                        ),
+//                         ),
 
                       ],
                     ),
@@ -456,19 +463,23 @@ class _LoginState extends State<Login> {
   _getBottomRow(context) {
     return Row(
       // crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>SignUp()));
-          },
-          child: Text(
-            'Dont have account Sign up here' ,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              decoration: TextDecoration.underline,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>SignUp()));
+            },
+            child: Text(
+              "Don't have an account, Sign Up",
+              style: TextStyle(
+                color: Colors.orange.withAlpha(500),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'MontserratMed',
+
+              ),
             ),
           ),
         ),
