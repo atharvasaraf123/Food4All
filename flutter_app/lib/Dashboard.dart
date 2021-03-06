@@ -28,7 +28,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
 
 
     return Scaffold(
