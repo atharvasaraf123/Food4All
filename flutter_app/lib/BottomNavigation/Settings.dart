@@ -361,7 +361,7 @@ class _SettingsState extends State<Settings> {
                         child: ListView(
                           children: <Widget>[
                             ProfileListItem(
-                              icon: Icons.help,
+                              icon: Icons.find_in_page_outlined,
                               text: 'Research',
                             ),
                             ProfileListItem(
