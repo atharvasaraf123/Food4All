@@ -246,9 +246,17 @@ class _LoginState extends State<Login> {
                             prefixIcon: Icon(Icons.email,
                                 color: Colors.orangeAccent.shade400, size: 20),
                             hintText: "Email",
+                            hintStyle: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.blueGrey
+                            ),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                                 borderSide: BorderSide.none),
+                          ),
+                          style: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.black
                           ),
                           onChanged: (val) {
                             // setState(() {
@@ -271,7 +279,15 @@ class _LoginState extends State<Login> {
                           controller: passwordController,
                           keyboardType: TextInputType.text,
                           cursorColor: Colors.orangeAccent.shade400,
+                          style: TextStyle(
+                              fontFamily: 'MontserratMed',
+                              color: Colors.black
+                          ),
                           decoration: InputDecoration(
+                              hintStyle: TextStyle(
+                                  fontFamily: 'MontserratMed',
+                                  color: Colors.blueGrey
+                              ),
                               prefixIcon: Icon(Icons.lock,
                                   color: Colors.orangeAccent.shade400, size: 20),
                               hintText: "Password",

@@ -17,6 +17,7 @@ import 'BottomNavigation/Donate_Food.dart';
 import 'BottomNavigation/Home.dart';
 import 'login.dart';
 import 'package:geolocator/geolocator.dart';
+import 'konstants/loaders.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -190,7 +191,7 @@ class _MyHomePageState extends State {
 
     this.context=context;
 
-    return load?CircularProgressIndicator():Scaffold(
+    return load?Center(child: spinkit):Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
           title: Text('Food Donation',style: TextStyle(fontFamily: 'Sol Thin',fontWeight: FontWeight.bold,fontSize: 22),),
