@@ -125,8 +125,9 @@ class _EditProfileState extends State<EditProfile> {
         'Profile',
         style: TextStyle(
           fontSize: 35.0,
-          letterSpacing: 1.5,
           color: Colors.white,
+          fontFamily: 'Sol Thin',
+          letterSpacing: 1.5,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -197,12 +198,14 @@ class _EditProfileState extends State<EditProfile> {
             ),
             hintText: hintText,
             hintStyle: TextStyle(
+              fontFamily: 'MontserratMed',
               letterSpacing: 2,
               color: Colors.blueGrey,
               fontWeight: FontWeight.bold,
             ),
             filled: true,
             fillColor: Colors.white30),
+        style: TextStyle( fontFamily: 'MontserratMed',),
       ),
     );
   }

@@ -93,9 +93,11 @@ class _IntroPageState extends State<IntroPage> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 25,
+                        fontFamily: 'MontserratMed',
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    SizedBox(height: 20,),
                     Expanded(child: _displaybutton())
                     // _displaybutton(),
                   ],

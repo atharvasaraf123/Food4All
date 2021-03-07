@@ -181,8 +181,8 @@ class _SettingsState extends State<Settings> {
                                               begin: Alignment.centerLeft,
                                               end: Alignment.centerRight,
                                               colors: [
-                                                Color(0xe1ec9f05),
-                                                Color(0xdaff4e00)
+                                                Colors.orange.shade200,
+                                                Colors.orange.shade400
                                               ],
                                             ),
                                             // progressColor: Colors.green,
@@ -211,7 +211,7 @@ class _SettingsState extends State<Settings> {
                                                 style: BorderStyle.solid),
                                             child: Text(
                                               "Edit Profile",
-                                              style: TextStyle(fontSize: 15.0),
+                                              style: TextStyle(fontSize: 15.0,fontFamily: 'MontserratMed'),
                                             ),
                                             highlightedBorderColor: Colors.red,
                                             splashColor: Colors.deepOrange,
@@ -270,8 +270,8 @@ class _SettingsState extends State<Settings> {
                                         begin: Alignment.centerLeft,
                                         end: Alignment.centerRight,
                                         colors: [
-                                          Color(0xffEC9F05),
-                                          Color(0xffFF4E00)
+                                          Colors.orange.shade200,
+                                          Colors.orange.shade400
                                         ],
                                       ),
                                     ),
@@ -316,8 +316,8 @@ class _SettingsState extends State<Settings> {
                                         begin: Alignment.centerLeft,
                                         end: Alignment.centerRight,
                                         colors: [
-                                          Color(0xffEC9F05),
-                                          Color(0xffFF4E00)
+                                          Colors.orange.shade200,
+                                          Colors.orange.shade400
                                         ],
                                       ),
                                     ),
@@ -371,6 +371,7 @@ class _SettingsState extends State<Settings> {
                         height: 25,
                       ),
                       Container(
+                        width: 220,
                         child: GestureDetector(
                           onTap: ()async{
                             await logout();
@@ -385,8 +386,8 @@ class _SettingsState extends State<Settings> {
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                   colors: [
-                                    Color(0xffEC9F05),
-                                    Color(0xffFF4E00)
+                                    Colors.orange.shade200,
+                                    Colors.orange.shade400
                                   ],
                                 ),
                               ),

@@ -87,7 +87,7 @@ class _MyHomePageState extends State {
         }
 
         if (permission == LocationPermission.denied) {
-          // Permissions are denied, next time you could try
+          // Permissions are denied, next time you could trysett
           // requesting permissions again (this is also where
           // Android's shouldShowRequestPermissionRationale
           // returned true. According to Android guidelines
@@ -148,7 +148,7 @@ class _MyHomePageState extends State {
     return SpeedDial(
       animatedIcon: AnimatedIcons.menu_close,
       animatedIconTheme: IconThemeData(size: 24.0),
-      curve: Curves.easeInBack,
+      curve: Curves.linear,
       backgroundColor: Colors.orange.shade700,
       heroTag: 'add',
       children: [
@@ -156,6 +156,7 @@ class _MyHomePageState extends State {
           backgroundColor: Colors.orange.shade400,
           child: Image.asset('images/fooddonationhand.png',fit: BoxFit.contain,height: 24,width: 24,),
           label: 'Donate Food',
+          labelStyle: TextStyle( fontFamily: 'MontserratMed',),
           labelBackgroundColor: Colors.grey.shade400,
           onTap: () => Navigator.push(
               context,
@@ -166,6 +167,7 @@ class _MyHomePageState extends State {
           backgroundColor: Colors.orange.shade400,
           child: Icon(Icons.add_a_photo),
           label: 'Add Hunger Spot',
+          labelStyle: TextStyle( fontFamily: 'MontserratMed',),
           labelBackgroundColor: Colors.grey.shade400,
           onTap: () => Navigator.push(
               context,
@@ -175,6 +177,7 @@ class _MyHomePageState extends State {
       ],
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +193,7 @@ class _MyHomePageState extends State {
     return load?CircularProgressIndicator():Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          title: Text('Food Donation'),
+          title: Text('Food Donation',style: TextStyle(fontFamily: 'Sol Thin',fontWeight: FontWeight.bold,fontSize: 22),),
           centerTitle: true,
         ),
         floatingActionButton: _speedDial(),
@@ -218,7 +221,7 @@ class _MyHomePageState extends State {
                 Icons.dashboard,
                 color: Colors.orangeAccent,
               ),
-              title: Text('Dashboard'),
+              title: Text('Dashboard',style: TextStyle(fontFamily: 'MontserratMed'),),
             ),
             BubbleBottomBarItem(
               backgroundColor: Colors.orangeAccent,
@@ -230,7 +233,7 @@ class _MyHomePageState extends State {
                 Icons.account_balance_sharp,
                 color: Colors.orangeAccent,
               ),
-              title: Text('NGOs'),
+              title: Text('NGOs',style: TextStyle(fontFamily: 'MontserratMed'),),
             ),
             BubbleBottomBarItem(
               backgroundColor: Colors.orangeAccent,
@@ -242,7 +245,7 @@ class _MyHomePageState extends State {
                 Icons.settings_outlined,
                 color: Colors.orangeAccent,
               ),
-              title: Text('Settings'),
+              title: Text('Settings',style: TextStyle(fontFamily: 'MontserratMed'),),
             ),
           ],
         ),

@@ -289,10 +289,11 @@ class _SignUpState extends State<SignUp> {
           child: Text(
             'Already a user Sign in here',
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              decoration: TextDecoration.underline,
+              fontFamily: 'MontserratMed',
+
             ),
           ),
         ),
@@ -315,7 +316,7 @@ class _SignUpState extends State<SignUp> {
         Text(
           'Sign up',
           style: TextStyle(
-              color: Colors.white, fontSize: 25, fontWeight: FontWeight.w500),
+              color: Colors.white, fontSize: 25, fontWeight: FontWeight.w500, fontFamily: 'MontserratSemi',),
         ),
         InkWell(
           onTap: ()async{
@@ -331,7 +332,7 @@ class _SignUpState extends State<SignUp> {
             padding: const EdgeInsets.symmetric(vertical:20.0),
             child: CircleAvatar(
               backgroundColor: Colors.grey.shade800,
-              radius: 40,
+              radius: 25,
               child: Icon(
                 Icons.arrow_forward,
                 color: Colors.white,
@@ -364,10 +365,20 @@ class _SignUpState extends State<SignUp> {
             onSaved: (val) => name = val,
             keyboardType: TextInputType.text,
             cursorColor:Colors.orange.shade300,
+            style:  TextStyle(
+              fontFamily: 'MontserratMed',
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.person,
                   color: Colors.orange.shade300, size: 20),
               hintText: "Name",
+              hintStyle: TextStyle(
+                fontFamily: 'MontserratMed',
+                color: Colors.blueGrey,
+                fontWeight: FontWeight.bold,
+              ),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.0),
                   borderSide: BorderSide.none),
@@ -396,7 +407,17 @@ class _SignUpState extends State<SignUp> {
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
             cursorColor: Colors.orange.shade300,
+            style:  TextStyle(
+              fontFamily: 'MontserratMed',
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
             decoration: InputDecoration(
+              hintStyle: TextStyle(
+                fontFamily: 'MontserratMed',
+                color: Colors.blueGrey,
+                fontWeight: FontWeight.bold,
+              ),
               prefixIcon: Icon(Icons.email,
                   color: Colors.orange.shade300, size: 20),
               hintText: "Email",
@@ -424,6 +445,11 @@ class _SignUpState extends State<SignUp> {
             keyboardType: TextInputType.text,
             cursorColor: Colors.orange.shade300,
             decoration: InputDecoration(
+                hintStyle: TextStyle(
+                  fontFamily: 'MontserratMed',
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.bold,
+                ),
                 prefixIcon: Icon(Icons.lock,
                     color: Colors.orange.shade300, size: 20),
                 hintText: "Password",
@@ -439,7 +465,11 @@ class _SignUpState extends State<SignUp> {
                     });
                   },
                 )),
-
+            style:  TextStyle(
+              fontFamily: 'MontserratMed',
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
             obscureText: _obscureText,
           ),
         ),
@@ -461,6 +491,12 @@ class _SignUpState extends State<SignUp> {
             keyboardType: TextInputType.phone,
             cursorColor:Colors.orange.shade300,
             decoration: InputDecoration(
+              hintStyle: TextStyle(
+                fontFamily: 'MontserratMed',
+
+                color: Colors.blueGrey,
+                fontWeight: FontWeight.bold,
+              ),
               prefixIcon: Icon(Icons.phone,
                   color: Colors.orange.shade300, size: 20),
               hintText: "Phone Number",
@@ -473,6 +509,12 @@ class _SignUpState extends State<SignUp> {
               //   phoneNumber = val;
               // });
             },
+            style:  TextStyle(
+              fontFamily: 'MontserratMed',
+
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         SizedBox(height: _height / 30.0),
@@ -491,6 +533,12 @@ class _SignUpState extends State<SignUp> {
             keyboardType: TextInputType.phone,
             cursorColor: Colors.orange.shade300,
             decoration: InputDecoration(
+              hintStyle: TextStyle(
+                fontFamily: 'MontserratMed',
+
+                color: Colors.blueGrey,
+                fontWeight: FontWeight.bold,
+              ),
               prefixIcon: Icon(Icons.location_city,
                   color: Colors.orange.shade300, size: 20),
               hintText: "City",
@@ -499,6 +547,12 @@ class _SignUpState extends State<SignUp> {
                   borderSide: BorderSide.none),
             ),
             readOnly: true,
+            style:  TextStyle(
+    fontFamily: 'MontserratMed',
+
+              color: Colors.black,
+    fontWeight: FontWeight.bold,
+    ),
             onTap: ()async{
              await getUserLocation();
             },
@@ -514,7 +568,8 @@ class _SignUpState extends State<SignUp> {
       alignment: Alignment.bottomLeft,
       child: Text(
         'Create\nAccount',
-        style: TextStyle(color: Colors.white, fontSize: 40),
+        style: TextStyle(color: Colors.white, fontSize: 40, fontFamily: 'MontserratMed',),
+        textAlign: TextAlign.center,
       ),
     );
   }
