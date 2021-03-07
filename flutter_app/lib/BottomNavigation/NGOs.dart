@@ -297,15 +297,6 @@ class _NGOsState extends State<NGOs> {
                     itemCount: cities[dropVal].length,
                     shrinkWrap: true,
                   ),
-                  Center(child: Text('No NGO registered yet')),
-                  GestureDetector(
-                      child: Center(child: Text('Register here')),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => AddNGO()));
-                      }),
                 ],
               );
   }
