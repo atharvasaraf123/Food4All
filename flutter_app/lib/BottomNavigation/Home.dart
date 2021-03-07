@@ -156,17 +156,21 @@ class _HomeState extends State<Home> {
   }
 
   Widget Image1(dynamic image, {bool ass=false}) {
-    return Container(
+    return ass?Container(
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.contain,
           colorFilter: ColorFilter.mode(
               Colors.purple[700].withOpacity(0.8), BlendMode.dstATop),
-          image: ass?AssetImage(image):NetworkImage(image),
+          image: AssetImage(image),
         ),
         borderRadius: BorderRadius.all(Radius.circular(8)),
         // border: Border.all(color: Colors.grey, width: 0.2)
       ),
+    ):CachedNetworkImage(
+      placeholder: (context, url) => spinkit,
+      imageUrl: image,
+      errorWidget: (context, url, error) => Icon(Icons.error),
     );
   }
 
