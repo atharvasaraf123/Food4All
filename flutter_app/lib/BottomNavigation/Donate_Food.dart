@@ -131,7 +131,7 @@ class _Donate_FoodState extends State<Donate_Food> {
   List url;
 
   Future getImage() async {
-    final imageTemp = await imagePicker.getImage(source: ImageSource.camera,imageQuality:40);
+    final imageTemp = await imagePicker.getImage(source: ImageSource.gallery,imageQuality:40);
     setState(() {
       image.add(File(imageTemp.path));
     });

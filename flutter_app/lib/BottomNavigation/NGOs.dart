@@ -204,14 +204,14 @@ class _NGOsState extends State<NGOs> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        cities[dropVal][0]['name'].toString(),
+                                        cities[dropVal][pos]['name'].toString(),
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             color: Colors.white,
                                             fontFamily: 'MontserratBold'),
                                       ),
                                       Text(
-                                        "Address:- ${ cities[dropVal][0]['address'].toString()}",
+                                        "Address:- ${ cities[dropVal][pos]['address'].toString()}",
                                         style: TextStyle(
                                           fontSize: 15.0,
                                           color: Color(0xfff0f8ff),
@@ -228,7 +228,7 @@ class _NGOsState extends State<NGOs> {
                                                 size: 20.0,
                                               ),
                                               Text(
-                                                " ${ cities[dropVal][0]['capacity'].toString()}",
+                                                " ${ cities[dropVal][pos]['capacity'].toString()}",
                                                 style: TextStyle(
                                                     fontSize: 13.0,
                                                     color: Colors.white,
@@ -264,7 +264,7 @@ class _NGOsState extends State<NGOs> {
                                             size: 20.0,
                                           ),
                                           Text(
-                                            " ${ cities[dropVal][0]['phone'].toString()}",
+                                            " ${ cities[dropVal][pos]['phone'].toString()}",
                                             style: TextStyle(
                                                 fontSize: 13.0,
                                                 color: Colors.white,
@@ -294,18 +294,9 @@ class _NGOsState extends State<NGOs> {
                       //   ),
                       // );
                     },
-                    itemCount: 10,
+                    itemCount: cities[dropVal].length,
                     shrinkWrap: true,
                   ),
-                  Center(child: Text('No NGO registered yet')),
-                  GestureDetector(
-                      child: Center(child: Text('Register here')),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => AddNGO()));
-                      }),
                 ],
               );
   }
